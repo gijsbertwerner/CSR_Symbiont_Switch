@@ -36,6 +36,7 @@ dat_CSR_symb$Species_name <- gsub(pattern = " ",
 
 #How many of the 3014 species in the database are absent in Zanne?
 length(setdiff(dat_CSR_symb$Species_name, zanne_tree$tip.label))
+#About one third of the data set is not present in Zanne. That's a bit much. 
 
 #How many of the 3014 species in the database are absent in Smith and Brown?
 length(setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label))
@@ -54,3 +55,19 @@ analysis_tree <-
     tip = setdiff(smith_brown_tree$tip.label,dat_CSR_symb$Species_name)
   )
 analysis_tree
+
+analysis_dat_CSR_symb<-dat_CSR_symb %>% filter(Species_name %in% analysis_tree$tip.label)
+nrow(analysis_dat_CSR_symb)
+#More species in data set, than in tree. 
+#This should not be possible. Could be due to duplicates in the dataset?
+analysis_dat_CSR_symb[duplicated(analysis_dat_CSR_symb$Species_name),]
+#Yes, some duplicates, but only about ~30. Small variations in CSR-values, agreement on symbiont type
+
+#For now, simply remove the duplicates. Other option, take average values for CSR values. 
+analysis_dat_CSR_symb<-analysis_dat_CSR_symb[!duplicated(analysis_dat_CSR_symb$Species_name), ]
+nrow(analysis_dat_CSR_symb)
+#Now matches
+
+# Descriptives ------------------------------------------------------------
+
+
