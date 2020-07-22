@@ -82,4 +82,21 @@ length(which(
 ))
 
 
-# Descriptive ------------------------------------------------------------
+# Descriptives ------------------------------------------------------------
+
+#Plot the 
+
+# Basic statistics on the C, S and R values
+summary(analysis_dat_CSR_symb$C.selection)
+summary(analysis_dat_CSR_symb$S.selection)
+summary(analysis_dat_CSR_symb$R.selection)
+
+ggplot(data = analysis_dat_CSR_symb)+
+  geom_histogram(aes(C.selection))
+
+ggplot(data = analysis_dat_CSR_symb)+
+  geom_freqpoly(aes(C.selection),colour="Red")+
+  geom_freqpoly(aes(S.selection),colour="Blue")+
+  geom_freqpoly(aes(R.selection),colour="Green")
+
+#Steps
