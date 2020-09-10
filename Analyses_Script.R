@@ -19,6 +19,12 @@ dat_CSR_symb <-
            as.is = T,
            strip.white = T)
 head(dat_CSR_symb)
+dat_CSR_symb$Symbiotic_type<-
+  gsub(pattern = "NM-AM",replacement = "NMAM",dat_CSR_symb$Symbiotic_type)
+dat_CSR_symb$Symbiotic_type<-
+  gsub(pattern = "EcM-AM",replacement = "EcMAM",dat_CSR_symb$Symbiotic_type)
+dat_CSR_symb$Symbiotic_type<-
+  gsub(pattern = "AM-Nod",replacement = "AMNod",dat_CSR_symb$Symbiotic_type)
 sapply(dat_CSR_symb, class)
 nrow(dat_CSR_symb)
 
@@ -116,6 +122,30 @@ ggplot(data = analysis_dat_CSR_symb)+
 
 #Let's start with ASR (Ancestral State Reconstructions) for symbiont state, and plot them on the tree
 
+#Data formatting. We need two columns, species and symbiont state.
+analysis_dat_CSR_symb_ASR_symbiont_type <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type)
+head(analysis_dat_CSR_symb_ASR_symbiont_type)
+
+#Run ASRs
+ASR_symnbiont_type_ER_yang<-rayDISC(phy = analysis_tree,data = analysis_dat_CSR_symb_ASR_symbiont_type,ntraits = 1,
+                                       model="ER",node.states = "marginal",root.p="yang",
+                                       verbose = T,lewis.asc.bias = T)
+ASR_symnbiont_type_ARD_yang<-rayDISC(phy = analysis_tree,data = analysis_dat_CSR_symb_ASR_symbiont_type,ntraits = 1,
+                                    model="ARD",node.states = "marginal",root.p="yang",
+                                    verbose = T,lewis.asc.bias = T)
+ASR_symnbiont_type_SYM_yang<-rayDISC(phy = analysis_tree,data = analysis_dat_CSR_symb_ASR_symbiont_type,ntraits = 1,
+                                    model="SYM",node.states = "marginal",root.p="yang",
+                                    verbose = T,lewis.asc.bias = T)
+
+#Which is the best model, using AIC-criteria? 
+akaike.weights(c(ASR_symnbiont_type_ER_yang$AICc,
+                 ASR_symnbiont_type_ARD_yang$AICc,
+                 ASR_symnbiont_type_SYM_yang$AICc))
+
+#ARD by far the best
+ASR_symnbiont_type_ARD_yang
+#Downside: some states few cases. Removing would simplify inference, but other downsides.
 
 
 
