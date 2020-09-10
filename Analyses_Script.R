@@ -142,7 +142,7 @@ ASR_symnbiont_type_ER_yang <-
     model = "ER",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 100,
+    nstarts = 20,
     n.cores = 6
   )
 ASR_symnbiont_type_ARD_yang <-
@@ -153,7 +153,7 @@ ASR_symnbiont_type_ARD_yang <-
     model = "ARD",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 100,
+    nstarts = 20,
     n.cores = 6
   )
 ASR_symnbiont_type_SYM_yang <-
@@ -164,7 +164,7 @@ ASR_symnbiont_type_SYM_yang <-
     model = "SYM",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 100,
+    nstarts = 20,
     n.cores = 6
   )
 
