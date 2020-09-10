@@ -100,3 +100,9 @@ ggplot(data = analysis_dat_CSR_symb)+
   geom_freqpoly(aes(R.selection),colour="Green")
 
 #Steps
+#Plot categories of symbiotic state on outline
+#ASR of categorical states
+#ASRs of the three CSR values. 3x
+#Plot these on top of each other
+#Pagel's model, need two binary variables.
+#Turn csr into three categorical ones, see if correlated three variables with corhmm.
