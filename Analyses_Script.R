@@ -140,7 +140,7 @@ ASR_symbiont_type_ER_yang <-
     model = "ER",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 20,
+    nstarts = 10,
     n.cores = 6
   )
 ASR_symbiont_type_ARD_yang <-
@@ -151,7 +151,7 @@ ASR_symbiont_type_ARD_yang <-
     model = "ARD",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 20,
+    nstarts = 10,
     n.cores = 6
   )
 ASR_symbiont_type_SYM_yang <-
@@ -162,7 +162,7 @@ ASR_symbiont_type_SYM_yang <-
     model = "SYM",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 20,
+    nstarts = 10,
     n.cores = 6
   )
 
@@ -265,7 +265,7 @@ ASR_selection_type_ER_yang <-
     model = "ER",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 20,
+    nstarts = 10,
     n.cores = 6
   )
 ASR_selection_type_ARD_yang <-
@@ -276,7 +276,7 @@ ASR_selection_type_ARD_yang <-
     model = "ARD",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 20,
+    nstarts = 10,
     n.cores = 6
   )
 ASR_selection_type_SYM_yang <-
@@ -287,7 +287,7 @@ ASR_selection_type_SYM_yang <-
     model = "SYM",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 20,
+    nstarts = 10,
     n.cores = 6
   )
 
@@ -359,7 +359,7 @@ ASR_symbiont_selection_type_ER_yang <-
     model = "ER",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 20,
+    nstarts = 10,
     n.cores = 6
   )
 ASR_symbiont_selection_type_ARD_yang <-
@@ -370,7 +370,7 @@ ASR_symbiont_selection_type_ARD_yang <-
     model = "ARD",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 20,
+    nstarts = 10,
     n.cores = 6
   )
 ASR_symbiont_selection_type_SYM_yang <-
@@ -381,7 +381,7 @@ ASR_symbiont_selection_type_SYM_yang <-
     model = "SYM",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 20,
+    nstarts = 10,
     n.cores = 6
   )
 
