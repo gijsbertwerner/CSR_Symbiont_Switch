@@ -6,6 +6,9 @@
 library(dplyr)
 library(ggplot2)
 library(ape)
+library(diversitree)
+library(Rphylopars)
+library(corHMM)
 
 # Loading data and trees --------------------------------------------------
 
@@ -105,6 +108,11 @@ ggplot(data = analysis_dat_CSR_symb)+
 #1. Turn it into a categorical variable: assign one of three categorical states based on what it is most selected for. 
 #2. Treat as three distinct continuous variables, and repeat the analyses for each.
 #Neither of these captures perfectly what we are trying to measure, but they may do for our purposes. 
+
+
+# Analyses ----------------------------------------------------------------
+
+#Let's start with ASR (Ancestral State Reconstructions) for symbiont state, and plot them on the tree
 
 
 
