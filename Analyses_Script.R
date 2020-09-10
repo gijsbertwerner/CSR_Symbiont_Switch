@@ -9,11 +9,8 @@ library(ape)
 library(diversitree)
 library(Rphylopars)
 library(corHMM)
-<<<<<<< HEAD
 library(phytools)
 library(phylolm)
-=======
->>>>>>> 91f7bcf8658db23fe8cd062e03039f693d118073
 
 # Loading data and trees --------------------------------------------------
 
