@@ -1,7 +1,6 @@
 #Gijsbert Werner, University of Oxford
 #July 22, 2020
 
-
 # Loading packages --------------------------------------------------------
 
 library(dplyr)
@@ -41,6 +40,11 @@ length(setdiff(dat_CSR_symb$Species_name, zanne_tree$tip.label))
 #How many of the 3014 species in the database are absent in Smith and Brown?
 length(setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label))
 #Only 320 of 3014 lacking. I.e. ~90% is present. That seems good enough for now.
+#What we could still do to get the numbers up 
+# (1) Fuzzy matching of species names to tree -> so small spelling variations means it doesn't immediately drop out.
+# (2) Manually check the missing 10% with reference to the tree. See if synonyms are present. 
+# @Marco: do you think either of these is worth it? 
+
 write.csv(
   setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label),
   quote = F,
@@ -81,10 +85,7 @@ length(which(
   ) == 100
 ))
 
-
 # Descriptives ------------------------------------------------------------
-
-#Plot the 
 
 # Basic statistics on the C, S and R values
 summary(analysis_dat_CSR_symb$C.selection)
@@ -98,6 +99,15 @@ ggplot(data = analysis_dat_CSR_symb)+
   geom_freqpoly(aes(C.selection),colour="Red")+
   geom_freqpoly(aes(S.selection),colour="Blue")+
   geom_freqpoly(aes(R.selection),colour="Green")
+#Ok, so looking at the graphs quite a lot of plants on the 0 side for particularly S and R selection.
+
+#Ways to treat CSR analytically:
+#1. Turn it into a categorical variable: assign one of three categorical states based on what it is most selected for. 
+#2. Treat as three distinct continuous variables, and repeat the analyses for each.
+#Neither of these captures perfectly what we are trying to measure, but they may do for our purposes. 
+
+
+
 
 #Steps
 #Plot categories of symbiotic state on outline
