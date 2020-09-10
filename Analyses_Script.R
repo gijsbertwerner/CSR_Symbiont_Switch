@@ -1,7 +1,6 @@
 #Gijsbert Werner, University of Oxford
 #July 22, 2020
 
-
 # Loading packages --------------------------------------------------------
 
 library(dplyr)
@@ -41,6 +40,11 @@ length(setdiff(dat_CSR_symb$Species_name, zanne_tree$tip.label))
 #How many of the 3014 species in the database are absent in Smith and Brown?
 length(setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label))
 #Only 320 of 3014 lacking. I.e. ~90% is present. That seems good enough for now.
+#What we could still do to get the numbers up 
+# (1) Fuzzy matching of species names to tree -> so small spelling variations means it doesn't immediately drop out.
+# (2) Manually check the missing 10% with reference to the tree. See if synonyms are present. 
+# @Marco: do you think either of these is worth it? 
+
 write.csv(
   setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label),
   quote = F,
@@ -80,7 +84,6 @@ length(which(
     0
   ) == 100
 ))
-
 
 # Descriptives ------------------------------------------------------------
 
