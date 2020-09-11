@@ -84,12 +84,12 @@ analysis_dat_CSR_symb <-
 nrow(analysis_dat_CSR_symb)
 #More species in data set, than in tree.
 #This should not be possible. Could be due to duplicates in the dataset?
-analysis_dat_CSR_symb[duplicated(analysis_dat_CSR_symb$Species_name),]
+analysis_dat_CSR_symb[duplicated(analysis_dat_CSR_symb$Species_name), ]
 #Yes, some duplicates, but only about ~30. Small variations in CSR-values, agreement on symbiont type
 
 #For now, simply remove the duplicates. Other option, take average values for CSR values.
 analysis_dat_CSR_symb <-
-  analysis_dat_CSR_symb[!duplicated(analysis_dat_CSR_symb$Species_name), ]
+  analysis_dat_CSR_symb[!duplicated(analysis_dat_CSR_symb$Species_name),]
 nrow(analysis_dat_CSR_symb)
 #Now matches
 
@@ -167,9 +167,9 @@ ASR_symbiont_type_SYM_yang <-
   )
 
 #Save all model ran
-save(ASR_symbiont_type_ER_yang,file="./Output/ASR_symbiont_type_ER_yang")
-save(ASR_symbiont_type_ARD_yang,file="./Output/ASR_symbiont_type_ARD_yang")
-save(ASR_symbiont_type_SYM_yang,file="./Output/ASR_symbiont_type_SYM_yang")
+save(ASR_symbiont_type_ER_yang, file = "./Output/ASR_symbiont_type_ER_yang")
+save(ASR_symbiont_type_ARD_yang, file = "./Output/ASR_symbiont_type_ARD_yang")
+save(ASR_symbiont_type_SYM_yang, file = "./Output/ASR_symbiont_type_SYM_yang")
 
 #Which is the best model, using AIC-criteria?
 akaike.weights(
@@ -180,9 +180,9 @@ akaike.weights(
   )
 )
 
-#ARD by far the best
-ASR_symbiont_type_ARD_yang
-plotMKmodel(ASR_symbiont_type_ARD_yang)
+#SYM by far the best
+ASR_symbiont_type_SYM_yang
+plotMKmodel(ASR_symbiont_type_SYM_yang)
 table(analysis_dat_CSR_symb$Symbiotic_type) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
 
 #Consideration: we have lots of states (8), and some have only few cases.
@@ -201,7 +201,7 @@ dat_plot_symbiont_type$Symbiotic_type <-
   as.numeric(as.factor(dat_plot_symbiont_type$Symbiotic_type))
 head(dat_plot_symbiont_type)
 
-#Symbionts ASR
+#Symbionts ASR - plot to pdf
 pdf("./Output/ASRSymbiontType.pdf",
     width = 20,
     height = 20)
@@ -217,11 +217,35 @@ trait.plot(
   tip.color = "white",
   show.node.label = T
 )
-nodelabels(pie = ASR_symbiont_type_ARD_yang$states,
+nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
            piecol = brewer.pal(n = 8, "Set2"),
            cex = 0.3)
 add.scale.bar()
 dev.off()
+
+#Plot to screen
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_type,
+  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.3)
+add.scale.bar()
+
+table(analysis_dat_CSR_symb$Symbiotic_type)
+#Ok, what are we seeing here?
+#A reconstruction of symbiont type: ancestral state is estimated as AM, and AM seems maintained througout.
+#With transitions towards other types that are quite 'tippy' (i.e. recent/shallow) at this phylogenetic scale.
+#No major suprises here, I would say. Everything in line with earlier work (including Nadia and mine previous paper. )
 
 ############## CSR ASR
 
@@ -298,9 +322,9 @@ ASR_selection_type_SYM_yang <-
   )
 
 #Save all model ran
-save(ASR_selection_type_ER_yang,file="./Output/ASR_selection_type_ER_yang")
-save(ASR_selection_type_ARD_yang,file="./Output/ASR_selection_type_ARD_yang")
-save(ASR_selection_type_SYM_yang,file="./Output/ASR_selection_type_SYM_yang")
+save(ASR_selection_type_ER_yang, file = "./Output/ASR_selection_type_ER_yang")
+save(ASR_selection_type_ARD_yang, file = "./Output/ASR_selection_type_ARD_yang")
+save(ASR_selection_type_SYM_yang, file = "./Output/ASR_selection_type_SYM_yang")
 
 #Which is the best model, using AIC-criteria?
 akaike.weights(
@@ -316,12 +340,6 @@ ASR_selection_type_ARD_yang
 plotMKmodel(ASR_selection_type_ARD_yang)
 table(analysis_dat_CSR_symb$selection_type) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
 
-#Consideration: we have lots of states (8), and some have only few cases.
-#We could simplify the inference by dropping some states and/or subsuming them in other states.
-#That would make inference easier, and the results more interpretable (not so many state transitions), but also lose biological detail.
-
-##Let's for now plot this reconstruction onto the tree
-
 #Create a data frame to plot the trait data
 dat_plot_selection_type <-
   analysis_dat_CSR_symb_ASR_selection_type %>%
@@ -332,7 +350,7 @@ dat_plot_selection_type$selection_type <-
   as.numeric(as.factor(dat_plot_selection_type$selection_type))
 head(dat_plot_selection_type)
 
-#CSR ASR
+#CSR ASR - Plot to Pdf
 pdf("./Output/ASRCSRType.pdf",
     width = 20,
     height = 20)
@@ -348,13 +366,45 @@ trait.plot(
   tip.color = "white",
   show.node.label = T
 )
-nodelabels(pie = ASR_selection_type_ER_yang$states,
+nodelabels(pie = ASR_selection_type_ARD_yang$states,
            piecol = brewer.pal(n = 3, "Accent"),
            cex = 0.3)
 add.scale.bar()
 dev.off()
 
+#Plot to screen
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_selection_type,
+  cols = list(selection_type = brewer.pal(n = 3, "Accent")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_selection_type_ARD_yang$states,
+           piecol = brewer.pal(n = 3, "Accent"),
+           cex = 0.3)
+add.scale.bar()
+
+#Ok, what do we see here? Reconstruction of the three CSR types, treated as three discrete categories.
+#Some things that spring to mind:
+#1. Looking at the distribution of the trait on the outside bar, there doesn't seem to be massive phylogenetic signal (we could quantify this)
+#2. Or in other words, the three types are all mixed up, mostly.
+#3  As a result throughout most of evolutionary history, it seems to be the case that we can't do mutch better than reconstruct 1/3, 1/3, 1/3 for the three types.
+#4. Thus, evolution of distinct CSR-types is even more tippy than symbiont.
+#5. Or, in other words. They generally don't precede, but follow symbiont switches.
+#6. Alternative explantion CSR evolution happens at a much much faster rate. I.e. we just can't look back that far with ASR.
+#7. Or, it's the method of splitting into 3 discrete categories, which creates the inevitbale simplification.
+#8. Options: if we have fossile/other evidence of ancient CSR-types, we could fix some nodes and create a better ASR.
+# Does this exist?
+
 ######Correlated evolution between the two variables
+
+#Let's run a combined model, modelling to traits simultaneously first.
 
 #Data formatting. We need three columns, species and symbiont state and selection type.
 analysis_dat_CSR_symb_ASR_symbiont_selection_type <-
@@ -396,6 +446,8 @@ ASR_symbiont_selection_type_ER_yang <-
 #     n.cores = 7
 #   )
 
+#
+
 #Which is the best model, using AIC-criteria?
 # akaike.weights(
 #   c(
@@ -405,11 +457,14 @@ ASR_symbiont_selection_type_ER_yang <-
 #   )
 # )
 
+#Potentially, there are 3*8=24 states this way, but only 21 are actually found.
+#This is lots and lots of state. Too many probably. The models run forever. Only the simples one finished overnight.
+#We'll look at that one for now.
 
 #Save all model ran
-save(ASR_symbiont_selection_type_ER_yang,file="./Output/ASR_symbiont_selection_type_ER_yang")
-save(ASR_symbiont_selection_type_ARD_yang,file="./Output/ASR_symbiont_selection_type_ARD_yang")
-save(ASR_symbiont_selection_type_SYM_yang,file="./Output/ASR_symbiont_selection_type_SYM_yang")
+save(ASR_symbiont_selection_type_ER_yang, file = "./Output/ASR_symbiont_selection_type_ER_yang")
+save(ASR_symbiont_selection_type_ARD_yang, file = "./Output/ASR_symbiont_selection_type_ARD_yang")
+save(ASR_symbiont_selection_type_SYM_yang, file = "./Output/ASR_symbiont_selection_type_SYM_yang")
 
 #We'll look at ER for now. The others take forever to run.
 ASR_symbiont_selection_type_ER_yang
@@ -429,7 +484,7 @@ dat_plot_symbiont_selection_type$selection_type <-
   as.numeric(as.factor(dat_plot_symbiont_selection_type$selection_type))
 head(dat_plot_symbiont_selection_type)
 
-#CSR ASR
+#CSR ASR - plot pdf
 pdf("./Output/ASRSymbiontCSRType.pdf",
     width = 20,
     height = 20)
@@ -437,8 +492,8 @@ trait.plot(
   tree = analysis_tree,
   dat = dat_plot_symbiont_selection_type,
   cols = list(
-    Symbiotic_type = brewer.pal(n = 11, "Set3"),
-    selection_type = brewer.pal(n = 11, "Paired")
+    Symbiotic_type = brewer.pal(n = 8, "Set2"),
+    selection_type = brewer.pal(n = 3, "Accent")
   ),
   type = "f",
   legend = T,
@@ -454,16 +509,88 @@ nodelabels(
   cex = 0.3
 )
 legend(
-  legend = colnames(ASR_symbiont_selection_type_ER_yang$states),
+  legend = paste(
+    rep(
+      unique(
+        analysis_dat_CSR_symb_ASR_symbiont_selection_type$Symbiotic_type
+      ),
+      each = length(
+        unique(
+          analysis_dat_CSR_symb_ASR_symbiont_selection_type$selection_type
+        )
+      )
+    ),
+    unique(
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type$selection_type
+    ),
+    sep = " & "
+  ),
   x = "bottomright",
   fill = c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired"))
 )
 add.scale.bar()
 dev.off()
 
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_selection_type,
+  cols = list(
+    Symbiotic_type = brewer.pal(n = 8, "Set2"),
+    selection_type = brewer.pal(n = 3, "Accent")
+  ),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(
+  pie = ASR_symbiont_selection_type_ER_yang$states,
+  piecol = c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired")),
+  cex = 0.3
+)
+legend(
+  legend = paste(
+    rep(
+      unique(
+        analysis_dat_CSR_symb_ASR_symbiont_selection_type$Symbiotic_type
+      ),
+      each = length(
+        unique(
+          analysis_dat_CSR_symb_ASR_symbiont_selection_type$selection_type
+        )
+      )
+    ),
+    unique(
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type$selection_type
+    ),
+    sep = " & "
+  ),
+  x = "bottomright",
+  fill = c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired"))
+)
+add.scale.bar()
+
+#Ok, what are we seeing here?
+#A joint reconstruction of both categorical variables simultaneously.
+#This gets at your quesion most directly.
+#What does it tell us? Well something a bit more complicated than before, and also partally contradictory, I would say.
+#For instance from the ancestral state of angiosperms AM with S-type, we first get a transition towards AM & R
+#Or, this is CSR-selection shift first, then symbiont.
+#But, there's lots and lots of detail in this figure, so this may not be true universally.
+#If you want to present something like this in the paper, we would need to think of a clever colouring scheme.
+#You could work with hues of given colour to indicate CSR-shifts within a symbiont type (or the other way around) - could be quite beautiful, I think.
+#Big caveat: This model is not reliable yet. Only the simples version (Equal Rate - ER) has finished so far.
+#For a complex evolutionary scenario like this, these tend to not be great.
+#My idea expanding this line of analysis is probably fruitful.
+#Things to decide to that:
+#1. Do we manually update species? or accept the 90% overlap (my thought)
+#2. Is the categorical approach for CSR acceptable?
+#3. Do we have justified grounds to fix some nodes, particularly for the CSR-variable?
 
 ###Potential follow-up
 #ASRs of the three CSR values. 3x
 #Plot these on top of each other
 #Pagel's model, need two binary variables.
-
