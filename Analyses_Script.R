@@ -84,12 +84,12 @@ analysis_dat_CSR_symb <-
 nrow(analysis_dat_CSR_symb)
 #More species in data set, than in tree.
 #This should not be possible. Could be due to duplicates in the dataset?
-analysis_dat_CSR_symb[duplicated(analysis_dat_CSR_symb$Species_name), ]
+analysis_dat_CSR_symb[duplicated(analysis_dat_CSR_symb$Species_name),]
 #Yes, some duplicates, but only about ~30. Small variations in CSR-values, agreement on symbiont type
 
 #For now, simply remove the duplicates. Other option, take average values for CSR values.
 analysis_dat_CSR_symb <-
-  analysis_dat_CSR_symb[!duplicated(analysis_dat_CSR_symb$Species_name),]
+  analysis_dat_CSR_symb[!duplicated(analysis_dat_CSR_symb$Species_name), ]
 nrow(analysis_dat_CSR_symb)
 #Now matches
 
@@ -141,7 +141,7 @@ ASR_symbiont_type_ER_yang <-
     node.states = "marginal",
     root.p = "yang",
     nstarts = 10,
-    n.cores = 6
+    n.cores = 7
   )
 ASR_symbiont_type_ARD_yang <-
   corHMM(
@@ -152,7 +152,7 @@ ASR_symbiont_type_ARD_yang <-
     node.states = "marginal",
     root.p = "yang",
     nstarts = 10,
-    n.cores = 6
+    n.cores = 7
   )
 ASR_symbiont_type_SYM_yang <-
   corHMM(
@@ -163,7 +163,7 @@ ASR_symbiont_type_SYM_yang <-
     node.states = "marginal",
     root.p = "yang",
     nstarts = 10,
-    n.cores = 6
+    n.cores = 7
   )
 
 #Which is the best model, using AIC-criteria?
@@ -187,7 +187,8 @@ table(analysis_dat_CSR_symb$Symbiotic_type) #States are numbered in the modeling
 ##Let's for now plot this reconstruction onto the tree
 
 #Create a data frame to plot the trait data
-dat_plot_symbiont_type <- analysis_dat_CSR_symb_ASR_symbiont_type %>%
+dat_plot_symbiont_type <-
+  analysis_dat_CSR_symb_ASR_symbiont_type %>%
   dplyr::select(Symbiotic_type)
 row.names(dat_plot_symbiont_type) <-
   analysis_dat_CSR_symb_ASR_symbiont_type$Species_name
@@ -266,7 +267,7 @@ ASR_selection_type_ER_yang <-
     node.states = "marginal",
     root.p = "yang",
     nstarts = 10,
-    n.cores = 6
+    n.cores = 7
   )
 ASR_selection_type_ARD_yang <-
   corHMM(
@@ -277,7 +278,7 @@ ASR_selection_type_ARD_yang <-
     node.states = "marginal",
     root.p = "yang",
     nstarts = 10,
-    n.cores = 6
+    n.cores = 7
   )
 ASR_selection_type_SYM_yang <-
   corHMM(
@@ -288,7 +289,7 @@ ASR_selection_type_SYM_yang <-
     node.states = "marginal",
     root.p = "yang",
     nstarts = 10,
-    n.cores = 6
+    n.cores = 7
   )
 
 #Which is the best model, using AIC-criteria?
@@ -360,77 +361,93 @@ ASR_symbiont_selection_type_ER_yang <-
     node.states = "marginal",
     root.p = "yang",
     nstarts = 10,
-    n.cores = 6
+    n.cores = 7
   )
-ASR_symbiont_selection_type_ARD_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type,
-    rate.cat = 1,
-    model = "ARD",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 6
-  )
-ASR_symbiont_selection_type_SYM_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type,
-    rate.cat = 1,
-    model = "SYM",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 6
-  )
+# ASR_symbiont_selection_type_ARD_yang <-
+#   corHMM(
+#     phy = analysis_tree,
+#     data = analysis_dat_CSR_symb_ASR_symbiont_selection_type,
+#     rate.cat = 1,
+#     model = "ARD",
+#     node.states = "marginal",
+#     root.p = "yang",
+#     nstarts = 10,
+#     n.cores = 7
+#   )
+# ASR_symbiont_selection_type_SYM_yang <-
+#   corHMM(
+#     phy = analysis_tree,
+#     data = analysis_dat_CSR_symb_ASR_symbiont_selection_type,
+#     rate.cat = 1,
+#     model = "SYM",
+#     node.states = "marginal",
+#     root.p = "yang",
+#     nstarts = 10,
+#     n.cores = 7
+#   )
 
 #Which is the best model, using AIC-criteria?
-akaike.weights(
-  c(
-    ASR_symbiont_selection_type_ER_yang$AICc,
-    ASR_symbiont_selection_type_ARD_yang$AICc,
-    ASR_symbiont_selection_type_SYM_yang$AICc
-  )
-)
+# akaike.weights(
+#   c(
+#     ASR_symbiont_selection_type_ER_yang$AICc,
+#     ASR_symbiont_selection_type_ARD_yang$AICc,
+#     ASR_symbiont_selection_type_SYM_yang$AICc
+#   )
+# )
 
-#ARD by far the best
-ASR_symbiont_selection_type_ARD_yang
-plotMKmodel(ASR_symbiont_selection_type_ARD_yang)
-table(analysis_dat_CSR_symb$symbiont_selection_type) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
-
-#Consideration: we have lots of states (8), and some have only few cases.
-#We could simplify the inference by dropping some states and/or subsuming them in other states.
-#That would make inference easier, and the results more interpretable (not so many state transitions), but also lose biological detail. 
+#We'll look at ER for now. The others take forever to run.
+ASR_symbiont_selection_type_ER_yang
+plotMKmodel(ASR_symbiont_selection_type_ER_yang)
 
 ##Let's for now plot this reconstruction onto the tree
 
 #Create a data frame to plot the trait data
-dat_plot_symbiont_selection_type<-analysis_dat_CSR_symb_ASR_symbiont_selection_type %>%
-  dplyr::select(Symbiotic_type,selection_type)
-row.names(dat_plot_symbiont_selection_type)<-analysis_dat_CSR_symb_ASR_symbiont_selection_type$Species_name  
-dat_plot_symbiont_selection_type$Symbiotic_type<-as.numeric(as.factor(dat_plot_symbiont_selection_type$Symbiotic_type))
-dat_plot_symbiont_selection_type$selection_type<-as.numeric(as.factor(dat_plot_symbiont_selection_type$selection_type))
+dat_plot_symbiont_selection_type <-
+  analysis_dat_CSR_symb_ASR_symbiont_selection_type %>%
+  dplyr::select(Symbiotic_type, selection_type)
+row.names(dat_plot_symbiont_selection_type) <-
+  analysis_dat_CSR_symb_ASR_symbiont_selection_type$Species_name
+dat_plot_symbiont_selection_type$Symbiotic_type <-
+  as.numeric(as.factor(dat_plot_symbiont_selection_type$Symbiotic_type))
+dat_plot_symbiont_selection_type$selection_type <-
+  as.numeric(as.factor(dat_plot_symbiont_selection_type$selection_type))
 head(dat_plot_symbiont_selection_type)
 
 #CSR ASR
-pdf("./Output/ASRSymbiontCSRType.pdf",width = 20,height = 20)
-trait.plot(tree = analysis_tree,dat = dat_plot_symbiont_selection_type,
-           cols = list(Symbiotic_type=brewer.pal(n=8,"Set2"),
-                       selection_type=),
-           type="f",legend=T,w=1/40,edge.width =2,
-           cex.lab = 0.01,tip.color="white",
-           show.node.label=T)
-nodelabels(pie = ASR_symbiont_selection_type_ARD_yang$states,
-           piecol = brewer.pal(n=8,"Set2"),cex=0.3)
+pdf("./Output/ASRSymbiontCSRType.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_selection_type,
+  cols = list(
+    Symbiotic_type = brewer.pal(n = 11, "Set3"),
+    selection_type = brewer.pal(n = 11, "Paired")
+  ),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(
+  pie = ASR_symbiont_selection_type_ER_yang$states,
+  piecol = c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired")),
+  cex = 0.3
+)
+legend(
+  legend = colnames(ASR_symbiont_selection_type_ER_yang$states),
+  x = "bottomright",
+  fill = c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired"))
+)
 add.scale.bar()
 dev.off()
 
 
-#Steps
-#Plot categories of symbiotic state on outline
-#ASR of categorical states
+###Potential follow-up
 #ASRs of the three CSR values. 3x
 #Plot these on top of each other
 #Pagel's model, need two binary variables.
-#Turn csr into three categorical ones, see if correlated three variables with corhmm.
+
