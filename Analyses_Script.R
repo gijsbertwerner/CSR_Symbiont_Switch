@@ -166,6 +166,11 @@ ASR_symbiont_type_SYM_yang <-
     n.cores = 7
   )
 
+#Save all model ran
+save(ASR_symbiont_type_ER_yang,file="./Output/ASR_symbiont_type_ER_yang")
+save(ASR_symbiont_type_ARD_yang,file="./Output/ASR_symbiont_type_ARD_yang")
+save(ASR_symbiont_type_SYM_yang,file="./Output/ASR_symbiont_type_SYM_yang")
+
 #Which is the best model, using AIC-criteria?
 akaike.weights(
   c(
@@ -292,6 +297,11 @@ ASR_selection_type_SYM_yang <-
     n.cores = 7
   )
 
+#Save all model ran
+save(ASR_selection_type_ER_yang,file="./Output/ASR_selection_type_ER_yang")
+save(ASR_selection_type_ARD_yang,file="./Output/ASR_selection_type_ARD_yang")
+save(ASR_selection_type_SYM_yang,file="./Output/ASR_selection_type_SYM_yang")
+
 #Which is the best model, using AIC-criteria?
 akaike.weights(
   c(
@@ -394,6 +404,12 @@ ASR_symbiont_selection_type_ER_yang <-
 #     ASR_symbiont_selection_type_SYM_yang$AICc
 #   )
 # )
+
+
+#Save all model ran
+save(ASR_symbiont_selection_type_ER_yang,file="./Output/ASR_symbiont_selection_type_ER_yang")
+save(ASR_symbiont_selection_type_ARD_yang,file="./Output/ASR_symbiont_selection_type_ARD_yang")
+save(ASR_symbiont_selection_type_SYM_yang,file="./Output/ASR_symbiont_selection_type_SYM_yang")
 
 #We'll look at ER for now. The others take forever to run.
 ASR_symbiont_selection_type_ER_yang
