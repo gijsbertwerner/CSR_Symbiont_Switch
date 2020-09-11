@@ -14,6 +14,7 @@ library(phylolm)
 library(parallel)
 library(RColorBrewer)
 library(Rphylopars)
+library(viridis)
 
 # Loading data and trees --------------------------------------------------
 
