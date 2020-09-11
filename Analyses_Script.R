@@ -133,41 +133,45 @@ analysis_dat_CSR_symb_ASR_symbiont_type <-
 head(analysis_dat_CSR_symb_ASR_symbiont_type)
 
 #Run ASRs
-ASR_symbiont_type_ER_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_type,
-    rate.cat = 1,
-    model = "ER",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
-ASR_symbiont_type_ARD_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_type,
-    rate.cat = 1,
-    model = "ARD",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
-ASR_symbiont_type_SYM_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_type,
-    rate.cat = 1,
-    model = "SYM",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
+# ASR_symbiont_type_ER_yang <-
+#   corHMM(
+#     phy = analysis_tree,
+#     data = analysis_dat_CSR_symb_ASR_symbiont_type,
+#     rate.cat = 1,
+#     model = "ER",
+#     node.states = "marginal",
+#     root.p = "yang",
+#     nstarts = 10,
+#     n.cores = 7
+#   )
+# ASR_symbiont_type_ARD_yang <-
+#   corHMM(
+#     phy = analysis_tree,
+#     data = analysis_dat_CSR_symb_ASR_symbiont_type,
+#     rate.cat = 1,
+#     model = "ARD",
+#     node.states = "marginal",
+#     root.p = "yang",
+#     nstarts = 10,
+#     n.cores = 7
+#   )
+# ASR_symbiont_type_SYM_yang <-
+#   corHMM(
+#     phy = analysis_tree,
+#     data = analysis_dat_CSR_symb_ASR_symbiont_type,
+#     rate.cat = 1,
+#     model = "SYM",
+#     node.states = "marginal",
+#     root.p = "yang",
+#     nstarts = 10,
+#     n.cores = 7
+#   )
 
 #Save all model ran
+load("./Output/ASR_symbiont_type_ER_yang")
+load("./Output/ASR_symbiont_type_ARD_yang")
+load("./Output/ASR_symbiont_type_SYM_yang")
+
 save(ASR_symbiont_type_ER_yang, file = "./Output/ASR_symbiont_type_ER_yang")
 save(ASR_symbiont_type_ARD_yang, file = "./Output/ASR_symbiont_type_ARD_yang")
 save(ASR_symbiont_type_SYM_yang, file = "./Output/ASR_symbiont_type_SYM_yang")
@@ -288,41 +292,45 @@ analysis_dat_CSR_symb_ASR_selection_type <-
 head(analysis_dat_CSR_symb_ASR_selection_type)
 
 #Run ASRs
-ASR_selection_type_ER_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_selection_type,
-    rate.cat = 1,
-    model = "ER",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
-ASR_selection_type_ARD_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_selection_type,
-    rate.cat = 1,
-    model = "ARD",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
-ASR_selection_type_SYM_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_selection_type,
-    rate.cat = 1,
-    model = "SYM",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
+# ASR_selection_type_ER_yang <-
+#   corHMM(
+#     phy = analysis_tree,
+#     data = analysis_dat_CSR_symb_ASR_selection_type,
+#     rate.cat = 1,
+#     model = "ER",
+#     node.states = "marginal",
+#     root.p = "yang",
+#     nstarts = 10,
+#     n.cores = 7
+#   )
+# ASR_selection_type_ARD_yang <-
+#   corHMM(
+#     phy = analysis_tree,
+#     data = analysis_dat_CSR_symb_ASR_selection_type,
+#     rate.cat = 1,
+#     model = "ARD",
+#     node.states = "marginal",
+#     root.p = "yang",
+#     nstarts = 10,
+#     n.cores = 7
+#   )
+# ASR_selection_type_SYM_yang <-
+#   corHMM(
+#     phy = analysis_tree,
+#     data = analysis_dat_CSR_symb_ASR_selection_type,
+#     rate.cat = 1,
+#     model = "SYM",
+#     node.states = "marginal",
+#     root.p = "yang",
+#     nstarts = 10,
+#     n.cores = 7
+#   )
 
 #Save all model ran
+load("./Output/ASR_selection_type_ER_yang")
+load("./Output/ASR_selection_type_ARD_yang")
+load("./Output/ASR_selection_type_SYM_yang")
+
 save(ASR_selection_type_ER_yang, file = "./Output/ASR_selection_type_ER_yang")
 save(ASR_selection_type_ARD_yang, file = "./Output/ASR_selection_type_ARD_yang")
 save(ASR_selection_type_SYM_yang, file = "./Output/ASR_selection_type_SYM_yang")
@@ -463,9 +471,13 @@ ASR_symbiont_selection_type_ER_yang <-
 #We'll look at that one for now.
 
 #Save all model ran
+load("./Output/ASR_symbiont_selection_type_ER_yang")
+#load("./Output/ASR_symbiont_selection_type_ARD_yang")
+#load("./Output/ASR_symbiont_selection_type_SYM_yang")
+
 save(ASR_symbiont_selection_type_ER_yang, file = "./Output/ASR_symbiont_selection_type_ER_yang")
-save(ASR_symbiont_selection_type_ARD_yang, file = "./Output/ASR_symbiont_selection_type_ARD_yang")
-save(ASR_symbiont_selection_type_SYM_yang, file = "./Output/ASR_symbiont_selection_type_SYM_yang")
+#save(ASR_symbiont_selection_type_ARD_yang, file = "./Output/ASR_symbiont_selection_type_ARD_yang")
+#save(ASR_symbiont_selection_type_SYM_yang, file = "./Output/ASR_symbiont_selection_type_SYM_yang")
 
 #We'll look at ER for now. The others take forever to run.
 ASR_symbiont_selection_type_ER_yang
