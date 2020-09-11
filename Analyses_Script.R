@@ -66,11 +66,19 @@ length(setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label))
 # (2) Manually check the missing 10% with reference to the tree. See if synonyms are present.
 # @Marco: do you think either of these is worth it?
 
+#Print species from database not in tree.
 write.csv(
   setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label),
   quote = F,
   row.names = F,
   file = "./Data/Cosme_Species_Missing_Smith_Tree.csv"
+)
+#Print all tree species
+write.csv(
+  smith_brown_tree$tip.label,
+  quote = F,
+  row.names = F,
+  file = "./Data/SmithBrownAllSpecies.csv"
 )
 
 #Extract the appropriate subtree from Smith&Brown
