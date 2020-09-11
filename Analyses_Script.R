@@ -13,6 +13,7 @@ library(phytools)
 library(phylolm)
 library(parallel)
 library(RColorBrewer)
+library(Rphylopars)
 
 # Loading data and trees --------------------------------------------------
 
@@ -589,6 +590,215 @@ add.scale.bar()
 #1. Do we manually update species? or accept the 90% overlap (my thought)
 #2. Is the categorical approach for CSR acceptable?
 #3. Do we have justified grounds to fix some nodes, particularly for the CSR-variable?
+
+
+###############Quantitative analysis for CSR
+
+#Reconstruct the CSR spectrum as three separate quantitative variables
+
+#Data formatting create the vectors
+vector_C_selection<-analysis_dat_CSR_symb$C.selection
+names(vector_C_selection)<-analysis_dat_CSR_symb$Species_name
+vector_S_selection<-analysis_dat_CSR_symb$S.selection
+names(vector_S_selection)<-analysis_dat_CSR_symb$Species_name
+vector_R_selection<-analysis_dat_CSR_symb$R.selection
+names(vector_R_selection)<-analysis_dat_CSR_symb$Species_name
+#For ease of plotting, order vector same order as in tree
+vector_C_selection<-vector_C_selection[match(analysis_tree$tip.label,names(vector_C_selection))]
+vector_S_selection<-vector_S_selection[match(analysis_tree$tip.label,names(vector_S_selection))]
+vector_R_selection<-vector_R_selection[match(analysis_tree$tip.label,names(vector_R_selection))]
+
+head(vector_C_selection)
+head(vector_S_selection)
+head(vector_R_selection)
+#Look all good. 
+
+#Run the models
+quant_ASR_C_selection<-anc.recon(trait_data = vector_C_selection,tree = analysis_tree)
+save(quant_ASR_C_selection,file = "./Output/quant_ASR_C_selection")
+
+quant_ASR_S_selection<-anc.recon(trait_data = vector_S_selection,tree = analysis_tree)
+save(quant_ASR_S_selection,file = "./Output/quant_ASR_S_selection")
+
+quant_ASR_R_selection<-anc.recon(trait_data = vector_R_selection,tree = analysis_tree)
+save(quant_ASR_R_selection,file = "./Output/quant_ASR_R_selection")
+
+head(quant_ASR_C_selection)
+head(quant_ASR_S_selection)
+head(quant_ASR_R_selection)
+
+#Plot the three reconstruction, and overlay the symbiotic reconstructions on top. 
+
+#Symbionts ASR with quantitative ASR of CSelection - plot to pdf
+pdf("./Output/ASRSymbiontType_QuantCSelection.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_selection_type,
+  cols = list(
+    Symbiotic_type = brewer.pal(n = 8, "Set2"),
+    selection_type = brewer.pal(n = 3, "Accent")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T,
+  edge.color = inferno(100)[cut(quant_ASR_C_selection[match(analysis_tree$edge[,1],names(quant_ASR_C_selection[,1])),1],breaks=100)]
+)
+nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.15)
+add.color.bar(100,inferno(100),title = "C Selection",prompt = F,
+              lims = c(min(quant_ASR_C_selection),max(quant_ASR_C_selection)),fsize=0.8,
+              x=-100,y=-50)
+add.scale.bar()
+dev.off()
+
+#Plot to screen
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_selection_type,
+  cols = list(
+    Symbiotic_type = brewer.pal(n = 8, "Set2"),
+    selection_type = brewer.pal(n = 3, "Accent")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T,
+  edge.color = inferno(100)[cut(quant_ASR_C_selection[match(analysis_tree$edge[,1],names(quant_ASR_C_selection[,1])),1],breaks=100)]
+)
+nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.15)
+add.color.bar(100,inferno(100),title = "C Selection",prompt = F,
+              lims = c(min(quant_ASR_C_selection),max(quant_ASR_C_selection)),fsize=0.8,
+              x=-100,y=-50)
+add.scale.bar()
+
+
+#Symbionts ASR with quantitative ASR of S_Selection - plot to pdf
+pdf("./Output/ASRSymbiontType_QuantSSelection.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_selection_type,
+  cols = list(
+    Symbiotic_type = brewer.pal(n = 8, "Set2"),
+    selection_type = brewer.pal(n = 3, "Accent")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T,
+  edge.color = inferno(100)[cut(quant_ASR_S_selection[match(analysis_tree$edge[,1],names(quant_ASR_S_selection[,1])),1],breaks=100)]
+)
+nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.15)
+add.color.bar(100,inferno(100),title = "S Selection",prompt = F,
+              lims = c(min(quant_ASR_S_selection),max(quant_ASR_S_selection)),fsize=0.8,
+              x=-100,y=-50)
+add.scale.bar()
+dev.off()
+
+#Plot to screen
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_selection_type,
+  cols = list(
+    Symbiotic_type = brewer.pal(n = 8, "Set2"),
+    selection_type = brewer.pal(n = 3, "Accent")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T,
+  edge.color = inferno(100)[cut(quant_ASR_S_selection[match(analysis_tree$edge[,1],names(quant_ASR_S_selection[,1])),1],breaks=100)]
+)
+nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.15)
+add.color.bar(100,inferno(100),title = "S Selection",prompt = F,
+              lims = c(min(quant_ASR_S_selection),max(quant_ASR_S_selection)),fsize=0.8,
+              x=-100,y=-50)
+add.scale.bar()
+
+
+#Symbionts ASR with quantitative ASR of R_Selection - plot to pdf
+pdf("./Output/ASRSymbiontType_QuantRSelection.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_selection_type,
+  cols = list(
+    Symbiotic_type = brewer.pal(n = 8, "Set2"),
+    selection_type = brewer.pal(n = 3, "Accent")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T,
+  edge.color = inferno(100)[cut(quant_ASR_R_selection[match(analysis_tree$edge[,1],names(quant_ASR_R_selection[,1])),1],breaks=100)]
+)
+nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.15)
+add.color.bar(100,inferno(100),title = "R Selection",prompt = F,
+              lims = c(min(quant_ASR_R_selection),max(quant_ASR_R_selection)),fsize=0.8,
+              x=-100,y=-50)
+add.scale.bar()
+dev.off()
+
+#Plot to screen
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_selection_type,
+  cols = list(
+    Symbiotic_type = brewer.pal(n = 8, "Set2"),
+    selection_type = brewer.pal(n = 3, "Accent")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T,
+  edge.color = inferno(100)[cut(quant_ASR_R_selection[match(analysis_tree$edge[,1],names(quant_ASR_R_selection[,1])),1],breaks=100)]
+)
+nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.15)
+add.color.bar(100,inferno(100),title = "R Selection",prompt = F,
+              lims = c(min(quant_ASR_R_selection),max(quant_ASR_R_selection)),fsize=0.8,
+              x=-100,y=-50)
+add.scale.bar()
+
+#Ok so what are we seeing here.
+#It's the categorical recosntructions of symbionts plotted onto the coloured tree branches, indicating C/S/R selection
+#General picture it seems: CSR-levels are mostly moderate throughout evolution, and big shifts are 'tippy'.
+#That means either (1) biological result, the distinct strategies evolved only late in evolution.
+#Or (2) it means we are dealing with an artifact. 
+#What I mean with 2: perhaps we just can't really evaluate the ancient evolution of CSR based on only tip data, because it simply evolves to fast. 
+#here too, the solution would be fixing nodes based on fossile evidence, I guess? 
+
+
+
+
+
 
 ###Potential follow-up
 #ASRs of the three CSR values. 3x
