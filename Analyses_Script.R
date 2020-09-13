@@ -71,14 +71,14 @@ write.csv(
   setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label),
   quote = F,
   row.names = F,
-  file = "./Data/Cosme_Species_Missing_Smith_Tree.csv"
+  file = "./Output/Cosme_Species_Missing_Smith_Tree.csv"
 )
 #Print all tree species
 write.csv(
   smith_brown_tree$tip.label,
   quote = F,
   row.names = F,
-  file = "./Data/SmithBrownAllSpecies.csv"
+  file = "./Output/SmithBrownAllSpecies.csv"
 )
 
 #Extract the appropriate subtree from Smith&Brown
