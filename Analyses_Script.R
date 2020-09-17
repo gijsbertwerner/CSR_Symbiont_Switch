@@ -19,7 +19,7 @@ library(viridis)
 # Loading data and trees --------------------------------------------------
 
 dat_CSR_symb <-
-  read.csv(file = "./Data/Plant species with symbiotic type and CSR strategy_Cosme et al 09-07-2020.csv",
+  read.csv(file = "./Data/Plant species with symbiotic type and CSR strategy_Cosme et al 16-09-2020.csv",
            as.is = T,
            strip.white = T)
 head(dat_CSR_symb)
@@ -36,6 +36,7 @@ dat_CSR_symb$Symbiotic_type <-
        replacement = "AMNod",
        dat_CSR_symb$Symbiotic_type)
 sapply(dat_CSR_symb, class)
+table(dat_CSR_symb$CSR_categorical_level)
 nrow(dat_CSR_symb)
 
 zanne_tree <- read.tree("./Data/Vascular_Plants_rooted.dated.tre")
@@ -80,6 +81,8 @@ write.csv(
   row.names = F,
   file = "./Output/SmithBrownAllSpecies.csv"
 )
+
+
 
 #Extract the appropriate subtree from Smith&Brown
 analysis_tree <-
