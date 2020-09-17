@@ -432,6 +432,129 @@ add.scale.bar()
 #8. Options: if we have fossile/other evidence of ancient CSR-types, we could fix some nodes and create a better ASR.
 # Does this exist?
 
+
+############## CSR ASR - Approach 2
+
+table(analysis_dat_CSR_symb$CSR_categorical_level) #Pretty equal numbers of all three types.
+#Turn it into a binary with CSR vs other
+analysis_dat_CSR_symb$CSR_binary<-
+  ifelse(analysis_dat_CSR_symb$CSR_categorical_level %in% c("C/CSR","CR/CSR","CS/CSR","CSR","R/CSR","S/CSR","SR/CSR"),
+         "Any_CSR","No_CSR")
+table(analysis_dat_CSR_symb$CSR_binary)
+
+#Data formatting. We need two columns, species and symbiont state.
+analysis_dat_CSR_symb_ASR_selection_type_binary <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, CSR_binary)
+head(analysis_dat_CSR_symb_ASR_selection_type_binary)
+
+#Run ASRs
+ASR_selection_type_binary_ER_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_selection_type_binary_ARD_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_selection_type_binary_SYM_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#Save all model ran
+load("./Output/ASR_selection_type_binary_ER_yang")
+load("./Output/ASR_selection_type_binary_ARD_yang")
+load("./Output/ASR_selection_type_binary_SYM_yang")
+
+save(ASR_selection_type_binary_ER_yang, file = "./Output/ASR_selection_type_binary_ER_yang")
+save(ASR_selection_type_binary_ARD_yang, file = "./Output/ASR_selection_type_binary_ARD_yang")
+save(ASR_selection_type_binary_SYM_yang, file = "./Output/ASR_selection_type_binary_SYM_yang")
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_selection_type_binary_ER_yang$AICc,
+    ASR_selection_type_binary_ARD_yang$AICc,
+    ASR_selection_type_binary_SYM_yang$AICc
+  )
+)
+
+#ARD by far the best
+ASR_selection_type_binary_ARD_yang
+plotMKmodel(ASR_selection_type_binary_ARD_yang)
+table(analysis_dat_CSR_symb$selection_type) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
+
+# #Create a data frame to plot the trait data
+# dat_plot_selection_type <-
+#   analysis_dat_CSR_symb_ASR_selection_type %>%
+#   dplyr::select(selection_type)
+# row.names(dat_plot_selection_type) <-
+#   analysis_dat_CSR_symb_ASR_selection_type$Species_name
+# dat_plot_selection_type$selection_type <-
+#   as.numeric(as.factor(dat_plot_selection_type$selection_type))
+# head(dat_plot_selection_type)
+# 
+# #CSR ASR - Plot to Pdf
+# pdf("./Output/ASRCSRType.pdf",
+#     width = 20,
+#     height = 20)
+# trait.plot(
+#   tree = analysis_tree,
+#   dat = dat_plot_selection_type,
+#   cols = list(selection_type = brewer.pal(n = 3, "Accent")),
+#   type = "f",
+#   legend = T,
+#   w = 1 / 40,
+#   edge.width = 2,
+#   cex.lab = 0.01,
+#   tip.color = "white",
+#   show.node.label = T
+# )
+# nodelabels(pie = ASR_selection_type_ARD_yang$states,
+#            piecol = brewer.pal(n = 3, "Accent"),
+#            cex = 0.3)
+# add.scale.bar()
+# dev.off()
+# 
+# #Plot to screen
+# trait.plot(
+#   tree = analysis_tree,
+#   dat = dat_plot_selection_type,
+#   cols = list(selection_type = brewer.pal(n = 3, "Accent")),
+#   type = "f",
+#   legend = T,
+#   w = 1 / 40,
+#   edge.width = 2,
+#   cex.lab = 0.01,
+#   tip.color = "white",
+#   show.node.label = T
+# )
+# nodelabels(pie = ASR_selection_type_ARD_yang$states,
+#            piecol = brewer.pal(n = 3, "Accent"),
+#            cex = 0.3)
+# add.scale.bar()
+
 ######Correlated evolution between the two variables
 
 #Let's run a combined model, modelling to traits simultaneously first.
