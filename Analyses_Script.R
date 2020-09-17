@@ -82,7 +82,16 @@ write.csv(
   file = "./Output/SmithBrownAllSpecies.csv"
 )
 
+###Manual substitutions of data names
+sub_table<-read.csv("./Data/SolvingMismatchesSmith.csv")
+head(sub_table)
 
+#Replace in the CSR data file
+dat_CSR_symb$Species_name<-
+  ifelse(is.na(match(dat_CSR_symb$Species_name,sub_table$Name.in.CSR.data.set)),
+         dat_CSR_symb$Species_name,
+         sub_table$Equivalent.in.Smith.Brown.Tree[match(dat_CSR_symb$Species_name,sub_table$Name.in.CSR.data.set)])
+dat_CSR_symb$Species_name
 
 #Extract the appropriate subtree from Smith&Brown
 analysis_tree <-
