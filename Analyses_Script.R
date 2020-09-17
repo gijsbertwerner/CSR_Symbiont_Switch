@@ -154,39 +154,39 @@ analysis_dat_CSR_symb_ASR_symbiont_type <-
 head(analysis_dat_CSR_symb_ASR_symbiont_type)
 
 #Run ASRs
-# ASR_symbiont_type_ER_yang <-
-#   corHMM(
-#     phy = analysis_tree,
-#     data = analysis_dat_CSR_symb_ASR_symbiont_type,
-#     rate.cat = 1,
-#     model = "ER",
-#     node.states = "marginal",
-#     root.p = "yang",
-#     nstarts = 10,
-#     n.cores = 7
-#   )
-# ASR_symbiont_type_ARD_yang <-
-#   corHMM(
-#     phy = analysis_tree,
-#     data = analysis_dat_CSR_symb_ASR_symbiont_type,
-#     rate.cat = 1,
-#     model = "ARD",
-#     node.states = "marginal",
-#     root.p = "yang",
-#     nstarts = 10,
-#     n.cores = 7
-#   )
-# ASR_symbiont_type_SYM_yang <-
-#   corHMM(
-#     phy = analysis_tree,
-#     data = analysis_dat_CSR_symb_ASR_symbiont_type,
-#     rate.cat = 1,
-#     model = "SYM",
-#     node.states = "marginal",
-#     root.p = "yang",
-#     nstarts = 10,
-#     n.cores = 7
-#   )
+ASR_symbiont_type_ER_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_type_ARD_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_type_SYM_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
 
 #Save all model ran
 load("./Output/ASR_symbiont_type_ER_yang")
@@ -313,39 +313,39 @@ analysis_dat_CSR_symb_ASR_selection_type <-
 head(analysis_dat_CSR_symb_ASR_selection_type)
 
 #Run ASRs
-# ASR_selection_type_ER_yang <-
-#   corHMM(
-#     phy = analysis_tree,
-#     data = analysis_dat_CSR_symb_ASR_selection_type,
-#     rate.cat = 1,
-#     model = "ER",
-#     node.states = "marginal",
-#     root.p = "yang",
-#     nstarts = 10,
-#     n.cores = 7
-#   )
-# ASR_selection_type_ARD_yang <-
-#   corHMM(
-#     phy = analysis_tree,
-#     data = analysis_dat_CSR_symb_ASR_selection_type,
-#     rate.cat = 1,
-#     model = "ARD",
-#     node.states = "marginal",
-#     root.p = "yang",
-#     nstarts = 10,
-#     n.cores = 7
-#   )
-# ASR_selection_type_SYM_yang <-
-#   corHMM(
-#     phy = analysis_tree,
-#     data = analysis_dat_CSR_symb_ASR_selection_type,
-#     rate.cat = 1,
-#     model = "SYM",
-#     node.states = "marginal",
-#     root.p = "yang",
-#     nstarts = 10,
-#     n.cores = 7
-#   )
+ASR_selection_type_ER_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_selection_type_ARD_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_selection_type_SYM_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
 
 #Save all model ran
 load("./Output/ASR_selection_type_ER_yang")
@@ -453,39 +453,39 @@ ASR_symbiont_selection_type_ER_yang <-
     nstarts = 10,
     n.cores = 7
   )
-# ASR_symbiont_selection_type_ARD_yang <-
-#   corHMM(
-#     phy = analysis_tree,
-#     data = analysis_dat_CSR_symb_ASR_symbiont_selection_type,
-#     rate.cat = 1,
-#     model = "ARD",
-#     node.states = "marginal",
-#     root.p = "yang",
-#     nstarts = 10,
-#     n.cores = 7
-#   )
-# ASR_symbiont_selection_type_SYM_yang <-
-#   corHMM(
-#     phy = analysis_tree,
-#     data = analysis_dat_CSR_symb_ASR_symbiont_selection_type,
-#     rate.cat = 1,
-#     model = "SYM",
-#     node.states = "marginal",
-#     root.p = "yang",
-#     nstarts = 10,
-#     n.cores = 7
-#   )
+ASR_symbiont_selection_type_ARD_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_selection_type_SYM_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
 
 #
 
 #Which is the best model, using AIC-criteria?
-# akaike.weights(
-#   c(
-#     ASR_symbiont_selection_type_ER_yang$AICc,
-#     ASR_symbiont_selection_type_ARD_yang$AICc,
-#     ASR_symbiont_selection_type_SYM_yang$AICc
-#   )
-# )
+akaike.weights(
+  c(
+    ASR_symbiont_selection_type_ER_yang$AICc,
+    ASR_symbiont_selection_type_ARD_yang$AICc,
+    ASR_symbiont_selection_type_SYM_yang$AICc
+  )
+)
 
 #Potentially, there are 3*8=24 states this way, but only 21 are actually found.
 #This is lots and lots of state. Too many probably. The models run forever. Only the simples one finished overnight.
