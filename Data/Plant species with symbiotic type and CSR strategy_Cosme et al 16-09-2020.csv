@@ -1,4 +1,4 @@
-﻿Species name NCBI,Symbiosis,C -selection_%,S-selection_%,R-selection_%,CSR_categorical_level
+﻿Species_name,Symbiotic_type,C-selection,S-selection,R-selection,CSR_categorical_level
 Abuta racemosa,AM,29.59454705,63.12209932,7.283353622,S/CS
 Abutilon theophrasti,AM,66.59428353,14.06769819,19.33801828,C/CR
 Acalypha diversifolia,AM,43.51862074,35.93207922,20.54930004,CS/CSR
