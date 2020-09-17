@@ -83,14 +83,18 @@ write.csv(
 )
 
 ###Manual substitutions of data names
-sub_table<-read.csv("./Data/SolvingMismatchesSmith.csv")
+sub_table <- read.csv("./Data/SolvingMismatchesSmith.csv")
 head(sub_table)
 
 #Replace in the CSR data file
-dat_CSR_symb$Species_name<-
-  ifelse(is.na(match(dat_CSR_symb$Species_name,sub_table$Name.in.CSR.data.set)),
-         dat_CSR_symb$Species_name,
-         sub_table$Equivalent.in.Smith.Brown.Tree[match(dat_CSR_symb$Species_name,sub_table$Name.in.CSR.data.set)])
+dat_CSR_symb$Species_name <-
+  ifelse(
+    is.na(
+      match(dat_CSR_symb$Species_name, sub_table$Name.in.CSR.data.set)
+    ),
+    dat_CSR_symb$Species_name,
+    sub_table$Equivalent.in.Smith.Brown.Tree[match(dat_CSR_symb$Species_name, sub_table$Name.in.CSR.data.set)]
+  )
 dat_CSR_symb$Species_name
 
 #Extract the appropriate subtree from Smith&Brown
@@ -106,12 +110,12 @@ analysis_dat_CSR_symb <-
 nrow(analysis_dat_CSR_symb)
 #More species in data set, than in tree.
 #This should not be possible. Could be due to duplicates in the dataset?
-analysis_dat_CSR_symb[duplicated(analysis_dat_CSR_symb$Species_name),]
+analysis_dat_CSR_symb[duplicated(analysis_dat_CSR_symb$Species_name), ]
 #Yes, some duplicates, but only about ~30. Small variations in CSR-values, agreement on symbiont type
 
 #For now, simply remove the duplicates. Other option, take average values for CSR values.
 analysis_dat_CSR_symb <-
-  analysis_dat_CSR_symb[!duplicated(analysis_dat_CSR_symb$Species_name), ]
+  analysis_dat_CSR_symb[!duplicated(analysis_dat_CSR_symb$Species_name),]
 nrow(analysis_dat_CSR_symb)
 #Now matches
 
@@ -437,9 +441,12 @@ add.scale.bar()
 
 table(analysis_dat_CSR_symb$CSR_categorical_level) #Pretty equal numbers of all three types.
 #Turn it into a binary with CSR vs other
-analysis_dat_CSR_symb$CSR_binary<-
-  ifelse(analysis_dat_CSR_symb$CSR_categorical_level %in% c("C/CSR","CR/CSR","CS/CSR","CSR","R/CSR","S/CSR","SR/CSR"),
-         "Any_CSR","No_CSR")
+analysis_dat_CSR_symb$CSR_binary <-
+  ifelse(
+    analysis_dat_CSR_symb$CSR_categorical_level %in% c("C/CSR", "CR/CSR", "CS/CSR", "CSR", "R/CSR", "S/CSR", "SR/CSR"),
+    "Any_CSR",
+    "No_CSR"
+  )
 table(analysis_dat_CSR_symb$CSR_binary)
 
 #Data formatting. We need two columns, species and symbiont state.
@@ -514,7 +521,7 @@ table(analysis_dat_CSR_symb$selection_type) #States are numbered in the modeling
 # dat_plot_selection_type$selection_type <-
 #   as.numeric(as.factor(dat_plot_selection_type$selection_type))
 # head(dat_plot_selection_type)
-# 
+#
 # #CSR ASR - Plot to Pdf
 # pdf("./Output/ASRCSRType.pdf",
 #     width = 20,
@@ -536,7 +543,7 @@ table(analysis_dat_CSR_symb$selection_type) #States are numbered in the modeling
 #            cex = 0.3)
 # add.scale.bar()
 # dev.off()
-# 
+#
 # #Plot to screen
 # trait.plot(
 #   tree = analysis_tree,
