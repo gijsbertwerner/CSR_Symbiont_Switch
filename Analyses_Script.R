@@ -96,6 +96,7 @@ dat_CSR_symb$Species_name <-
     sub_table$Equivalent.in.Smith.Brown.Tree[match(dat_CSR_symb$Species_name, sub_table$Name.in.CSR.data.set)]
   )
 dat_CSR_symb$Species_name
+length(setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label))
 
 #Extract the appropriate subtree from Smith&Brown
 analysis_tree <-
