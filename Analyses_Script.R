@@ -279,6 +279,277 @@ table(analysis_dat_CSR_symb$Symbiotic_type)
 #With transitions towards other types that are quite 'tippy' (i.e. recent/shallow) at this phylogenetic scale.
 #No major suprises here, I would say. Everything in line with earlier work (including Nadia and mine previous paper. )
 
+#######Explore ways of simplifying this ASR
+
+#####First, lump AM+NMAM
+#Data formatting. We need two columns, species and symbiont state.
+analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type)
+analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type<-
+  ifelse(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type %in% c("AM","NMAM"),
+         "AM_NMAM",analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type)
+head(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped)
+table(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type)
+
+#Run ASRs
+ASR_symbiont_type_AM_NMAM_lumped_ER_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_type_AM_NMAM_lumped_ARD_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_type_AM_NMAM_lumped_SYM_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#Save all model ran
+load("./Output/ASR_symbiont_type_AM_NMAM_lumped_ER_yang")
+load("./Output/ASR_symbiont_type_AM_NMAM_lumped_ARD_yang")
+load("./Output/ASR_symbiont_type_AM_NMAM_lumped_SYM_yang")
+
+save(ASR_symbiont_type_AM_NMAM_lumped_ER_yang, file = "./Output/ASR_symbiont_type_AM_NMAM_lumped_ER_yang")
+save(ASR_symbiont_type_AM_NMAM_lumped_ARD_yang, file = "./Output/ASR_symbiont_type_AM_NMAM_lumped_ARD_yang")
+save(ASR_symbiont_type_AM_NMAM_lumped_SYM_yang, file = "./Output/ASR_symbiont_type_AM_NMAM_lumped_SYM_yang")
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_symbiont_type_AM_NMAM_lumped_ER_yang$AICc,
+    ASR_symbiont_type_AM_NMAM_lumped_ARD_yang$AICc,
+    ASR_symbiont_type_AM_NMAM_lumped_SYM_yang$AICc
+  )
+)
+
+#SYM by far the best
+ASR_symbiont_type_AM_NMAM_lumped_SYM_yang
+plotMKmodel(ASR_symbiont_type_AM_NMAM_lumped_SYM_yang)
+
+
+####Second, lump all AM
+#Data formatting. We need two columns, species and symbiont state.
+analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type)
+analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type<-
+  ifelse(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type %in% c("AM","NMAM","AMNod","EcMAM"),
+         "All_AM",analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type)
+head(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped)
+table(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type)
+
+#Run ASRs
+ASR_symbiont_type_All_AM_lumped_ER_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_type_All_AM_lumped_ARD_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_type_All_AM_lumped_SYM_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#Save all model ran
+load("./Output/ASR_symbiont_type_All_AM_lumped_ER_yang")
+load("./Output/ASR_symbiont_type_All_AM_lumped_ARD_yang")
+load("./Output/ASR_symbiont_type_All_AM_lumped_SYM_yang")
+
+save(ASR_symbiont_type_All_AM_lumped_ER_yang, file = "./Output/ASR_symbiont_type_All_AM_lumped_ER_yang")
+save(ASR_symbiont_type_All_AM_lumped_ARD_yang, file = "./Output/ASR_symbiont_type_All_AM_lumped_ARD_yang")
+save(ASR_symbiont_type_All_AM_lumped_SYM_yang, file = "./Output/ASR_symbiont_type_All_AM_lumped_SYM_yang")
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_symbiont_type_All_AM_lumped_ER_yang$AICc,
+    ASR_symbiont_type_All_AM_lumped_ARD_yang$AICc,
+    ASR_symbiont_type_All_AM_lumped_SYM_yang$AICc
+  )
+)
+
+#SYM by far the best
+ASR_symbiont_type_All_AM_lumped_SYM_yang
+plotMKmodel(ASR_symbiont_type_All_AM_lumped_SYM_yang)
+
+#####Third, lump all non-AM
+#Data formatting. We need two columns, species and symbiont state.
+analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type)
+analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type<-
+  ifelse(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type %in% c("AM"),
+         "Strict_AM","non_AM")
+head(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped)
+table(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type)
+
+#Run ASRs
+ASR_symbiont_type_All_non_AM_lumpedER_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_type_All_non_AM_lumped_ARD_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_type_All_non_AM_lumped_SYM_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#Save all model ran
+load("./Output/ASR_symbiont_type_All_non_AM_lumped_ER_yang")
+load("./Output/ASR_symbiont_type_All_non_AM_lumped_ARD_yang")
+load("./Output/ASR_symbiont_type_All_non_AM_lumped_SYM_yang")
+
+save(ASR_symbiont_type_All_non_AM_lumped_ER_yang, file = "./Output/ASR_symbiont_type_All_non_AM_lumped_ER_yang")
+save(ASR_symbiont_type_All_non_AM_lumped_ARD_yang, file = "./Output/ASR_symbiont_type_All_non_AM_lumped_ARD_yang")
+save(ASR_symbiont_type_All_non_AM_lumped_SYM_yang, file = "./Output/ASR_symbiont_type_All_non_AM_lumped_SYM_yang")
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_symbiont_type_All_non_AM_lumped_ER_yang$AICc,
+    ASR_symbiont_type_All_non_AM_lumped_ARD_yang$AICc,
+    ASR_symbiont_type_All_non_AM_lumped_SYM_yang$AICc
+  )
+)
+
+#SYM by far the best
+ASR_symbiont_type_All_non_AM_lumped_SYM_yang
+plotMKmodel(ASR_symbiont_type_All_non_AM_lumped_SYM_yang)
+
+#####Fourth, lump all non-AM And all with AnyAM
+#Data formatting. We need two columns, species and symbiont state.
+analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type)
+analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_type<-
+  ifelse(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_type %in% c("AM","NMAM","AMNod","EcMAM"),
+         "Any_AM","non_AM")
+head(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped)
+table(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_type)
+
+#Run ASRs
+ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ER_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ARD_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#Save all model ran
+load("./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ER_yang")
+load("./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ARD_yang")
+load("./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang")
+
+save(ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ER_yang, file = "./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ER_yang")
+save(ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ARD_yang, file = "./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ARD_yang")
+save(ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang, file = "./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang")
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ER_yang$AICc,
+    ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ARD_yang$AICc,
+    ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang$AICc
+  )
+)
+
+#SYM by far the best
+ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang
+plotMKmodel(ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang)
+
 ############## CSR ASR
 
 #Ways to treat CSR analytically:
