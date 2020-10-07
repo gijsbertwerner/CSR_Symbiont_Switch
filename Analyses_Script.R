@@ -98,6 +98,7 @@ dat_CSR_symb$Species_name <-
 dat_CSR_symb$Species_name
 length(setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label)) #Yes, now only 17 species missing. 
 
+
 #Extract the appropriate subtree from Smith&Brown
 analysis_tree <-
   drop.tip(
