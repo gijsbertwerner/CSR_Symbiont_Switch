@@ -229,8 +229,8 @@ dat_plot_symbiont_type <-
   dplyr::select(Symbiotic_type)
 row.names(dat_plot_symbiont_type) <-
   analysis_dat_CSR_symb_ASR_symbiont_type$Species_name
-dat_plot_symbiont_type$Symbiotic_type <-
-  as.numeric(as.factor(dat_plot_symbiont_type$Symbiotic_type))
+# dat_plot_symbiont_type$Symbiotic_type <-
+#   as.numeric(as.factor(dat_plot_symbiont_type$Symbiotic_type))
 head(dat_plot_symbiont_type)
 
 #Symbionts ASR - plot to pdf
