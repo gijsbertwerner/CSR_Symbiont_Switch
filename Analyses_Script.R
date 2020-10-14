@@ -344,10 +344,61 @@ akaike.weights(
   )
 )
 
-#SYM by far the best
-ASR_symbiont_type_AM_NMAM_lumped_SYM_yang
-plotMKmodel(ASR_symbiont_type_AM_NMAM_lumped_SYM_yang)
+#ARD by far the best
+ASR_symbiont_type_AM_NMAM_lumped_ARD_yang
+plotMKmodel(ASR_symbiont_type_AM_NMAM_lumped_ARD_yang)
 
+##Let's for now plot this reconstruction onto the tree
+
+#Create a data frame to plot the trait data
+dat_plot_symbiont_type_AM_NMAM_lumped <-
+  analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped %>%
+  dplyr::select(Symbiotic_type)
+row.names(dat_plot_symbiont_type_AM_NMAM_lumped) <-
+  analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Species_name
+# dat_plot_symbiont_type$Symbiotic_type <-
+#   as.numeric(as.factor(dat_plot_symbiont_type$Symbiotic_type))
+head(dat_plot_symbiont_type_AM_NMAM_lumped)
+
+#Plot
+pdf("./Output/ASRsymbiont_type_AM_NMAM_lumped.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_type_AM_NMAM_lumped,
+  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_symbiont_type_AM_NMAM_lumped_ARD_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.3)
+add.scale.bar()
+dev.off()
+
+#Plot to screen
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_type_AM_NMAM_lumped,
+  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_symbiont_type_AM_NMAM_lumped_ARD_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.3)
+add.scale.bar()
 
 ####Second, lump all AM
 #Data formatting. We need two columns, species and symbiont state.
@@ -416,6 +467,59 @@ akaike.weights(
 ASR_symbiont_type_All_AM_lumped_SYM_yang
 plotMKmodel(ASR_symbiont_type_All_AM_lumped_SYM_yang)
 
+#Plot them
+
+#Create a data frame to plot the trait data
+dat_plot_symbiont_type_All_AM_lumped <-
+  analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped %>%
+  dplyr::select(Symbiotic_type)
+row.names(dat_plot_symbiont_type_All_AM_lumped) <-
+  analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Species_name
+# dat_plot_symbiont_type$Symbiotic_type <-
+#   as.numeric(as.factor(dat_plot_symbiont_type$Symbiotic_type))
+head(dat_plot_symbiont_type_All_AM_lumped)
+
+#Plot
+pdf("./Output/ASRsymbiont_type_All_AM_lumped.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_type_All_AM_lumped,
+  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_symbiont_type_All_AM_lumped_SYM_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.3)
+add.scale.bar()
+dev.off()
+
+#Plot to screen
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_type_All_AM_lumped,
+  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_symbiont_type_All_AM_lumped_SYM_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.3)
+add.scale.bar()
+
+
 #####Third, lump all non-AM
 #Data formatting. We need two columns, species and symbiont state.
 analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped <-
@@ -427,7 +531,7 @@ head(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped)
 table(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type)
 
 #Run ASRs
-ASR_symbiont_type_All_non_AM_lumpedER_yang <-
+ASR_symbiont_type_All_non_AM_lumped_ER_yang <-
   corHMM(
     phy = analysis_tree,
     data = analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped,
@@ -479,9 +583,62 @@ akaike.weights(
   )
 )
 
-#SYM by far the best
-ASR_symbiont_type_All_non_AM_lumped_SYM_yang
-plotMKmodel(ASR_symbiont_type_All_non_AM_lumped_SYM_yang)
+#ARD by far the best
+ASR_symbiont_type_All_non_AM_lumped_ARD_yang
+plotMKmodel(ASR_symbiont_type_All_non_AM_lumped_ARD_yang)
+
+#Plot them
+
+#Create a data frame to plot the trait data
+dat_plot_symbiont_type_All_non_AM_lumped <-
+  analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped %>%
+  dplyr::select(Symbiotic_type)
+row.names(dat_plot_symbiont_type_All_non_AM_lumped) <-
+  analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Species_name
+# dat_plot_symbiont_type$Symbiotic_type <-
+#   as.numeric(as.factor(dat_plot_symbiont_type$Symbiotic_type))
+head(dat_plot_symbiont_type_All_non_AM_lumped)
+table(dat_plot_symbiont_type_All_non_AM_lumped$Symbiotic_type)
+
+#Plot
+pdf("./Output/ASRsymbiont_type_All_non_AM_lumped.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_type_All_non_AM_lumped,
+  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_symbiont_type_All_non_AM_lumped_ARD_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.3)
+add.scale.bar()
+dev.off()
+
+#Plot to screen
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_type_All_non_AM_lumped,
+  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_symbiont_type_All_non_AM_lumped_ARD_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.3)
+add.scale.bar()
 
 #####Fourth, lump all non-AM And all with AnyAM
 #Data formatting. We need two columns, species and symbiont state.
@@ -546,9 +703,63 @@ akaike.weights(
   )
 )
 
-#SYM by far the best
+#SYM or ER by far the best - they are the same in this case, because only two states. 
 ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang
 plotMKmodel(ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang)
+
+#Plot them
+
+#Create a data frame to plot the trait data
+dat_plot_symbiont_type_All_non_AM_vs_any_AM_lumped <-
+  analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped %>%
+  dplyr::select(Symbiotic_type)
+row.names(dat_plot_symbiont_type_All_non_AM_vs_any_AM_lumped) <-
+  analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Species_name
+# dat_plot_symbiont_type$Symbiotic_type <-
+#   as.numeric(as.factor(dat_plot_symbiont_type$Symbiotic_type))
+head(dat_plot_symbiont_type_All_non_AM_vs_any_AM_lumped)
+
+#Plot
+pdf("./Output/ASRsymbiont_type_All_non_AM_vs_any_AM_lumped.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_type_All_non_AM_vs_any_AM_lumped,
+  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.3)
+add.scale.bar()
+dev.off()
+
+#Plot to screen
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_type_All_non_AM_vs_any_AM_lumped,
+  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.3)
+add.scale.bar()
+
+
 
 ############## CSR ASR
 
