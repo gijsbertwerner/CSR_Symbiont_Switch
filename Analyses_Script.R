@@ -1130,6 +1130,23 @@ row.names(dat_plot_symbiont_selection_type_binary) <-
 #   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary$CSR_binary))
 head(dat_plot_symbiont_selection_type_binary)
 
+#Make a suitable plotting colour vector
+#First, I simply used this, but contrasts did not make sense c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired"))
+#Idea: there's eight symbiotic types and two CSR types.
+#Use the same colour (i.e. red) for a symbiotic type, in two shades to higlight the two levels for CSR
+#For instance: dark is AnyCSR, ligth is noCSR
+
+plotvec_symbiont_selection_type_binary<-
+  c("#e31a1c","#fb9a99",     #Red is AMF
+    "#8c510a","#d8b365",     #Brown is AMNod
+    "#1f78b4","#a6cee3",      #Blue is ECM
+    "#a6cee3","#cab2d6",     #Purple is ECMAM
+    "#33a02c","#b2df8a",      #Green is ERM  
+     "#fec44f","#fee391",     #Yellow is NM
+    "#525252","#bdbdbd",    #Grey is NMAM
+     "#016c59" ,"#016c59")    #Turqouise is OM 
+     
+
 #CSR ASR - plot pdf
 pdf("./Output/ASRSymbiontCSRTypeBinary.pdf",
     width = 20,
@@ -1142,7 +1159,7 @@ trait.plot(
     CSR_binary = brewer.pal(n = 3, "Accent")
   ),
   type = "f",
-  legend = T,
+  legend = F,
   w = 1 / 40,
   edge.width = 2,
   cex.lab = 0.01,
@@ -1151,28 +1168,28 @@ trait.plot(
 )
 nodelabels(
   pie = ASR_symbiont_selection_type_binary_ER_yang$states,
-  piecol = c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired")),
+  piecol = plotvec_symbiont_selection_type_binary,
   cex = 0.3
 )
 legend(
   legend = paste(
     rep(
-      unique(
+      sort(unique(
         analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type
-      ),
+      )),
       each = length(
         unique(
           analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary
         )
       )
     ),
-    unique(
+    sort(unique(
       analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary
-    ),
+    )),
     sep = " & "
   ),
   x = "bottomright",
-  fill = c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired"))
+  fill =plotvec_symbiont_selection_type_binary
 )
 add.scale.bar()
 dev.off()
