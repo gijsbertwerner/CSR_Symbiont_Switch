@@ -526,7 +526,7 @@ analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped <-
   analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type)
 analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type<-
   ifelse(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type %in% c("AM"),
-         "Strict_AM","non_AM")
+         "only_AM","other")
 head(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped)
 table(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type)
 
