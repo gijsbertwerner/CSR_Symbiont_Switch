@@ -1101,9 +1101,7 @@ akaike.weights(
   )
 )
 
-#Potentially, there are 3*8=24 states this way, but only 21 are actually found.
-#This is lots and lots of state. Too many probably. The models run forever. Only the simples one finished overnight.
-#We'll look at that one for now.
+
 
 #Save all model ran
 load("./Output/ASR_symbiont_selection_type_binary_ER_yang")
@@ -1114,22 +1112,22 @@ save(ASR_symbiont_selection_type_binary_ER_yang, file = "./Output/ASR_symbiont_s
 save(ASR_symbiont_selection_type_binary_ARD_yang, file = "./Output/ASR_symbiont_selection_type_binary_ARD_yang")
 save(ASR_symbiont_selection_type_binary_SYM_yang, file = "./Output/ASR_symbiont_selection_type_binary_SYM_yang")
 
-#We'll look at ER for now. The others take forever to run.
-ASR_symbiont_selection_type_binary_ER_yang
-plotMKmodel(ASR_symbiont_selection_type_binary_ER_yang)
+#Let's look at the best (=ARD) model
+ASR_symbiont_selection_type_binary_ARD_yang
+plotMKmodel(ASR_symbiont_selection_type_binary_ARD_yang)
 
 ##Let's for now plot this reconstruction onto the tree
 
 #Create a data frame to plot the trait data
 dat_plot_symbiont_selection_type_binary <-
   analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary %>%
-  dplyr::select(Symbiotic_type, selection_type_binary)
+  dplyr::select(Symbiotic_type, CSR_binary)
 row.names(dat_plot_symbiont_selection_type_binary) <-
   analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Species_name
-dat_plot_symbiont_selection_type_binary$Symbiotic_type <-
-  as.numeric(as.factor(dat_plot_symbiont_selection_type_binary$Symbiotic_type))
-dat_plot_symbiont_selection_type_binary$selection_type_binary <-
-  as.numeric(as.factor(dat_plot_symbiont_selection_type_binary$selection_type_binary))
+# dat_plot_symbiont_selection_type_binary$Symbiotic_type <-
+#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary$Symbiotic_type))
+# dat_plot_symbiont_selection_type_binary$CSR_binary <-
+#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary$CSR_binary))
 head(dat_plot_symbiont_selection_type_binary)
 
 #CSR ASR - plot pdf
@@ -1141,7 +1139,7 @@ trait.plot(
   dat = dat_plot_symbiont_selection_type_binary,
   cols = list(
     Symbiotic_type = brewer.pal(n = 8, "Set2"),
-    selection_type_binary = brewer.pal(n = 3, "Accent")
+    CSR_binary = brewer.pal(n = 3, "Accent")
   ),
   type = "f",
   legend = T,
@@ -1164,12 +1162,12 @@ legend(
       ),
       each = length(
         unique(
-          analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$selection_type_binary
+          analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary
         )
       )
     ),
     unique(
-      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$selection_type_binary
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary
     ),
     sep = " & "
   ),
@@ -1184,7 +1182,7 @@ trait.plot(
   dat = dat_plot_symbiont_selection_type_binary,
   cols = list(
     Symbiotic_type = brewer.pal(n = 8, "Set2"),
-    selection_type_binary = brewer.pal(n = 3, "Accent")
+    CSR_binary = brewer.pal(n = 3, "Accent")
   ),
   type = "f",
   legend = T,
@@ -1207,12 +1205,12 @@ legend(
       ),
       each = length(
         unique(
-          analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$selection_type_binary
+          analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary
         )
       )
     ),
     unique(
-      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$selection_type_binary
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary
     ),
     sep = " & "
   ),
