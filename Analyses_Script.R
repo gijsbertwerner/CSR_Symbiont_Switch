@@ -168,6 +168,8 @@ analysis_dat_CSR_symb_ASR_symbiont_type <-
   analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type)
 head(analysis_dat_CSR_symb_ASR_symbiont_type)
 table(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type)
+analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type<-as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type))
+table(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type)
 
 #Run ASRs
 ASR_symbiont_type_ER_yang <-
@@ -300,6 +302,10 @@ analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type<-
          "AM_NMAM",analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type)
 head(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped)
 table(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type)
+analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type))
+table(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type)
+
 
 #Run ASRs
 ASR_symbiont_type_AM_NMAM_lumped_ER_yang <-
@@ -418,6 +424,10 @@ analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type<-
   ifelse(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type %in% c("AM","NMAM","AMNod","EcMAM"),
          "All_AM",analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type)
 head(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped)
+table(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type)
+
+analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type))
 table(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type)
 
 #Run ASRs
@@ -540,6 +550,10 @@ analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type<-
 head(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped)
 table(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type)
 
+analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type))
+table(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type)
+
 #Run ASRs
 ASR_symbiont_type_All_non_AM_lumped_ER_yang <-
   corHMM(
@@ -658,6 +672,10 @@ analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_ty
   ifelse(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_type %in% c("AM","NMAM","AMNod","EcMAM"),
          "Any_AM","non_AM")
 head(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped)
+table(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_type)
+
+analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_type))
 table(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_type)
 
 #Run ASRs
@@ -809,6 +827,11 @@ table(analysis_dat_CSR_symb$selection_type) #Pretty equal numbers of all three t
 analysis_dat_CSR_symb_ASR_selection_type <-
   analysis_dat_CSR_symb %>% dplyr::select(Species_name, selection_type)
 head(analysis_dat_CSR_symb_ASR_selection_type)
+table(analysis_dat_CSR_symb_ASR_selection_type$selection_type)
+
+analysis_dat_CSR_symb_ASR_selection_type$selection_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_selection_type$selection_type))
+table(analysis_dat_CSR_symb_ASR_selection_type$selection_type)
 
 #Run ASRs
 ASR_selection_type_ER_yang <-
@@ -947,6 +970,12 @@ table(analysis_dat_CSR_symb$CSR_binary)
 analysis_dat_CSR_symb_ASR_selection_type_binary <-
   analysis_dat_CSR_symb %>% dplyr::select(Species_name, CSR_binary)
 head(analysis_dat_CSR_symb_ASR_selection_type_binary)
+table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary)
+
+analysis_dat_CSR_symb_ASR_selection_type$selection_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary))
+table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary)
+
 
 #Run ASRs
 ASR_selection_type_binary_ER_yang <-
@@ -1068,6 +1097,20 @@ pdf("./Output/ASRCSRType_binary.pdf",
 analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary <-
   analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type, CSR_binary)
 head(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary)
+
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type))
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary))
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary)
+
 
 #Run ASRs
 ASR_symbiont_selection_type_binary_ER_yang <-
@@ -1216,6 +1259,19 @@ analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary <-
 analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type<-
   analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type
 head(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary)
+table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary)
+table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary)
+
+analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type))
+analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary))
+table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary)
+table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary)
 
 #Run ASRs
 ASR_symbiont_binary_selection_type_binary_ER_yang <-
