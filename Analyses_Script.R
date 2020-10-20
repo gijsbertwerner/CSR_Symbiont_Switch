@@ -1346,6 +1346,23 @@ dev.off()
 
 save.image()
 
+####Run Pagel's model
+vec_symbiont_binary<-dat_plot_symbiont_binary_selection_type_binary$Symbiotic_type
+vec_selection_type_binary<-dat_plot_symbiont_binary_selection_type_binary$CSR_binary
+names(vec_symbiont_binary)<-row.names(dat_plot_symbiont_binary_selection_type_binary)
+names(vec_selection_type_binary)<-row.names(dat_plot_symbiont_binary_selection_type_binary)
+head(vec_symbiont_binary)
+head(vec_selection_type_binary)
+table(vec_symbiont_binary)
+table(vec_selection_type_binary)
+
+pagel_symbiont_binary_selection_type_binary_ER<-
+  fitPagel(tree = analysis_tree,x = vec_symbiont_binary,y = vec_selection_type_binary,model = "ER",pi="fitzjohn")
+pagel_symbiont_binary_selection_type_binary_ARD<-
+  fitPagel(tree = analysis_tree,x = vec_symbiont_binary,y = vec_selection_type_binary,model = "ARD",pi="fitzjohn")
+
+
+
 ####Notes below here are old, can now be disregarded. 
 #Ok, what are we seeing here?
 #A joint reconstruction of both categorical variables simultaneously.
