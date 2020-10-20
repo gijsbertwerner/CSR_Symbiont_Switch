@@ -110,9 +110,9 @@ analysis_tree
 
 #PLot big analysis tree for finding species
 pdf("./Output/BigAnalysisTree.pdf",
-    width = 120,
-    height = 120)
-plot.phylo(x = analysis_tree,type = F,show.tip.label = T,cex = 0.1)
+    width = 30,
+    height = 30)
+plot.phylo(x = analysis_tree,type = "f",show.tip.label = T,cex = 0.1,label.offset = 0.2)
 dev.off()
 
 
