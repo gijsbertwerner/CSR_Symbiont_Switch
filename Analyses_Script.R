@@ -205,13 +205,13 @@ ASR_symbiont_type_SYM_yang <-
   )
 
 #Save all model ran
-load("./Output/ASR_symbiont_type_ER_yang")
-load("./Output/ASR_symbiont_type_ARD_yang")
-load("./Output/ASR_symbiont_type_SYM_yang")
-
 save(ASR_symbiont_type_ER_yang, file = "./Output/ASR_symbiont_type_ER_yang")
 save(ASR_symbiont_type_ARD_yang, file = "./Output/ASR_symbiont_type_ARD_yang")
 save(ASR_symbiont_type_SYM_yang, file = "./Output/ASR_symbiont_type_SYM_yang")
+
+load("./Output/ASR_symbiont_type_ER_yang")
+load("./Output/ASR_symbiont_type_ARD_yang")
+load("./Output/ASR_symbiont_type_SYM_yang")
 
 #Which is the best model, using AIC-criteria?
 akaike.weights(
@@ -337,13 +337,13 @@ ASR_symbiont_type_AM_NMAM_lumped_SYM_yang <-
   )
 
 #Save all model ran
-load("./Output/ASR_symbiont_type_AM_NMAM_lumped_ER_yang")
-load("./Output/ASR_symbiont_type_AM_NMAM_lumped_ARD_yang")
-load("./Output/ASR_symbiont_type_AM_NMAM_lumped_SYM_yang")
-
 save(ASR_symbiont_type_AM_NMAM_lumped_ER_yang, file = "./Output/ASR_symbiont_type_AM_NMAM_lumped_ER_yang")
 save(ASR_symbiont_type_AM_NMAM_lumped_ARD_yang, file = "./Output/ASR_symbiont_type_AM_NMAM_lumped_ARD_yang")
 save(ASR_symbiont_type_AM_NMAM_lumped_SYM_yang, file = "./Output/ASR_symbiont_type_AM_NMAM_lumped_SYM_yang")
+
+load("./Output/ASR_symbiont_type_AM_NMAM_lumped_ER_yang")
+load("./Output/ASR_symbiont_type_AM_NMAM_lumped_ARD_yang")
+load("./Output/ASR_symbiont_type_AM_NMAM_lumped_SYM_yang")
 
 #Which is the best model, using AIC-criteria?
 akaike.weights(
@@ -456,13 +456,13 @@ ASR_symbiont_type_All_AM_lumped_SYM_yang <-
   )
 
 #Save all model ran
-load("./Output/ASR_symbiont_type_All_AM_lumped_ER_yang")
-load("./Output/ASR_symbiont_type_All_AM_lumped_ARD_yang")
-load("./Output/ASR_symbiont_type_All_AM_lumped_SYM_yang")
-
 save(ASR_symbiont_type_All_AM_lumped_ER_yang, file = "./Output/ASR_symbiont_type_All_AM_lumped_ER_yang")
 save(ASR_symbiont_type_All_AM_lumped_ARD_yang, file = "./Output/ASR_symbiont_type_All_AM_lumped_ARD_yang")
 save(ASR_symbiont_type_All_AM_lumped_SYM_yang, file = "./Output/ASR_symbiont_type_All_AM_lumped_SYM_yang")
+
+load("./Output/ASR_symbiont_type_All_AM_lumped_ER_yang")
+load("./Output/ASR_symbiont_type_All_AM_lumped_ARD_yang")
+load("./Output/ASR_symbiont_type_All_AM_lumped_SYM_yang")
 
 #Which is the best model, using AIC-criteria?
 akaike.weights(
@@ -576,13 +576,13 @@ ASR_symbiont_type_All_non_AM_lumped_SYM_yang <-
   )
 
 #Save all model ran
-load("./Output/ASR_symbiont_type_All_non_AM_lumped_ER_yang")
-load("./Output/ASR_symbiont_type_All_non_AM_lumped_ARD_yang")
-load("./Output/ASR_symbiont_type_All_non_AM_lumped_SYM_yang")
-
 save(ASR_symbiont_type_All_non_AM_lumped_ER_yang, file = "./Output/ASR_symbiont_type_All_non_AM_lumped_ER_yang")
 save(ASR_symbiont_type_All_non_AM_lumped_ARD_yang, file = "./Output/ASR_symbiont_type_All_non_AM_lumped_ARD_yang")
 save(ASR_symbiont_type_All_non_AM_lumped_SYM_yang, file = "./Output/ASR_symbiont_type_All_non_AM_lumped_SYM_yang")
+
+load("./Output/ASR_symbiont_type_All_non_AM_lumped_ER_yang")
+load("./Output/ASR_symbiont_type_All_non_AM_lumped_ARD_yang")
+load("./Output/ASR_symbiont_type_All_non_AM_lumped_SYM_yang")
 
 #Which is the best model, using AIC-criteria?
 akaike.weights(
@@ -696,13 +696,13 @@ ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang <-
   )
 
 #Save all model ran
-load("./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ER_yang")
-load("./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ARD_yang")
-load("./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang")
-
 save(ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ER_yang, file = "./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ER_yang")
 save(ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ARD_yang, file = "./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ARD_yang")
 save(ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang, file = "./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang")
+
+load("./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ER_yang")
+load("./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_ARD_yang")
+load("./Output/ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang")
 
 #Which is the best model, using AIC-criteria?
 akaike.weights(
@@ -846,13 +846,13 @@ ASR_selection_type_SYM_yang <-
   )
 
 #Save all model ran
-load("./Output/ASR_selection_type_ER_yang")
-load("./Output/ASR_selection_type_ARD_yang")
-load("./Output/ASR_selection_type_SYM_yang")
-
 save(ASR_selection_type_ER_yang, file = "./Output/ASR_selection_type_ER_yang")
 save(ASR_selection_type_ARD_yang, file = "./Output/ASR_selection_type_ARD_yang")
 save(ASR_selection_type_SYM_yang, file = "./Output/ASR_selection_type_SYM_yang")
+
+load("./Output/ASR_selection_type_ER_yang")
+load("./Output/ASR_selection_type_ARD_yang")
+load("./Output/ASR_selection_type_SYM_yang")
 
 #Which is the best model, using AIC-criteria?
 akaike.weights(
@@ -984,13 +984,13 @@ ASR_selection_type_binary_SYM_yang <-
   )
 
 #Save all model ran
-load("./Output/ASR_selection_type_binary_ER_yang")
-load("./Output/ASR_selection_type_binary_ARD_yang")
-load("./Output/ASR_selection_type_binary_SYM_yang")
-
 save(ASR_selection_type_binary_ER_yang, file = "./Output/ASR_selection_type_binary_ER_yang")
 save(ASR_selection_type_binary_ARD_yang, file = "./Output/ASR_selection_type_binary_ARD_yang")
 save(ASR_selection_type_binary_SYM_yang, file = "./Output/ASR_selection_type_binary_SYM_yang")
+
+load("./Output/ASR_selection_type_binary_ER_yang")
+load("./Output/ASR_selection_type_binary_ARD_yang")
+load("./Output/ASR_selection_type_binary_SYM_yang")
 
 #Which is the best model, using AIC-criteria?
 akaike.weights(
@@ -1118,13 +1118,13 @@ akaike.weights(
 
 
 #Save all model ran
-load("./Output/ASR_symbiont_selection_type_binary_ER_yang")
-load("./Output/ASR_symbiont_selection_type_binary_ARD_yang")
-load("./Output/ASR_symbiont_selection_type_binary_SYM_yang")
-
 save(ASR_symbiont_selection_type_binary_ER_yang, file = "./Output/ASR_symbiont_selection_type_binary_ER_yang")
 save(ASR_symbiont_selection_type_binary_ARD_yang, file = "./Output/ASR_symbiont_selection_type_binary_ARD_yang")
 save(ASR_symbiont_selection_type_binary_SYM_yang, file = "./Output/ASR_symbiont_selection_type_binary_SYM_yang")
+
+load("./Output/ASR_symbiont_selection_type_binary_ER_yang")
+load("./Output/ASR_symbiont_selection_type_binary_ARD_yang")
+load("./Output/ASR_symbiont_selection_type_binary_SYM_yang")
 
 #Let's look at the best (=ARD) model
 ASR_symbiont_selection_type_binary_ARD_yang
@@ -1266,13 +1266,13 @@ akaike.weights(
 
 
 #Save all model ran
-load("./Output/ASR_symbiont_binary_selection_type_binary_ER_yang")
-load("./Output/ASR_symbiont_binary_selection_type_binary_ARD_yang")
-load("./Output/ASR_symbiont_binary_selection_type_binary_SYM_yang")
-
 save(ASR_symbiont_binary_selection_type_binary_ER_yang, file = "./Output/ASR_symbiont_binary_selection_type_binary_ER_yang")
 save(ASR_symbiont_binary_selection_type_binary_ARD_yang, file = "./Output/ASR_symbiont_binary_selection_type_binary_ARD_yang")
 save(ASR_symbiont_binary_selection_type_binary_SYM_yang, file = "./Output/ASR_symbiont_binary_selection_type_binary_SYM_yang")
+
+load("./Output/ASR_symbiont_binary_selection_type_binary_ER_yang")
+load("./Output/ASR_symbiont_binary_selection_type_binary_ARD_yang")
+load("./Output/ASR_symbiont_binary_selection_type_binary_SYM_yang")
 
 #Let's look at the best (=ARD) model
 ASR_symbiont_binary_selection_type_binary_ARD_yang
