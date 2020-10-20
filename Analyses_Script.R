@@ -107,6 +107,15 @@ analysis_tree <-
   )
 analysis_tree
 
+
+#PLot big analysis tree for finding species
+pdf("./Output/BigAnalysisTree.pdf",
+    width = 120,
+    height = 120)
+plot.phylo(x = analysis_tree,type = F,show.tip.label = T,cex = 0.1)
+dev.off()
+
+
 analysis_dat_CSR_symb <-
   dat_CSR_symb %>% filter(Species_name %in% analysis_tree$tip.label)
 nrow(analysis_dat_CSR_symb)
@@ -158,6 +167,7 @@ ggplot(data = analysis_dat_CSR_symb) +
 analysis_dat_CSR_symb_ASR_symbiont_type <-
   analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type)
 head(analysis_dat_CSR_symb_ASR_symbiont_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type)
 
 #Run ASRs
 ASR_symbiont_type_ER_yang <-
@@ -946,7 +956,7 @@ ASR_selection_type_binary_ER_yang <-
     rate.cat = 1,
     model = "ER",
     node.states = "marginal",
-    root.p = c(1,0), #Fix root to any CSR - email Marco mid September 2020
+    root.p = "yang", #Fix root to any CSR - email Marco mid September 2020
     nstarts = 10,
     n.cores = 7
   )
@@ -957,7 +967,7 @@ ASR_selection_type_binary_ARD_yang <-
     rate.cat = 1,
     model = "ARD",
     node.states = "marginal",
-    root.p = c(1,0),
+    root.p = "yang",
     nstarts = 10,
     n.cores = 7
   )
@@ -968,7 +978,7 @@ ASR_selection_type_binary_SYM_yang <-
     rate.cat = 1,
     model = "SYM",
     node.states = "marginal",
-    root.p = c(1,0),
+    root.p = "yang",
     nstarts = 10,
     n.cores = 7
   )
@@ -1025,6 +1035,8 @@ pdf("./Output/ASRCSRType_binary.pdf",
     nodelabels(pie = ASR_selection_type_binary_ARD_yang$states,
                piecol = brewer.pal(n = 3, "Accent"),
                cex = 0.3)
+    legend(legend = names(table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary)),
+           x = "bottomright",fill = brewer.pal(n = 3, "Accent"))
     add.scale.bar()
     dev.off()
 
