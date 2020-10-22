@@ -224,7 +224,7 @@ akaike.weights(
   )
 )
 
-#SYM by far the best
+#ARD is the best
 ASR_symbiont_type_SYM_yang
 plotMKmodel(ASR_symbiont_type_SYM_yang)
 table(analysis_dat_CSR_symb$Symbiotic_type) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
@@ -264,28 +264,13 @@ trait.plot(
 nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
            piecol = brewer.pal(n = 8, "Set2"),
            cex = 0.3)
+legend(legend=names(table(analysis_dat_CSR_symb$Symbiotic_type)),
+       x = "bottomright",
+       fill = brewer.pal(n = 8, "Set2"),
+       cex = 2)
 add.scale.bar()
 dev.off()
 
-#Plot to screen
-trait.plot(
-  tree = analysis_tree,
-  dat = dat_plot_symbiont_type,
-  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
-  type = "f",
-  legend = T,
-  w = 1 / 40,
-  edge.width = 2,
-  cex.lab = 0.01,
-  tip.color = "white",
-  show.node.label = T
-)
-nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
-           piecol = brewer.pal(n = 8, "Set2"),
-           cex = 0.3)
-add.scale.bar()
-
-table(analysis_dat_CSR_symb$Symbiotic_type)
 #Ok, what are we seeing here?
 #A reconstruction of symbiont type: ancestral state is estimated as AM, and AM seems maintained througout.
 #With transitions towards other types that are quite 'tippy' (i.e. recent/shallow) at this phylogenetic scale.
@@ -302,6 +287,7 @@ analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type<-
          "AM_NMAM",analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type)
 head(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped)
 table(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type)
+states_AM_NMAM_lumped<-names(table(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type))
 analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type<-
   as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type))
 table(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type)
@@ -395,26 +381,12 @@ trait.plot(
 nodelabels(pie = ASR_symbiont_type_AM_NMAM_lumped_ARD_yang$states,
            piecol = brewer.pal(n = 8, "Set2"),
            cex = 0.3)
+legend(legend=states_AM_NMAM_lumped,
+       x = "bottomright",
+       fill = brewer.pal(n = 8, "Set2"),
+       cex = 2)
 add.scale.bar()
 dev.off()
-
-#Plot to screen
-trait.plot(
-  tree = analysis_tree,
-  dat = dat_plot_symbiont_type_AM_NMAM_lumped,
-  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
-  type = "f",
-  legend = T,
-  w = 1 / 40,
-  edge.width = 2,
-  cex.lab = 0.01,
-  tip.color = "white",
-  show.node.label = T
-)
-nodelabels(pie = ASR_symbiont_type_AM_NMAM_lumped_ARD_yang$states,
-           piecol = brewer.pal(n = 8, "Set2"),
-           cex = 0.3)
-add.scale.bar()
 
 ####Second, lump all AM
 #Data formatting. We need two columns, species and symbiont state.
@@ -425,6 +397,7 @@ analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type<-
          "All_AM",analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type)
 head(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped)
 table(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type)
+states_All_AM_lumped<-names(table(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type))
 
 analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type<-
   as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type))
@@ -518,27 +491,12 @@ trait.plot(
 nodelabels(pie = ASR_symbiont_type_All_AM_lumped_SYM_yang$states,
            piecol = brewer.pal(n = 8, "Set2"),
            cex = 0.3)
+legend(legend=states_All_AM_lumped,
+       x = "bottomright",
+       fill = brewer.pal(n = 8, "Set2"),
+       cex = 2)
 add.scale.bar()
 dev.off()
-
-#Plot to screen
-trait.plot(
-  tree = analysis_tree,
-  dat = dat_plot_symbiont_type_All_AM_lumped,
-  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
-  type = "f",
-  legend = T,
-  w = 1 / 40,
-  edge.width = 2,
-  cex.lab = 0.01,
-  tip.color = "white",
-  show.node.label = T
-)
-nodelabels(pie = ASR_symbiont_type_All_AM_lumped_SYM_yang$states,
-           piecol = brewer.pal(n = 8, "Set2"),
-           cex = 0.3)
-add.scale.bar()
-
 
 #####Third, lump all non-AM
 #Data formatting. We need two columns, species and symbiont state.
@@ -549,6 +507,7 @@ analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type<-
          "AMOnly","Rest")
 head(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped)
 table(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type)
+states_All_non_AM_lumped<-names(table(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type))
 
 analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type<-
   as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type))
@@ -643,26 +602,12 @@ trait.plot(
 nodelabels(pie = ASR_symbiont_type_All_non_AM_lumped_ARD_yang$states,
            piecol = brewer.pal(n = 8, "Set2"),
            cex = 0.3)
+legend(legend=states_All_non_AM_lumped,
+       x = "bottomright",
+       fill = brewer.pal(n = 8, "Set2"),
+       cex = 2)
 add.scale.bar()
 dev.off()
-
-#Plot to screen
-trait.plot(
-  tree = analysis_tree,
-  dat = dat_plot_symbiont_type_All_non_AM_lumped,
-  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
-  type = "f",
-  legend = T,
-  w = 1 / 40,
-  edge.width = 2,
-  cex.lab = 0.01,
-  tip.color = "white",
-  show.node.label = T
-)
-nodelabels(pie = ASR_symbiont_type_All_non_AM_lumped_ARD_yang$states,
-           piecol = brewer.pal(n = 8, "Set2"),
-           cex = 0.3)
-add.scale.bar()
 
 #####Fourth, lump all non-AM And all with AnyAM
 #Data formatting. We need two columns, species and symbiont state.
@@ -673,6 +618,7 @@ analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_ty
          "Any_AM","non_AM")
 head(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped)
 table(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_type)
+states__All_non_AM_vs_any_AM_lumped<-names(table(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_type))
 
 analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_type<-
   as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_vs_any_AM_lumped$Symbiotic_type))
@@ -766,28 +712,12 @@ trait.plot(
 nodelabels(pie = ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang$states,
            piecol = brewer.pal(n = 8, "Set2"),
            cex = 0.3)
+legend(legend=states__All_non_AM_vs_any_AM_lumped,
+       x = "bottomright",
+       fill = brewer.pal(n = 8, "Set2"),
+       cex = 2)
 add.scale.bar()
 dev.off()
-
-#Plot to screen
-trait.plot(
-  tree = analysis_tree,
-  dat = dat_plot_symbiont_type_All_non_AM_vs_any_AM_lumped,
-  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
-  type = "f",
-  legend = T,
-  w = 1 / 40,
-  edge.width = 2,
-  cex.lab = 0.01,
-  tip.color = "white",
-  show.node.label = T
-)
-nodelabels(pie = ASR_symbiont_type_All_non_AM_vs_any_AM_lumped_SYM_yang$states,
-           piecol = brewer.pal(n = 8, "Set2"),
-           cex = 0.3)
-add.scale.bar()
-
-
 
 ############## CSR ASR
 
@@ -828,6 +758,7 @@ analysis_dat_CSR_symb_ASR_selection_type <-
   analysis_dat_CSR_symb %>% dplyr::select(Species_name, selection_type)
 head(analysis_dat_CSR_symb_ASR_selection_type)
 table(analysis_dat_CSR_symb_ASR_selection_type$selection_type)
+states_selection_type<-names(table(analysis_dat_CSR_symb_ASR_selection_type$selection_type))
 
 analysis_dat_CSR_symb_ASR_selection_type$selection_type<-
   as.numeric(as.factor(analysis_dat_CSR_symb_ASR_selection_type$selection_type))
@@ -920,26 +851,12 @@ trait.plot(
 nodelabels(pie = ASR_selection_type_ARD_yang$states,
            piecol = brewer.pal(n = 3, "Accent"),
            cex = 0.3)
+legend(legend=states_selection_type,
+       x = "bottomright",
+       fill = brewer.pal(n = 3, "Accent"),
+       cex = 2)
 add.scale.bar()
 dev.off()
-
-#Plot to screen
-trait.plot(
-  tree = analysis_tree,
-  dat = dat_plot_selection_type,
-  cols = list(selection_type = brewer.pal(n = 3, "Accent")),
-  type = "f",
-  legend = T,
-  w = 1 / 40,
-  edge.width = 2,
-  cex.lab = 0.01,
-  tip.color = "white",
-  show.node.label = T
-)
-nodelabels(pie = ASR_selection_type_ARD_yang$states,
-           piecol = brewer.pal(n = 3, "Accent"),
-           cex = 0.3)
-add.scale.bar()
 
 #Ok, what do we see here? Reconstruction of the three CSR types, treated as three discrete categories.
 #Some things that spring to mind:
@@ -971,6 +888,7 @@ analysis_dat_CSR_symb_ASR_selection_type_binary <-
   analysis_dat_CSR_symb %>% dplyr::select(Species_name, CSR_binary)
 head(analysis_dat_CSR_symb_ASR_selection_type_binary)
 table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary)
+states_selection_type_binary<-names(table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary))
 
 analysis_dat_CSR_symb_ASR_selection_type$selection_type<-
   as.numeric(as.factor(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary))
@@ -1064,28 +982,12 @@ pdf("./Output/ASRCSRType_binary.pdf",
     nodelabels(pie = ASR_selection_type_binary_ARD_yang$states,
                piecol = brewer.pal(n = 3, "Accent"),
                cex = 0.3)
-    legend(legend = names(table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary)),
-           x = "bottomright",fill = brewer.pal(n = 3, "Accent"))
+    legend(legend=states_selection_type_binary,
+           x = "bottomright",
+           fill = brewer.pal(n = 3, "Accent"),
+           cex = 2)
     add.scale.bar()
     dev.off()
-
-    #Plot to screen
-    trait.plot(
-      tree = analysis_tree,
-      dat = dat_plot_selection_type_binary,
-      cols = list(CSR_binary = brewer.pal(n = 3, "Accent")),
-      type = "f",
-      legend = T,
-      w = 1 / 40,
-      edge.width = 2,
-      cex.lab = 0.01,
-      tip.color = "white",
-      show.node.label = T
-    )
-    nodelabels(pie = ASR_selection_type_binary_ARD_yang$states,
-               piecol = brewer.pal(n = 3, "Accent"),
-               cex = 0.3)
-    add.scale.bar()
 
 ######Correlated evolution between the two variables
 
@@ -1101,6 +1003,10 @@ table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type)
 table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary)
 table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type,
       analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary)
+states_symbiont_selection_type_binary<-paste(
+  rep(names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type)),each=2),
+  names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary)),
+  sep = " & ")
 
 analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type<-
   as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type))
@@ -1216,7 +1122,7 @@ trait.plot(
     CSR_binary = brewer.pal(n = 3, "Accent")
   ),
   type = "f",
-  legend = F,
+  legend = T,
   w = 1 / 40,
   edge.width = 2,
   cex.lab = 0.01,
@@ -1228,26 +1134,10 @@ nodelabels(
   piecol = plotvec_symbiont_selection_type_binary,
   cex = 0.3
 )
-legend(
-  legend = paste(
-    rep(
-      sort(unique(
-        analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type
-      )),
-      each = length(
-        unique(
-          analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary
-        )
-      )
-    ),
-    sort(unique(
-      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary
-    )),
-    sep = " & "
-  ),
-  x = "bottomright",
-  fill =plotvec_symbiont_selection_type_binary
-)
+legend(legend=states_symbiont_selection_type_binary,
+       x = "bottomright",
+       fill = plotvec_symbiont_selection_type_binary,
+       cex = 1.5)
 add.scale.bar()
 dev.off()
 
@@ -1263,6 +1153,7 @@ table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_
 table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary)
 table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type,
       analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary)
+states_symbiont_binary_selection_type_binary<-c("Any_AM & AnyCSR","Any_AM & NoCSR","non_AM & AnyCSR","nonAM & NoCSR")
 
 analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type<-
   as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type))
@@ -1389,26 +1280,10 @@ nodelabels(
   piecol = plotvec_symbiont_binary_selection_type_binary,
   cex = 0.3
 )
-legend(
-  legend = paste(
-    rep(
-      sort(unique(
-        analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type
-      )),
-      each = length(
-        unique(
-          analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary
-        )
-      )
-    ),
-    sort(unique(
-      analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary
-    )),
-    sep = " & "
-  ),
-  x = "bottomright",
-  fill =plotvec_symbiont_binary_selection_type_binary
-)
+legend(legend=states_symbiont_binary_selection_type_binary,
+       x = "bottomright",
+       fill = plotvec_symbiont_binary_selection_type_binary,
+       cex = 1.5)
 add.scale.bar()
 dev.off()
 
@@ -1424,12 +1299,14 @@ head(vec_selection_type_binary)
 table(vec_symbiont_binary)
 table(vec_selection_type_binary)
 
-pagel_symbiont_binary_selection_type_binary_ER<-
-  fitPagel(tree = analysis_tree,x = vec_symbiont_binary,y = vec_selection_type_binary,model = "ER",pi="fitzjohn")
 pagel_symbiont_binary_selection_type_binary_ARD<-
   fitPagel(tree = analysis_tree,x = vec_symbiont_binary,y = vec_selection_type_binary,model = "ARD",pi="fitzjohn")
+pagel_symbiont_binary_selection_type_binary_ARD
+plot(pagel_symbiont_binary_selection_type_binary_ARD)
 
-
+pdf("./Output/Plot_pagel_symbiont_binary_selection_type_binary_ARD.pdf")
+plot(pagel_symbiont_binary_selection_type_binary_ARD)
+dev.off()
 
 ####Notes below here are old, can now be disregarded. 
 #Ok, what are we seeing here?
@@ -1501,10 +1378,10 @@ pdf(
 )
 trait.plot(
   tree = analysis_tree,
-  dat = dat_plot_symbiont_selection_type,
+  dat = dat_plot_symbiont_selection_type_binary,
   cols = list(
     Symbiotic_type = brewer.pal(n = 8, "Set2"),
-    selection_type = brewer.pal(n = 3, "Accent")
+    CSR_binary = brewer.pal(n = 3, "Accent")
   ),
   type = "f",
   legend = T,
@@ -1531,39 +1408,6 @@ add.color.bar(
 )
 add.scale.bar()
 dev.off()
-
-#Plot to screen
-trait.plot(
-  tree = analysis_tree,
-  dat = dat_plot_symbiont_selection_type,
-  cols = list(
-    Symbiotic_type = brewer.pal(n = 8, "Set2"),
-    selection_type = brewer.pal(n = 3, "Accent")
-  ),
-  type = "f",
-  legend = T,
-  w = 1 / 40,
-  edge.width = 2,
-  cex.lab = 0.01,
-  tip.color = "white",
-  show.node.label = T,
-  edge.color = inferno(100)[cut(quant_ASR_C_selection[match(analysis_tree$edge[, 1], names(quant_ASR_C_selection[, 1])), 1], breaks =
-                                  100)]
-)
-nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
-           piecol = brewer.pal(n = 8, "Set2"),
-           cex = 0.15)
-add.color.bar(
-  100,
-  inferno(100),
-  title = "C Selection",
-  prompt = F,
-  lims = c(min(quant_ASR_C_selection), max(quant_ASR_C_selection)),
-  fsize = 0.8,
-  x = -100,
-  y = -50
-)
-add.scale.bar()
 
 
 #Symbionts ASR with quantitative ASR of S_Selection - plot to pdf
@@ -1574,10 +1418,10 @@ pdf(
 )
 trait.plot(
   tree = analysis_tree,
-  dat = dat_plot_symbiont_selection_type,
+  dat = dat_plot_symbiont_selection_type_binary,
   cols = list(
     Symbiotic_type = brewer.pal(n = 8, "Set2"),
-    selection_type = brewer.pal(n = 3, "Accent")
+    CSR_binary = brewer.pal(n = 3, "Accent")
   ),
   type = "f",
   legend = T,
@@ -1604,39 +1448,6 @@ add.color.bar(
 )
 add.scale.bar()
 dev.off()
-
-#Plot to screen
-trait.plot(
-  tree = analysis_tree,
-  dat = dat_plot_symbiont_selection_type,
-  cols = list(
-    Symbiotic_type = brewer.pal(n = 8, "Set2"),
-    selection_type = brewer.pal(n = 3, "Accent")
-  ),
-  type = "f",
-  legend = T,
-  w = 1 / 40,
-  edge.width = 2,
-  cex.lab = 0.01,
-  tip.color = "white",
-  show.node.label = T,
-  edge.color = inferno(100)[cut(quant_ASR_S_selection[match(analysis_tree$edge[, 1], names(quant_ASR_S_selection[, 1])), 1], breaks =
-                                  100)]
-)
-nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
-           piecol = brewer.pal(n = 8, "Set2"),
-           cex = 0.15)
-add.color.bar(
-  100,
-  inferno(100),
-  title = "S Selection",
-  prompt = F,
-  lims = c(min(quant_ASR_S_selection), max(quant_ASR_S_selection)),
-  fsize = 0.8,
-  x = -100,
-  y = -50
-)
-add.scale.bar()
 
 
 #Symbionts ASR with quantitative ASR of R_Selection - plot to pdf
@@ -1647,10 +1458,10 @@ pdf(
 )
 trait.plot(
   tree = analysis_tree,
-  dat = dat_plot_symbiont_selection_type,
+  dat = dat_plot_symbiont_selection_type_binary,
   cols = list(
     Symbiotic_type = brewer.pal(n = 8, "Set2"),
-    selection_type = brewer.pal(n = 3, "Accent")
+    CSR_binary = brewer.pal(n = 3, "Accent")
   ),
   type = "f",
   legend = T,
@@ -1677,39 +1488,6 @@ add.color.bar(
 )
 add.scale.bar()
 dev.off()
-
-#Plot to screen
-trait.plot(
-  tree = analysis_tree,
-  dat = dat_plot_symbiont_selection_type,
-  cols = list(
-    Symbiotic_type = brewer.pal(n = 8, "Set2"),
-    selection_type = brewer.pal(n = 3, "Accent")
-  ),
-  type = "f",
-  legend = T,
-  w = 1 / 40,
-  edge.width = 2,
-  cex.lab = 0.01,
-  tip.color = "white",
-  show.node.label = T,
-  edge.color = inferno(100)[cut(quant_ASR_R_selection[match(analysis_tree$edge[, 1], names(quant_ASR_R_selection[, 1])), 1], breaks =
-                                  100)]
-)
-nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
-           piecol = brewer.pal(n = 8, "Set2"),
-           cex = 0.15)
-add.color.bar(
-  100,
-  inferno(100),
-  title = "R Selection",
-  prompt = F,
-  lims = c(min(quant_ASR_R_selection), max(quant_ASR_R_selection)),
-  fsize = 0.8,
-  x = -100,
-  y = -50
-)
-add.scale.bar()
 
 #Ok so what are we seeing here.
 #It's the categorical recosntructions of symbionts plotted onto the coloured tree branches, indicating C/S/R selection
