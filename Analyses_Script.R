@@ -578,8 +578,8 @@ dat_plot_symbiont_type_All_non_AM_lumped <-
   dplyr::select(Symbiotic_type)
 row.names(dat_plot_symbiont_type_All_non_AM_lumped) <-
   analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Species_name
- dat_plot_symbiont_type_All_non_AM_lumped$Symbiotic_type <-
-    as.numeric(as.factor(dat_plot_symbiont_type_All_non_AM_lumped$Symbiotic_type))
+dat_plot_symbiont_type_All_non_AM_lumped$Symbiotic_type <-
+  as.numeric(as.factor(dat_plot_symbiont_type_All_non_AM_lumped$Symbiotic_type))
 head(dat_plot_symbiont_type_All_non_AM_lumped)
 table(dat_plot_symbiont_type_All_non_AM_lumped$Symbiotic_type)
 
@@ -955,46 +955,46 @@ table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary) #States are nu
 
 # #Create a data frame to plot the trait data
 dat_plot_selection_type_binary <-
-   analysis_dat_CSR_symb_ASR_selection_type_binary %>%
-   dplyr::select(CSR_binary)
- row.names(dat_plot_selection_type_binary) <-
-   analysis_dat_CSR_symb_ASR_selection_type_binary$Species_name
-  dat_plot_selection_type_binary$CSR_binary <-
-    as.numeric(as.factor(dat_plot_selection_type_binary$CSR_binary))
- head(dat_plot_selection_type_binary)
+  analysis_dat_CSR_symb_ASR_selection_type_binary %>%
+  dplyr::select(CSR_binary)
+row.names(dat_plot_selection_type_binary) <-
+  analysis_dat_CSR_symb_ASR_selection_type_binary$Species_name
+dat_plot_selection_type_binary$CSR_binary <-
+  as.numeric(as.factor(dat_plot_selection_type_binary$CSR_binary))
+head(dat_plot_selection_type_binary)
 
- #CSR ASR - Plot to Pdf
+#CSR ASR - Plot to Pdf
 pdf("./Output/ASRCSRType_binary.pdf",
-        width = 20,
-        height = 20)
-    trait.plot(
-      tree = analysis_tree,
-      dat = dat_plot_selection_type_binary,
-      cols = list(CSR_binary = brewer.pal(n = 3, "Accent")),
-      type = "f",
-      legend = T,
-      w = 1 / 40,
-      edge.width = 2,
-      cex.lab = 0.01,
-      tip.color = "white",
-      show.node.label = T
-    )
-    nodelabels(pie = ASR_selection_type_binary_ARD_yang$states,
-               piecol = brewer.pal(n = 3, "Accent"),
-               cex = 0.3)
-    legend(legend=states_selection_type_binary,
-           x = "bottomright",
-           fill = brewer.pal(n = 3, "Accent"),
-           cex = 2)
-    add.scale.bar()
-    dev.off()
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_selection_type_binary,
+  cols = list(CSR_binary = brewer.pal(n = 3, "Accent")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_selection_type_binary_ARD_yang$states,
+           piecol = brewer.pal(n = 3, "Accent"),
+           cex = 0.3)
+legend(legend=states_selection_type_binary,
+       x = "bottomright",
+       fill = brewer.pal(n = 3, "Accent"),
+       cex = 2)
+add.scale.bar()
+dev.off()
 
 ######Correlated evolution between the two variables
 
 #Let's run a combined model, modelling to traits simultaneously first.
 
 ###First we'll do all symbiont types, with the binarised CSR    
-    
+
 #Data formatting. We need three columns, species and symbiont state and selection type.
 analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary <-
   analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type, CSR_binary)
@@ -1105,10 +1105,10 @@ plotvec_symbiont_selection_type_binary<-
     "#1f78b4","#a6cee3",      #Blue is ECM
     "#a6cee3","#cab2d6",     #Purple is ECMAM
     "#33a02c","#b2df8a",      #Green is ERM  
-     "#fec44f","#fee391",     #Yellow is NM
+    "#fec44f","#fee391",     #Yellow is NM
     "#525252","#bdbdbd",    #Grey is NMAM
-     "#016c59" ,"#016c59")    #Turqouise is OM 
-     
+    "#016c59" ,"#016c59")    #Turqouise is OM 
+
 
 #CSR ASR - plot pdf
 pdf("./Output/ASRSymbiontCSRTypeBinary.pdf",
