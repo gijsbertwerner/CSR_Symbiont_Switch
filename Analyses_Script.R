@@ -1453,34 +1453,37 @@ dev.off()
 
 ###First we'll do all symbiont types, with the binarised CSR    
 
+
+###### 70 cutoff
+
 #Data formatting. We need three columns, species and symbiont state and selection type.
-analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary <-
-  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type, CSR_binary_90)
-head(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary)
-table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type)
-table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90)
-table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type,
-      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90)
-states_symbiont_selection_type_binary<-paste(
-  rep(names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type)),each=2),
-  names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90)),
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70 <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type, CSR_binary_70)
+head(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$CSR_binary_70)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$CSR_binary_70)
+states_symbiont_selection_type_binary_70<-paste(
+  rep(names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$Symbiotic_type)),each=2),
+  names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$CSR_binary_70)),
   sep = " & ")
 
-analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type<-
-  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type))
-analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90<-
-  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90))
-table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type)
-table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90)
-table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type,
-      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90)
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$Symbiotic_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$Symbiotic_type))
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$CSR_binary_70<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$CSR_binary_70))
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$CSR_binary_70)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$CSR_binary_70)
 
 
 #Run ASRs
-ASR_symbiont_selection_type_binary_ER_yang <-
+ASR_symbiont_selection_type_binary_ER_yang_70 <-
   corHMM(
     phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70,
     rate.cat = 1,
     model = "ER",
     node.states = "marginal",
@@ -1488,10 +1491,10 @@ ASR_symbiont_selection_type_binary_ER_yang <-
     nstarts = 10,
     n.cores = 7
   )
-ASR_symbiont_selection_type_binary_ARD_yang <-
+ASR_symbiont_selection_type_binary_ARD_yang_70 <-
   corHMM(
     phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70,
     rate.cat = 1,
     model = "ARD",
     node.states = "marginal",
@@ -1499,10 +1502,10 @@ ASR_symbiont_selection_type_binary_ARD_yang <-
     nstarts = 10,
     n.cores = 7
   )
-ASR_symbiont_selection_type_binary_SYM_yang <-
+ASR_symbiont_selection_type_binary_SYM_yang_70 <-
   corHMM(
     phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70,
     rate.cat = 1,
     model = "SYM",
     node.states = "marginal",
@@ -1516,48 +1519,48 @@ ASR_symbiont_selection_type_binary_SYM_yang <-
 #Which is the best model, using AIC-criteria?
 akaike.weights(
   c(
-    ASR_symbiont_selection_type_binary_ER_yang$AICc,
-    ASR_symbiont_selection_type_binary_ARD_yang$AICc,
-    ASR_symbiont_selection_type_binary_SYM_yang$AICc
+    ASR_symbiont_selection_type_binary_ER_yang_70$AICc,
+    ASR_symbiont_selection_type_binary_ARD_yang_70$AICc,
+    ASR_symbiont_selection_type_binary_SYM_yang_70$AICc
   )
 )
 
 
 
 #Save all model ran
-save(ASR_symbiont_selection_type_binary_ER_yang, file = "./Output/ASR_symbiont_selection_type_binary_ER_yang")
-save(ASR_symbiont_selection_type_binary_ARD_yang, file = "./Output/ASR_symbiont_selection_type_binary_ARD_yang")
-save(ASR_symbiont_selection_type_binary_SYM_yang, file = "./Output/ASR_symbiont_selection_type_binary_SYM_yang")
+save(ASR_symbiont_selection_type_binary_ER_yang_70, file = "./Output/ASR_symbiont_selection_type_binary_ER_yang_70")
+save(ASR_symbiont_selection_type_binary_ARD_yang_70, file = "./Output/ASR_symbiont_selection_type_binary_ARD_yang_70")
+save(ASR_symbiont_selection_type_binary_SYM_yang_70, file = "./Output/ASR_symbiont_selection_type_binary_SYM_yang_70")
 
-load("./Output/ASR_symbiont_selection_type_binary_ER_yang")
-load("./Output/ASR_symbiont_selection_type_binary_ARD_yang")
-load("./Output/ASR_symbiont_selection_type_binary_SYM_yang")
+load("./Output/ASR_symbiont_selection_type_binary_ER_yang_70")
+load("./Output/ASR_symbiont_selection_type_binary_ARD_yang_70")
+load("./Output/ASR_symbiont_selection_type_binary_SYM_yang_70")
 
 #Let's look at the best (=ARD) model
-ASR_symbiont_selection_type_binary_ARD_yang
-plotMKmodel(ASR_symbiont_selection_type_binary_ARD_yang)
+ASR_symbiont_selection_type_binary_ARD_yang_70
+plotMKmodel(ASR_symbiont_selection_type_binary_ARD_yang_70)
 
 ##Let's for now plot this reconstruction onto the tree
 
 #Create a data frame to plot the trait data
-dat_plot_symbiont_selection_type_binary <-
-  analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary %>%
-  dplyr::select(Symbiotic_type, CSR_binary_90)
-row.names(dat_plot_symbiont_selection_type_binary) <-
-  analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Species_name
-# dat_plot_symbiont_selection_type_binary$Symbiotic_type <-
-#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary$Symbiotic_type))
-# dat_plot_symbiont_selection_type_binary$CSR_binary_90 <-
-#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary$CSR_binary_90))
-head(dat_plot_symbiont_selection_type_binary)
+dat_plot_symbiont_selection_type_binary_70 <-
+  analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70 %>%
+  dplyr::select(Symbiotic_type, CSR_binary_70)
+row.names(dat_plot_symbiont_selection_type_binary_70) <-
+  analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_70$Species_name
+# dat_plot_symbiont_selection_type_binary_70$Symbiotic_type <-
+#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary_70$Symbiotic_type))
+# dat_plot_symbiont_selection_type_binary_70$CSR_binary_70 <-
+#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary_70$CSR_binary_70))
+head(dat_plot_symbiont_selection_type_binary_70)
 
 #Make a suitable plotting colour vector
 #First, I simply used this, but contrasts did not make sense c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired"))
 #Idea: there's eight symbiotic types and two CSR types.
 #Use the same colour (i.e. red) for a symbiotic type, in two shades to higlight the two levels for CSR
-#For instance: dark is CSR90, ligth is noCSR
+#For instance: dark is CSR70, ligth is noCSR
 
-plotvec_symbiont_selection_type_binary<-
+plotvec_symbiont_selection_type_binary_70<-
   c("#e31a1c","#fb9a99",     #Red is AMF
     "#8c510a","#d8b365",     #Brown is AMNod
     "#1f78b4","#a6cee3",      #Blue is ECM
@@ -1569,12 +1572,308 @@ plotvec_symbiont_selection_type_binary<-
 
 
 #CSR ASR - plot pdf
-pdf("./Output/ASRSymbiontCSRTypeBinary.pdf",
+pdf("./Output/ASRSymbiontCSRTypeBinary_70.pdf",
     width = 20,
     height = 20)
 trait.plot(
   tree = analysis_tree,
-  dat = dat_plot_symbiont_selection_type_binary,
+  dat = dat_plot_symbiont_selection_type_binary_70,
+  cols = list(
+    Symbiotic_type = brewer.pal(n = 8, "Set2"),
+    CSR_binary_70 = brewer.pal(n = 3, "Accent")
+  ),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(
+  pie = ASR_symbiont_selection_type_binary_ER_yang_70$states,
+  piecol = plotvec_symbiont_selection_type_binary_70,
+  cex = 0.3
+)
+legend(legend=states_symbiont_selection_type_binary_70,
+       x = "bottomright",
+       fill = plotvec_symbiont_selection_type_binary_70,
+       cex = 1.5)
+add.scale.bar()
+dev.off()
+
+###### 85 cutoff
+
+#Data formatting. We need three columns, species and symbiont state and selection type.
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85 <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type, CSR_binary_85)
+head(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$CSR_binary_85)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$CSR_binary_85)
+states_symbiont_selection_type_binary_85<-paste(
+  rep(names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$Symbiotic_type)),each=2),
+  names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$CSR_binary_85)),
+  sep = " & ")
+
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$Symbiotic_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$Symbiotic_type))
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$CSR_binary_85<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$CSR_binary_85))
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$CSR_binary_85)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$CSR_binary_85)
+
+
+#Run ASRs
+ASR_symbiont_selection_type_binary_ER_yang_85 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_selection_type_binary_ARD_yang_85 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_selection_type_binary_SYM_yang_85 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_symbiont_selection_type_binary_ER_yang_85$AICc,
+    ASR_symbiont_selection_type_binary_ARD_yang_85$AICc,
+    ASR_symbiont_selection_type_binary_SYM_yang_85$AICc
+  )
+)
+
+
+
+#Save all model ran
+save(ASR_symbiont_selection_type_binary_ER_yang_85, file = "./Output/ASR_symbiont_selection_type_binary_ER_yang_85")
+save(ASR_symbiont_selection_type_binary_ARD_yang_85, file = "./Output/ASR_symbiont_selection_type_binary_ARD_yang_85")
+save(ASR_symbiont_selection_type_binary_SYM_yang_85, file = "./Output/ASR_symbiont_selection_type_binary_SYM_yang_85")
+
+load("./Output/ASR_symbiont_selection_type_binary_ER_yang_85")
+load("./Output/ASR_symbiont_selection_type_binary_ARD_yang_85")
+load("./Output/ASR_symbiont_selection_type_binary_SYM_yang_85")
+
+#Let's look at the best (=ARD) model
+ASR_symbiont_selection_type_binary_ARD_yang_85
+plotMKmodel(ASR_symbiont_selection_type_binary_ARD_yang_85)
+
+##Let's for now plot this reconstruction onto the tree
+
+#Create a data frame to plot the trait data
+dat_plot_symbiont_selection_type_binary_85 <-
+  analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85 %>%
+  dplyr::select(Symbiotic_type, CSR_binary_85)
+row.names(dat_plot_symbiont_selection_type_binary_85) <-
+  analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_85$Species_name
+# dat_plot_symbiont_selection_type_binary_85$Symbiotic_type <-
+#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary_85$Symbiotic_type))
+# dat_plot_symbiont_selection_type_binary_85$CSR_binary_85 <-
+#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary_85$CSR_binary_85))
+head(dat_plot_symbiont_selection_type_binary_85)
+
+#Make a suitable plotting colour vector
+#First, I simply used this, but contrasts did not make sense c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired"))
+#Idea: there's eight symbiotic types and two CSR types.
+#Use the same colour (i.e. red) for a symbiotic type, in two shades to higlight the two levels for CSR
+#For instance: dark is CSR85, ligth is noCSR
+
+plotvec_symbiont_selection_type_binary_85<-
+  c("#e31a1c","#fb9a99",     #Red is AMF
+    "#8c510a","#d8b365",     #Brown is AMNod
+    "#1f78b4","#a6cee3",      #Blue is ECM
+    "#a6cee3","#cab2d6",     #Purple is ECMAM
+    "#33a02c","#b2df8a",      #Green is ERM  
+    "#fec44f","#fee391",     #Yellow is NM
+    "#525252","#bdbdbd",    #Grey is NMAM
+    "#014636" ,"#02818a")    #Turqouise is OM 
+
+
+#CSR ASR - plot pdf
+pdf("./Output/ASRSymbiontCSRTypeBinary_85.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_selection_type_binary_85,
+  cols = list(
+    Symbiotic_type = brewer.pal(n = 8, "Set2"),
+    CSR_binary_85 = brewer.pal(n = 3, "Accent")
+  ),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(
+  pie = ASR_symbiont_selection_type_binary_ER_yang_85$states,
+  piecol = plotvec_symbiont_selection_type_binary_85,
+  cex = 0.3
+)
+legend(legend=states_symbiont_selection_type_binary_85,
+       x = "bottomright",
+       fill = plotvec_symbiont_selection_type_binary_85,
+       cex = 1.5)
+add.scale.bar()
+dev.off()
+
+###### 90 cutoff
+
+#Data formatting. We need three columns, species and symbiont state and selection type.
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90 <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type, CSR_binary_90)
+head(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$CSR_binary_90)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$CSR_binary_90)
+states_symbiont_selection_type_binary_90<-paste(
+  rep(names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$Symbiotic_type)),each=2),
+  names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$CSR_binary_90)),
+  sep = " & ")
+
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$Symbiotic_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$Symbiotic_type))
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$CSR_binary_90<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$CSR_binary_90))
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$CSR_binary_90)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$CSR_binary_90)
+
+
+#Run ASRs
+ASR_symbiont_selection_type_binary_ER_yang_90 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_selection_type_binary_ARD_yang_90 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_selection_type_binary_SYM_yang_90 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_symbiont_selection_type_binary_ER_yang_90$AICc,
+    ASR_symbiont_selection_type_binary_ARD_yang_90$AICc,
+    ASR_symbiont_selection_type_binary_SYM_yang_90$AICc
+  )
+)
+
+
+
+#Save all model ran
+save(ASR_symbiont_selection_type_binary_ER_yang_90, file = "./Output/ASR_symbiont_selection_type_binary_ER_yang_90")
+save(ASR_symbiont_selection_type_binary_ARD_yang_90, file = "./Output/ASR_symbiont_selection_type_binary_ARD_yang_90")
+save(ASR_symbiont_selection_type_binary_SYM_yang_90, file = "./Output/ASR_symbiont_selection_type_binary_SYM_yang_90")
+
+load("./Output/ASR_symbiont_selection_type_binary_ER_yang_90")
+load("./Output/ASR_symbiont_selection_type_binary_ARD_yang_90")
+load("./Output/ASR_symbiont_selection_type_binary_SYM_yang_90")
+
+#Let's look at the best (=ARD) model
+ASR_symbiont_selection_type_binary_ARD_yang_90
+plotMKmodel(ASR_symbiont_selection_type_binary_ARD_yang_90)
+
+##Let's for now plot this reconstruction onto the tree
+
+#Create a data frame to plot the trait data
+dat_plot_symbiont_selection_type_binary_90 <-
+  analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90 %>%
+  dplyr::select(Symbiotic_type, CSR_binary_90)
+row.names(dat_plot_symbiont_selection_type_binary_90) <-
+  analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_90$Species_name
+# dat_plot_symbiont_selection_type_binary_90$Symbiotic_type <-
+#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary_90$Symbiotic_type))
+# dat_plot_symbiont_selection_type_binary_90$CSR_binary_90 <-
+#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary_90$CSR_binary_90))
+head(dat_plot_symbiont_selection_type_binary_90)
+
+#Make a suitable plotting colour vector
+#First, I simply used this, but contrasts did not make sense c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired"))
+#Idea: there's eight symbiotic types and two CSR types.
+#Use the same colour (i.e. red) for a symbiotic type, in two shades to higlight the two levels for CSR
+#For instance: dark is CSR90, ligth is noCSR
+
+plotvec_symbiont_selection_type_binary_90<-
+  c("#e31a1c","#fb9a99",     #Red is AMF
+    "#8c510a","#d8b365",     #Brown is AMNod
+    "#1f78b4","#a6cee3",      #Blue is ECM
+    "#a6cee3","#cab2d6",     #Purple is ECMAM
+    "#33a02c","#b2df8a",      #Green is ERM  
+    "#fec44f","#fee391",     #Yellow is NM
+    "#525252","#bdbdbd",    #Grey is NMAM
+    "#014636" ,"#02818a")    #Turqouise is OM 
+
+
+#CSR ASR - plot pdf
+pdf("./Output/ASRSymbiontCSRTypeBinary_90.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_selection_type_binary_90,
   cols = list(
     Symbiotic_type = brewer.pal(n = 8, "Set2"),
     CSR_binary_90 = brewer.pal(n = 3, "Accent")
@@ -1588,16 +1887,319 @@ trait.plot(
   show.node.label = T
 )
 nodelabels(
-  pie = ASR_symbiont_selection_type_binary_ER_yang$states,
-  piecol = plotvec_symbiont_selection_type_binary,
+  pie = ASR_symbiont_selection_type_binary_ER_yang_90$states,
+  piecol = plotvec_symbiont_selection_type_binary_90,
   cex = 0.3
 )
-legend(legend=states_symbiont_selection_type_binary,
+legend(legend=states_symbiont_selection_type_binary_90,
        x = "bottomright",
-       fill = plotvec_symbiont_selection_type_binary,
+       fill = plotvec_symbiont_selection_type_binary_90,
        cex = 1.5)
 add.scale.bar()
 dev.off()
+
+###### 92 cutoff
+
+#Data formatting. We need three columns, species and symbiont state and selection type.
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92 <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type, CSR_binary_92)
+head(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$CSR_binary_92)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$CSR_binary_92)
+states_symbiont_selection_type_binary_92<-paste(
+  rep(names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$Symbiotic_type)),each=2),
+  names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$CSR_binary_92)),
+  sep = " & ")
+
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$Symbiotic_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$Symbiotic_type))
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$CSR_binary_92<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$CSR_binary_92))
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$CSR_binary_92)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$CSR_binary_92)
+
+
+#Run ASRs
+ASR_symbiont_selection_type_binary_ER_yang_92 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_selection_type_binary_ARD_yang_92 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_selection_type_binary_SYM_yang_92 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_symbiont_selection_type_binary_ER_yang_92$AICc,
+    ASR_symbiont_selection_type_binary_ARD_yang_92$AICc,
+    ASR_symbiont_selection_type_binary_SYM_yang_92$AICc
+  )
+)
+
+
+
+#Save all model ran
+save(ASR_symbiont_selection_type_binary_ER_yang_92, file = "./Output/ASR_symbiont_selection_type_binary_ER_yang_92")
+save(ASR_symbiont_selection_type_binary_ARD_yang_92, file = "./Output/ASR_symbiont_selection_type_binary_ARD_yang_92")
+save(ASR_symbiont_selection_type_binary_SYM_yang_92, file = "./Output/ASR_symbiont_selection_type_binary_SYM_yang_92")
+
+load("./Output/ASR_symbiont_selection_type_binary_ER_yang_92")
+load("./Output/ASR_symbiont_selection_type_binary_ARD_yang_92")
+load("./Output/ASR_symbiont_selection_type_binary_SYM_yang_92")
+
+#Let's look at the best (=ARD) model
+ASR_symbiont_selection_type_binary_ARD_yang_92
+plotMKmodel(ASR_symbiont_selection_type_binary_ARD_yang_92)
+
+##Let's for now plot this reconstruction onto the tree
+
+#Create a data frame to plot the trait data
+dat_plot_symbiont_selection_type_binary_92 <-
+  analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92 %>%
+  dplyr::select(Symbiotic_type, CSR_binary_92)
+row.names(dat_plot_symbiont_selection_type_binary_92) <-
+  analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_92$Species_name
+# dat_plot_symbiont_selection_type_binary_92$Symbiotic_type <-
+#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary_92$Symbiotic_type))
+# dat_plot_symbiont_selection_type_binary_92$CSR_binary_92 <-
+#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary_92$CSR_binary_92))
+head(dat_plot_symbiont_selection_type_binary_92)
+
+#Make a suitable plotting colour vector
+#First, I simply used this, but contrasts did not make sense c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired"))
+#Idea: there's eight symbiotic types and two CSR types.
+#Use the same colour (i.e. red) for a symbiotic type, in two shades to higlight the two levels for CSR
+#For instance: dark is CSR92, ligth is noCSR
+
+plotvec_symbiont_selection_type_binary_92<-
+  c("#e31a1c","#fb9a99",     #Red is AMF
+    "#8c510a","#d8b365",     #Brown is AMNod
+    "#1f78b4","#a6cee3",      #Blue is ECM
+    "#a6cee3","#cab2d6",     #Purple is ECMAM
+    "#33a02c","#b2df8a",      #Green is ERM  
+    "#fec44f","#fee391",     #Yellow is NM
+    "#525252","#bdbdbd",    #Grey is NMAM
+    "#014636" ,"#02818a")    #Turqouise is OM 
+
+
+#CSR ASR - plot pdf
+pdf("./Output/ASRSymbiontCSRTypeBinary_92.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_selection_type_binary_92,
+  cols = list(
+    Symbiotic_type = brewer.pal(n = 8, "Set2"),
+    CSR_binary_92 = brewer.pal(n = 3, "Accent")
+  ),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(
+  pie = ASR_symbiont_selection_type_binary_ER_yang_92$states,
+  piecol = plotvec_symbiont_selection_type_binary_92,
+  cex = 0.3
+)
+legend(legend=states_symbiont_selection_type_binary_92,
+       x = "bottomright",
+       fill = plotvec_symbiont_selection_type_binary_92,
+       cex = 1.5)
+add.scale.bar()
+dev.off()
+
+###### 95 cutoff
+
+#Data formatting. We need three columns, species and symbiont state and selection type.
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95 <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type, CSR_binary_95)
+head(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$CSR_binary_95)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$CSR_binary_95)
+states_symbiont_selection_type_binary_95<-paste(
+  rep(names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$Symbiotic_type)),each=2),
+  names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$CSR_binary_95)),
+  sep = " & ")
+
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$Symbiotic_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$Symbiotic_type))
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$CSR_binary_95<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$CSR_binary_95))
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$Symbiotic_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$CSR_binary_95)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$Symbiotic_type,
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$CSR_binary_95)
+
+
+#Run ASRs
+ASR_symbiont_selection_type_binary_ER_yang_95 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_selection_type_binary_ARD_yang_95 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_selection_type_binary_SYM_yang_95 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_symbiont_selection_type_binary_ER_yang_95$AICc,
+    ASR_symbiont_selection_type_binary_ARD_yang_95$AICc,
+    ASR_symbiont_selection_type_binary_SYM_yang_95$AICc
+  )
+)
+
+
+
+#Save all model ran
+save(ASR_symbiont_selection_type_binary_ER_yang_95, file = "./Output/ASR_symbiont_selection_type_binary_ER_yang_95")
+save(ASR_symbiont_selection_type_binary_ARD_yang_95, file = "./Output/ASR_symbiont_selection_type_binary_ARD_yang_95")
+save(ASR_symbiont_selection_type_binary_SYM_yang_95, file = "./Output/ASR_symbiont_selection_type_binary_SYM_yang_95")
+
+load("./Output/ASR_symbiont_selection_type_binary_ER_yang_95")
+load("./Output/ASR_symbiont_selection_type_binary_ARD_yang_95")
+load("./Output/ASR_symbiont_selection_type_binary_SYM_yang_95")
+
+#Let's look at the best (=ARD) model
+ASR_symbiont_selection_type_binary_ARD_yang_95
+plotMKmodel(ASR_symbiont_selection_type_binary_ARD_yang_95)
+
+##Let's for now plot this reconstruction onto the tree
+
+#Create a data frame to plot the trait data
+dat_plot_symbiont_selection_type_binary_95 <-
+  analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95 %>%
+  dplyr::select(Symbiotic_type, CSR_binary_95)
+row.names(dat_plot_symbiont_selection_type_binary_95) <-
+  analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary_95$Species_name
+# dat_plot_symbiont_selection_type_binary_95$Symbiotic_type <-
+#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary_95$Symbiotic_type))
+# dat_plot_symbiont_selection_type_binary_95$CSR_binary_95 <-
+#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary_95$CSR_binary_95))
+head(dat_plot_symbiont_selection_type_binary_95)
+
+#Make a suitable plotting colour vector
+#First, I simply used this, but contrasts did not make sense c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired"))
+#Idea: there's eight symbiotic types and two CSR types.
+#Use the same colour (i.e. red) for a symbiotic type, in two shades to higlight the two levels for CSR
+#For instance: dark is CSR95, ligth is noCSR
+
+plotvec_symbiont_selection_type_binary_95<-
+  c("#e31a1c","#fb9a99",     #Red is AMF
+    "#8c510a","#d8b365",     #Brown is AMNod
+    "#1f78b4","#a6cee3",      #Blue is ECM
+    "#a6cee3","#cab2d6",     #Purple is ECMAM
+    "#33a02c","#b2df8a",      #Green is ERM  
+    "#fec44f","#fee391",     #Yellow is NM
+    "#525252","#bdbdbd",    #Grey is NMAM
+    "#014636" ,"#02818a")    #Turqouise is OM 
+
+
+#CSR ASR - plot pdf
+pdf("./Output/ASRSymbiontCSRTypeBinary_95.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_selection_type_binary_95,
+  cols = list(
+    Symbiotic_type = brewer.pal(n = 8, "Set2"),
+    CSR_binary_95 = brewer.pal(n = 3, "Accent")
+  ),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(
+  pie = ASR_symbiont_selection_type_binary_ER_yang_95$states,
+  piecol = plotvec_symbiont_selection_type_binary_95,
+  cex = 0.3
+)
+legend(legend=states_symbiont_selection_type_binary_95,
+       x = "bottomright",
+       fill = plotvec_symbiont_selection_type_binary_95,
+       cex = 1.5)
+add.scale.bar()
+dev.off()
+
+
+
+
+
+###### Below here: still to do the cutoffs. 
+
 
 ####Second we'll also binarise symbiont type, symbiont type, for now picking only AM (ancestral?) vs other
 
