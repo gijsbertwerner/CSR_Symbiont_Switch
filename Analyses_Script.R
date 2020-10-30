@@ -876,31 +876,61 @@ dev.off()
 table(analysis_dat_CSR_symb$CSR_categorical_level) #Pretty equal numbers of all three types.
 
 #Create a number of alternative CSR-cutoffs, using cosine similarity (email Marco October 30, 2020). 
+analysis_dat_CSR_symb$CSR_binary_70 <-
+  ifelse(
+    analysis_dat_CSR_symb$CSR_categorical_level %in% c("C/CSR", "CR/CSR", "CS/CSR", 
+                                                       "CSR", "R/CSR", "S/CSR", "SR/CSR",
+                                                       "CR","CS","SR",
+                                                       "C/CR","C/CS","R/CR","R/SR","S/CS","S/SR"),
+    "CSR70",
+    "NoCSR"
+  )
+analysis_dat_CSR_symb$CSR_binary_85 <-
+  ifelse(
+    analysis_dat_CSR_symb$CSR_categorical_level %in% c("C/CSR", "CR/CSR", "CS/CSR", "CSR", "R/CSR", "S/CSR", "SR/CSR","CR","CS","SR"),
+    "CSR85",
+    "NoCSR"
+  )
 analysis_dat_CSR_symb$CSR_binary_90 <-
   ifelse(
     analysis_dat_CSR_symb$CSR_categorical_level %in% c("C/CSR", "CR/CSR", "CS/CSR", "CSR", "R/CSR", "S/CSR", "SR/CSR"),
-    "CSR9090",
+    "CSR90",
     "NoCSR"
   )
+analysis_dat_CSR_symb$CSR_binary_92 <-
+  ifelse(
+    analysis_dat_CSR_symb$CSR_categorical_level %in% c( "CR/CSR", "CS/CSR", "CSR", "SR/CSR"),
+    "CSR92",
+    "NoCSR"
+  )
+analysis_dat_CSR_symb$CSR_binary_95 <-
+  ifelse(
+    analysis_dat_CSR_symb$CSR_categorical_level %in% c("CSR"),
+    "CSR95",
+    "NoCSR"
+  )
+table(analysis_dat_CSR_symb$CSR_binary_70)
+table(analysis_dat_CSR_symb$CSR_binary_85)
 table(analysis_dat_CSR_symb$CSR_binary_90)
+table(analysis_dat_CSR_symb$CSR_binary_92)
+table(analysis_dat_CSR_symb$CSR_binary_95)
 
+####Analysis with the 70 cutoff
 #Data formatting. We need two columns, species and symbiont state.
-analysis_dat_CSR_symb_ASR_selection_type_binary <-
-  analysis_dat_CSR_symb %>% dplyr::select(Species_name, CSR_binary_90)
-head(analysis_dat_CSR_symb_ASR_selection_type_binary)
-table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary_90)
-states_selection_type_binary<-names(table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary_90))
-
-analysis_dat_CSR_symb_ASR_selection_type$selection_type<-
-  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary_90))
-table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary_90)
-
+analysis_dat_CSR_symb_ASR_selection_type_binary_70 <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, CSR_binary_70)
+head(analysis_dat_CSR_symb_ASR_selection_type_binary_70)
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_70$CSR_binary_70)
+states_selection_type_binary_70<-names(table(analysis_dat_CSR_symb_ASR_selection_type_binary_70$CSR_binary_70))
+analysis_dat_CSR_symb_ASR_selection_type_binary_70$selection_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_selection_type_binary_70$CSR_binary_70))
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_70$selection_type)
 
 #Run ASRs
-ASR_selection_type_binary_ER_yang <-
+ASR_selection_type_binary_ER_yang_70 <-
   corHMM(
     phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_selection_type_binary,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_70,
     rate.cat = 1,
     model = "ER",
     node.states = "marginal",
@@ -908,10 +938,10 @@ ASR_selection_type_binary_ER_yang <-
     nstarts = 10,
     n.cores = 7
   )
-ASR_selection_type_binary_ARD_yang <-
+ASR_selection_type_binary_ARD_yang_70 <-
   corHMM(
     phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_selection_type_binary,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_70,
     rate.cat = 1,
     model = "ARD",
     node.states = "marginal",
@@ -919,10 +949,10 @@ ASR_selection_type_binary_ARD_yang <-
     nstarts = 10,
     n.cores = 7
   )
-ASR_selection_type_binary_SYM_yang <-
+ASR_selection_type_binary_SYM_yang_70 <-
   corHMM(
     phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_selection_type_binary,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_70,
     rate.cat = 1,
     model = "SYM",
     node.states = "marginal",
@@ -932,40 +962,253 @@ ASR_selection_type_binary_SYM_yang <-
   )
 
 #Save all model ran
-save(ASR_selection_type_binary_ER_yang, file = "./Output/ASR_selection_type_binary_ER_yang")
-save(ASR_selection_type_binary_ARD_yang, file = "./Output/ASR_selection_type_binary_ARD_yang")
-save(ASR_selection_type_binary_SYM_yang, file = "./Output/ASR_selection_type_binary_SYM_yang")
+save(ASR_selection_type_binary_ER_yang_70, file = "./Output/ASR_selection_type_binary_ER_yang_70")
+save(ASR_selection_type_binary_ARD_yang_70, file = "./Output/ASR_selection_type_binary_ARD_yang_70")
+save(ASR_selection_type_binary_SYM_yang_70, file = "./Output/ASR_selection_type_binary_SYM_yang_70")
 
-load("./Output/ASR_selection_type_binary_ER_yang")
-load("./Output/ASR_selection_type_binary_ARD_yang")
-load("./Output/ASR_selection_type_binary_SYM_yang")
+load("./Output/ASR_selection_type_binary_ER_yang_70")
+load("./Output/ASR_selection_type_binary_ARD_yang_70")
+load("./Output/ASR_selection_type_binary_SYM_yang_70")
 
 #Which is the best model, using AIC-criteria?
 akaike.weights(
   c(
-    ASR_selection_type_binary_ER_yang$AICc,
-    ASR_selection_type_binary_ARD_yang$AICc,
-    ASR_selection_type_binary_SYM_yang$AICc
+    ASR_selection_type_binary_ER_yang_70$AICc,
+    ASR_selection_type_binary_ARD_yang_70$AICc,
+    ASR_selection_type_binary_SYM_yang_70$AICc
   )
 )
 
 #ARD by far the best
-ASR_selection_type_binary_ARD_yang
-plotMKmodel(ASR_selection_type_binary_ARD_yang)
-table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary_90) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
+ASR_selection_type_binary_ARD_yang_70
+plotMKmodel(ASR_selection_type_binary_ARD_yang_70)
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_70$CSR_binary_70) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
 
 # #Create a data frame to plot the trait data
 dat_plot_selection_type_binary <-
-  analysis_dat_CSR_symb_ASR_selection_type_binary %>%
+  analysis_dat_CSR_symb_ASR_selection_type_binary_70 %>%
+  dplyr::select(CSR_binary_70)
+row.names(dat_plot_selection_type_binary) <-
+  analysis_dat_CSR_symb_ASR_selection_type_binary_70$Species_name
+dat_plot_selection_type_binary$CSR_binary_70 <-
+  as.numeric(as.factor(dat_plot_selection_type_binary$CSR_binary_70))
+head(dat_plot_selection_type_binary)
+table(dat_plot_selection_type_binary)
+
+#CSR ASR - Plot to Pdf
+pdf("./Output/ASRCSRType_binary_70.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_selection_type_binary,
+  cols = list(CSR_binary_70 = brewer.pal(n = 3, "Accent")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_selection_type_binary_ARD_yang_70$states,
+           piecol = brewer.pal(n = 3, "Accent"),
+           cex = 0.3)
+legend(legend=states_selection_type_binary,
+       x = "bottomright",
+       fill = brewer.pal(n = 3, "Accent"),
+       cex = 2)
+add.scale.bar()
+dev.off()
+
+####Analysis with the 85 cutoff
+#Data formatting. We need two columns, species and symbiont state.
+analysis_dat_CSR_symb_ASR_selection_type_binary_85 <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, CSR_binary_85)
+head(analysis_dat_CSR_symb_ASR_selection_type_binary_85)
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_85$CSR_binary_85)
+states_selection_type_binary_85<-names(table(analysis_dat_CSR_symb_ASR_selection_type_binary_85$CSR_binary_85))
+analysis_dat_CSR_symb_ASR_selection_type_binary_85$selection_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_selection_type_binary_85$CSR_binary_85))
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_85$selection_type)
+
+#Run ASRs
+ASR_selection_type_binary_ER_yang_85 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_85,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang", #Fix root to any CSR - email Marco mid September 2020
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_selection_type_binary_ARD_yang_85 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_85,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_selection_type_binary_SYM_yang_85 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_85,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#Save all model ran
+save(ASR_selection_type_binary_ER_yang_85, file = "./Output/ASR_selection_type_binary_ER_yang_85")
+save(ASR_selection_type_binary_ARD_yang_85, file = "./Output/ASR_selection_type_binary_ARD_yang_85")
+save(ASR_selection_type_binary_SYM_yang_85, file = "./Output/ASR_selection_type_binary_SYM_yang_85")
+
+load("./Output/ASR_selection_type_binary_ER_yang_85")
+load("./Output/ASR_selection_type_binary_ARD_yang_85")
+load("./Output/ASR_selection_type_binary_SYM_yang_85")
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_selection_type_binary_ER_yang_85$AICc,
+    ASR_selection_type_binary_ARD_yang_85$AICc,
+    ASR_selection_type_binary_SYM_yang_85$AICc
+  )
+)
+
+#ARD by far the best
+ASR_selection_type_binary_ARD_yang_85
+plotMKmodel(ASR_selection_type_binary_ARD_yang_85)
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_85$CSR_binary_85) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
+
+# #Create a data frame to plot the trait data
+dat_plot_selection_type_binary <-
+  analysis_dat_CSR_symb_ASR_selection_type_binary_85 %>%
+  dplyr::select(CSR_binary_85)
+row.names(dat_plot_selection_type_binary) <-
+  analysis_dat_CSR_symb_ASR_selection_type_binary_85$Species_name
+dat_plot_selection_type_binary$CSR_binary_85 <-
+  as.numeric(as.factor(dat_plot_selection_type_binary$CSR_binary_85))
+head(dat_plot_selection_type_binary)
+table(dat_plot_selection_type_binary)
+
+#CSR ASR - Plot to Pdf
+pdf("./Output/ASRCSRType_binary_85.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_selection_type_binary,
+  cols = list(CSR_binary_85 = brewer.pal(n = 3, "Accent")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_selection_type_binary_ARD_yang_85$states,
+           piecol = brewer.pal(n = 3, "Accent"),
+           cex = 0.3)
+legend(legend=states_selection_type_binary,
+       x = "bottomright",
+       fill = brewer.pal(n = 3, "Accent"),
+       cex = 2)
+add.scale.bar()
+dev.off()
+
+####Analysis with the 90 cutoff
+#Data formatting. We need two columns, species and symbiont state.
+analysis_dat_CSR_symb_ASR_selection_type_binary_90 <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, CSR_binary_90)
+head(analysis_dat_CSR_symb_ASR_selection_type_binary_90)
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_90$CSR_binary_90)
+states_selection_type_binary_90<-names(table(analysis_dat_CSR_symb_ASR_selection_type_binary_90$CSR_binary_90))
+analysis_dat_CSR_symb_ASR_selection_type_binary_90$selection_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_selection_type_binary_90$CSR_binary_90))
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_90$selection_type)
+
+#Run ASRs
+ASR_selection_type_binary_ER_yang_90 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_90,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang", #Fix root to any CSR - email Marco mid September 2020
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_selection_type_binary_ARD_yang_90 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_90,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_selection_type_binary_SYM_yang_90 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_90,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#Save all model ran
+save(ASR_selection_type_binary_ER_yang_90, file = "./Output/ASR_selection_type_binary_ER_yang_90")
+save(ASR_selection_type_binary_ARD_yang_90, file = "./Output/ASR_selection_type_binary_ARD_yang_90")
+save(ASR_selection_type_binary_SYM_yang_90, file = "./Output/ASR_selection_type_binary_SYM_yang_90")
+
+load("./Output/ASR_selection_type_binary_ER_yang_90")
+load("./Output/ASR_selection_type_binary_ARD_yang_90")
+load("./Output/ASR_selection_type_binary_SYM_yang_90")
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_selection_type_binary_ER_yang_90$AICc,
+    ASR_selection_type_binary_ARD_yang_90$AICc,
+    ASR_selection_type_binary_SYM_yang_90$AICc
+  )
+)
+
+#ARD by far the best
+ASR_selection_type_binary_ARD_yang_90
+plotMKmodel(ASR_selection_type_binary_ARD_yang_90)
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_90$CSR_binary_90) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
+
+# #Create a data frame to plot the trait data
+dat_plot_selection_type_binary <-
+  analysis_dat_CSR_symb_ASR_selection_type_binary_90 %>%
   dplyr::select(CSR_binary_90)
 row.names(dat_plot_selection_type_binary) <-
-  analysis_dat_CSR_symb_ASR_selection_type_binary$Species_name
+  analysis_dat_CSR_symb_ASR_selection_type_binary_90$Species_name
 dat_plot_selection_type_binary$CSR_binary_90 <-
   as.numeric(as.factor(dat_plot_selection_type_binary$CSR_binary_90))
 head(dat_plot_selection_type_binary)
+table(dat_plot_selection_type_binary)
 
 #CSR ASR - Plot to Pdf
-pdf("./Output/ASRCSRType_binary.pdf",
+pdf("./Output/ASRCSRType_binary_90.pdf",
     width = 20,
     height = 20)
 trait.plot(
@@ -980,7 +1223,221 @@ trait.plot(
   tip.color = "white",
   show.node.label = T
 )
-nodelabels(pie = ASR_selection_type_binary_ARD_yang$states,
+nodelabels(pie = ASR_selection_type_binary_ARD_yang_90$states,
+           piecol = brewer.pal(n = 3, "Accent"),
+           cex = 0.3)
+legend(legend=states_selection_type_binary,
+       x = "bottomright",
+       fill = brewer.pal(n = 3, "Accent"),
+       cex = 2)
+add.scale.bar()
+dev.off()
+
+####Analysis with the 95 cutoff
+#Data formatting. We need two columns, species and symbiont state.
+analysis_dat_CSR_symb_ASR_selection_type_binary_95 <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, CSR_binary_95)
+head(analysis_dat_CSR_symb_ASR_selection_type_binary_95)
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_95$CSR_binary_95)
+states_selection_type_binary_95<-names(table(analysis_dat_CSR_symb_ASR_selection_type_binary_95$CSR_binary_95))
+analysis_dat_CSR_symb_ASR_selection_type_binary_95$selection_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_selection_type_binary_95$CSR_binary_95))
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_95$selection_type)
+
+#Run ASRs
+ASR_selection_type_binary_ER_yang_95 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_95,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang", #Fix root to any CSR - email Marco mid September 2020
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_selection_type_binary_ARD_yang_95 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_95,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_selection_type_binary_SYM_yang_95 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_95,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#Save all model ran
+save(ASR_selection_type_binary_ER_yang_95, file = "./Output/ASR_selection_type_binary_ER_yang_95")
+save(ASR_selection_type_binary_ARD_yang_95, file = "./Output/ASR_selection_type_binary_ARD_yang_95")
+save(ASR_selection_type_binary_SYM_yang_95, file = "./Output/ASR_selection_type_binary_SYM_yang_95")
+
+load("./Output/ASR_selection_type_binary_ER_yang_95")
+load("./Output/ASR_selection_type_binary_ARD_yang_95")
+load("./Output/ASR_selection_type_binary_SYM_yang_95")
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_selection_type_binary_ER_yang_95$AICc,
+    ASR_selection_type_binary_ARD_yang_95$AICc,
+    ASR_selection_type_binary_SYM_yang_95$AICc
+  )
+)
+
+#ARD by far the best
+ASR_selection_type_binary_ARD_yang_95
+plotMKmodel(ASR_selection_type_binary_ARD_yang_95)
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_95$CSR_binary_95) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
+
+# #Create a data frame to plot the trait data
+dat_plot_selection_type_binary <-
+  analysis_dat_CSR_symb_ASR_selection_type_binary_95 %>%
+  dplyr::select(CSR_binary_95)
+row.names(dat_plot_selection_type_binary) <-
+  analysis_dat_CSR_symb_ASR_selection_type_binary_95$Species_name
+dat_plot_selection_type_binary$CSR_binary_95 <-
+  as.numeric(as.factor(dat_plot_selection_type_binary$CSR_binary_95))
+head(dat_plot_selection_type_binary)
+table(dat_plot_selection_type_binary)
+
+#CSR ASR - Plot to Pdf
+pdf("./Output/ASRCSRType_binary_95.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_selection_type_binary,
+  cols = list(CSR_binary_95 = brewer.pal(n = 3, "Accent")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_selection_type_binary_ARD_yang_95$states,
+           piecol = brewer.pal(n = 3, "Accent"),
+           cex = 0.3)
+legend(legend=states_selection_type_binary,
+       x = "bottomright",
+       fill = brewer.pal(n = 3, "Accent"),
+       cex = 2)
+add.scale.bar()
+dev.off()
+
+
+
+####Analysis with the 92 cutoff
+#Data formatting. We need two columns, species and symbiont state.
+analysis_dat_CSR_symb_ASR_selection_type_binary_92 <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, CSR_binary_92)
+head(analysis_dat_CSR_symb_ASR_selection_type_binary_92)
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_92$CSR_binary_92)
+states_selection_type_binary_92<-names(table(analysis_dat_CSR_symb_ASR_selection_type_binary_92$CSR_binary_92))
+analysis_dat_CSR_symb_ASR_selection_type_binary_92$selection_type<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_selection_type_binary_92$CSR_binary_92))
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_92$selection_type)
+
+#Run ASRs
+ASR_selection_type_binary_ER_yang_92 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_92,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang", #Fix root to any CSR - email Marco mid September 2020
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_selection_type_binary_ARD_yang_92 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_92,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_selection_type_binary_SYM_yang_92 <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_selection_type_binary_92,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#Save all model ran
+save(ASR_selection_type_binary_ER_yang_92, file = "./Output/ASR_selection_type_binary_ER_yang_92")
+save(ASR_selection_type_binary_ARD_yang_92, file = "./Output/ASR_selection_type_binary_ARD_yang_92")
+save(ASR_selection_type_binary_SYM_yang_92, file = "./Output/ASR_selection_type_binary_SYM_yang_92")
+
+load("./Output/ASR_selection_type_binary_ER_yang_92")
+load("./Output/ASR_selection_type_binary_ARD_yang_92")
+load("./Output/ASR_selection_type_binary_SYM_yang_92")
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_selection_type_binary_ER_yang_92$AICc,
+    ASR_selection_type_binary_ARD_yang_92$AICc,
+    ASR_selection_type_binary_SYM_yang_92$AICc
+  )
+)
+
+#ARD by far the best
+ASR_selection_type_binary_ARD_yang_92
+plotMKmodel(ASR_selection_type_binary_ARD_yang_92)
+table(analysis_dat_CSR_symb_ASR_selection_type_binary_92$CSR_binary_92) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
+
+# #Create a data frame to plot the trait data
+dat_plot_selection_type_binary <-
+  analysis_dat_CSR_symb_ASR_selection_type_binary_92 %>%
+  dplyr::select(CSR_binary_92)
+row.names(dat_plot_selection_type_binary) <-
+  analysis_dat_CSR_symb_ASR_selection_type_binary_92$Species_name
+dat_plot_selection_type_binary$CSR_binary_92 <-
+  as.numeric(as.factor(dat_plot_selection_type_binary$CSR_binary_92))
+head(dat_plot_selection_type_binary)
+table(dat_plot_selection_type_binary)
+
+#CSR ASR - Plot to Pdf
+pdf("./Output/ASRCSRType_binary_92.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_selection_type_binary,
+  cols = list(CSR_binary_92 = brewer.pal(n = 3, "Accent")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_selection_type_binary_ARD_yang_92$states,
            piecol = brewer.pal(n = 3, "Accent"),
            cex = 0.3)
 legend(legend=states_selection_type_binary,
