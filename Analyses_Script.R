@@ -874,25 +874,26 @@ dev.off()
 ############## CSR ASR - Approach 2
 
 table(analysis_dat_CSR_symb$CSR_categorical_level) #Pretty equal numbers of all three types.
-#Turn it into a binary with CSR vs other
-analysis_dat_CSR_symb$CSR_binary <-
+
+#Create a number of alternative CSR-cutoffs, using cosine similarity (email Marco October 30, 2020). 
+analysis_dat_CSR_symb$CSR_binary_90 <-
   ifelse(
     analysis_dat_CSR_symb$CSR_categorical_level %in% c("C/CSR", "CR/CSR", "CS/CSR", "CSR", "R/CSR", "S/CSR", "SR/CSR"),
-    "AnyCSR",
+    "CSR9090",
     "NoCSR"
   )
-table(analysis_dat_CSR_symb$CSR_binary)
+table(analysis_dat_CSR_symb$CSR_binary_90)
 
 #Data formatting. We need two columns, species and symbiont state.
 analysis_dat_CSR_symb_ASR_selection_type_binary <-
-  analysis_dat_CSR_symb %>% dplyr::select(Species_name, CSR_binary)
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, CSR_binary_90)
 head(analysis_dat_CSR_symb_ASR_selection_type_binary)
-table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary)
-states_selection_type_binary<-names(table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary))
+table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary_90)
+states_selection_type_binary<-names(table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary_90))
 
 analysis_dat_CSR_symb_ASR_selection_type$selection_type<-
-  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary))
-table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary)
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary_90))
+table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary_90)
 
 
 #Run ASRs
@@ -951,16 +952,16 @@ akaike.weights(
 #ARD by far the best
 ASR_selection_type_binary_ARD_yang
 plotMKmodel(ASR_selection_type_binary_ARD_yang)
-table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
+table(analysis_dat_CSR_symb_ASR_selection_type_binary$CSR_binary_90) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
 
 # #Create a data frame to plot the trait data
 dat_plot_selection_type_binary <-
   analysis_dat_CSR_symb_ASR_selection_type_binary %>%
-  dplyr::select(CSR_binary)
+  dplyr::select(CSR_binary_90)
 row.names(dat_plot_selection_type_binary) <-
   analysis_dat_CSR_symb_ASR_selection_type_binary$Species_name
-dat_plot_selection_type_binary$CSR_binary <-
-  as.numeric(as.factor(dat_plot_selection_type_binary$CSR_binary))
+dat_plot_selection_type_binary$CSR_binary_90 <-
+  as.numeric(as.factor(dat_plot_selection_type_binary$CSR_binary_90))
 head(dat_plot_selection_type_binary)
 
 #CSR ASR - Plot to Pdf
@@ -970,7 +971,7 @@ pdf("./Output/ASRCSRType_binary.pdf",
 trait.plot(
   tree = analysis_tree,
   dat = dat_plot_selection_type_binary,
-  cols = list(CSR_binary = brewer.pal(n = 3, "Accent")),
+  cols = list(CSR_binary_90 = brewer.pal(n = 3, "Accent")),
   type = "f",
   legend = T,
   w = 1 / 40,
@@ -997,25 +998,25 @@ dev.off()
 
 #Data formatting. We need three columns, species and symbiont state and selection type.
 analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary <-
-  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type, CSR_binary)
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type, CSR_binary_90)
 head(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary)
 table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type)
-table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90)
 table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type,
-      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary)
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90)
 states_symbiont_selection_type_binary<-paste(
   rep(names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type)),each=2),
-  names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary)),
+  names(table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90)),
   sep = " & ")
 
 analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type<-
   as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type))
-analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary<-
-  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary))
+analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90))
 table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type)
-table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary)
+table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90)
 table(analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Symbiotic_type,
-      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary)
+      analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$CSR_binary_90)
 
 
 #Run ASRs
@@ -1084,20 +1085,20 @@ plotMKmodel(ASR_symbiont_selection_type_binary_ARD_yang)
 #Create a data frame to plot the trait data
 dat_plot_symbiont_selection_type_binary <-
   analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary %>%
-  dplyr::select(Symbiotic_type, CSR_binary)
+  dplyr::select(Symbiotic_type, CSR_binary_90)
 row.names(dat_plot_symbiont_selection_type_binary) <-
   analysis_dat_CSR_symb_ASR_symbiont_selection_type_binary$Species_name
 # dat_plot_symbiont_selection_type_binary$Symbiotic_type <-
 #   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary$Symbiotic_type))
-# dat_plot_symbiont_selection_type_binary$CSR_binary <-
-#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary$CSR_binary))
+# dat_plot_symbiont_selection_type_binary$CSR_binary_90 <-
+#   as.numeric(as.factor(dat_plot_symbiont_selection_type_binary$CSR_binary_90))
 head(dat_plot_symbiont_selection_type_binary)
 
 #Make a suitable plotting colour vector
 #First, I simply used this, but contrasts did not make sense c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired"))
 #Idea: there's eight symbiotic types and two CSR types.
 #Use the same colour (i.e. red) for a symbiotic type, in two shades to higlight the two levels for CSR
-#For instance: dark is AnyCSR, ligth is noCSR
+#For instance: dark is CSR90, ligth is noCSR
 
 plotvec_symbiont_selection_type_binary<-
   c("#e31a1c","#fb9a99",     #Red is AMF
@@ -1107,7 +1108,7 @@ plotvec_symbiont_selection_type_binary<-
     "#33a02c","#b2df8a",      #Green is ERM  
     "#fec44f","#fee391",     #Yellow is NM
     "#525252","#bdbdbd",    #Grey is NMAM
-    "#016c59" ,"#016c59")    #Turqouise is OM 
+    "#014636" ,"#02818a")    #Turqouise is OM 
 
 
 #CSR ASR - plot pdf
@@ -1119,7 +1120,7 @@ trait.plot(
   dat = dat_plot_symbiont_selection_type_binary,
   cols = list(
     Symbiotic_type = brewer.pal(n = 8, "Set2"),
-    CSR_binary = brewer.pal(n = 3, "Accent")
+    CSR_binary_90 = brewer.pal(n = 3, "Accent")
   ),
   type = "f",
   legend = T,
@@ -1145,24 +1146,24 @@ dev.off()
 
 #Data formatting. We need three columns, species and symbiont state and selection type.
 analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary <-
-  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type, CSR_binary)
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type, CSR_binary_90)
 analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type<-
   analysis_dat_CSR_symb_ASR_symbiont_type_All_non_AM_lumped$Symbiotic_type
 head(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary)
 table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type)
-table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary)
+table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary_90)
 table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type,
-      analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary)
-states_symbiont_binary_selection_type_binary<-c("Any_AM & AnyCSR","Any_AM & NoCSR","non_AM & AnyCSR","nonAM & NoCSR")
+      analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary_90)
+states_symbiont_binary_selection_type_binary<-c("Any_AM & CSR90","Any_AM & NoCSR","non_AM & CSR90","nonAM & NoCSR")
 
 analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type<-
   as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type))
-analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary<-
-  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary))
+analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary_90<-
+  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary_90))
 table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type)
-table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary)
+table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary_90)
 table(analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Symbiotic_type,
-      analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary)
+      analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$CSR_binary_90)
 
 #Run ASRs
 ASR_symbiont_binary_selection_type_binary_ER_yang <-
@@ -1230,20 +1231,20 @@ plotMKmodel(ASR_symbiont_binary_selection_type_binary_ARD_yang)
 #Create a data frame to plot the trait data
 dat_plot_symbiont_binary_selection_type_binary <-
   analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary %>%
-  dplyr::select(Symbiotic_type, CSR_binary)
+  dplyr::select(Symbiotic_type, CSR_binary_90)
 row.names(dat_plot_symbiont_binary_selection_type_binary) <-
   analysis_dat_CSR_symb_ASR_symbiont_binary_selection_type_binary$Species_name
 # dat_plot_symbiont_binary_selection_type_binary$Symbiotic_type <-
 #   as.numeric(as.factor(dat_plot_symbiont_binary_selection_type_binary$Symbiotic_type))
-# dat_plot_symbiont_binary_selection_type_binary$CSR_binary <-
-#   as.numeric(as.factor(dat_plot_symbiont_binary_selection_type_binary$CSR_binary))
+# dat_plot_symbiont_binary_selection_type_binary$CSR_binary_90 <-
+#   as.numeric(as.factor(dat_plot_symbiont_binary_selection_type_binary$CSR_binary_90))
 head(dat_plot_symbiont_binary_selection_type_binary)
 
 #Make a suitable plotting colour vector
 #First, I simply used this, but contrasts did not make sense c(brewer.pal(n = 11, "Set3"), brewer.pal(n = 11, "Paired"))
 #Idea: there's eight symbiotic types and two CSR types.
 #Use the same colour (i.e. red) for a symbiotic type, in two shades to higlight the two levels for CSR
-#For instance: dark is AnyCSR, ligth is noCSR
+#For instance: dark is CSR90, ligth is noCSR
 
 plotvec_symbiont_binary_selection_type_binary<-
   c("#e31a1c","#fb9a99",     #Red is AMF
@@ -1253,7 +1254,7 @@ plotvec_symbiont_binary_selection_type_binary<-
     "#33a02c","#b2df8a",      #Green is ERM  
     "#fec44f","#fee391",     #Yellow is NM
     "#525252","#bdbdbd",    #Grey is NMAM
-    "#016c59" ,"#016c59")    #Turqouise is OM 
+    "#014636" ,"#02818a")    #Turqouise is OM 
 
 
 #CSR ASR - plot pdf
@@ -1265,7 +1266,7 @@ trait.plot(
   dat = dat_plot_symbiont_binary_selection_type_binary,
   cols = list(
     Symbiotic_type = brewer.pal(n = 8, "Set2"),
-    CSR_binary = brewer.pal(n = 3, "Accent")
+    CSR_binary_90 = brewer.pal(n = 3, "Accent")
   ),
   type = "f",
   legend = F,
@@ -1291,7 +1292,7 @@ save.image()
 
 ####Run Pagel's model
 vec_symbiont_binary<-dat_plot_symbiont_binary_selection_type_binary$Symbiotic_type
-vec_selection_type_binary<-dat_plot_symbiont_binary_selection_type_binary$CSR_binary
+vec_selection_type_binary<-dat_plot_symbiont_binary_selection_type_binary$CSR_binary_90
 names(vec_symbiont_binary)<-row.names(dat_plot_symbiont_binary_selection_type_binary)
 names(vec_selection_type_binary)<-row.names(dat_plot_symbiont_binary_selection_type_binary)
 head(vec_symbiont_binary)
@@ -1381,7 +1382,7 @@ trait.plot(
   dat = dat_plot_symbiont_selection_type_binary,
   cols = list(
     Symbiotic_type = brewer.pal(n = 8, "Set2"),
-    CSR_binary = brewer.pal(n = 3, "Accent")
+    CSR_binary_90 = brewer.pal(n = 3, "Accent")
   ),
   type = "f",
   legend = T,
@@ -1421,7 +1422,7 @@ trait.plot(
   dat = dat_plot_symbiont_selection_type_binary,
   cols = list(
     Symbiotic_type = brewer.pal(n = 8, "Set2"),
-    CSR_binary = brewer.pal(n = 3, "Accent")
+    CSR_binary_90 = brewer.pal(n = 3, "Accent")
   ),
   type = "f",
   legend = T,
@@ -1461,7 +1462,7 @@ trait.plot(
   dat = dat_plot_symbiont_selection_type_binary,
   cols = list(
     Symbiotic_type = brewer.pal(n = 8, "Set2"),
-    CSR_binary = brewer.pal(n = 3, "Accent")
+    CSR_binary_90 = brewer.pal(n = 3, "Accent")
   ),
   type = "f",
   legend = T,
