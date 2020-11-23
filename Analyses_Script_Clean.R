@@ -23,6 +23,15 @@ dat_CSR_symb <-
            as.is = T,
            strip.white = T)
 head(dat_CSR_symb)
+
+smith_brown_tree <- read.tree("./Data/ALLMB.tre")
+smith_brown_tree
+
+# Data Cleaning -----------------------------------------------------------
+
+####Clean data file
+
+#Formatting of levels
 dat_CSR_symb$Symbiotic_type <-
   gsub(pattern = "NM-AM",
        replacement = "NMAM",
@@ -35,34 +44,17 @@ dat_CSR_symb$Symbiotic_type <-
   gsub(pattern = "AM-Nod",
        replacement = "AMNod",
        dat_CSR_symb$Symbiotic_type)
-sapply(dat_CSR_symb, class)
-table(dat_CSR_symb$CSR_categorical_level)
-nrow(dat_CSR_symb)
-
-smith_brown_tree <- read.tree("./Data/ALLMB.tre")
-smith_brown_tree
-
-# Data Cleaning -----------------------------------------------------------
 
 #Species formatting
 head(dat_CSR_symb$Species_name)
-head(zanne_tree$tip.label)
 head(smith_brown_tree$tip.label)
 dat_CSR_symb$Species_name <- gsub(pattern = " ",
                                   replacement = "_",
                                   dat_CSR_symb$Species_name)
 
-#How many of the 3014 species in the database are absent in Zanne?
-length(setdiff(dat_CSR_symb$Species_name, zanne_tree$tip.label))
-#About one third of the data set is not present in Zanne. That's a bit much.
-
 #How many of the 3014 species in the database are absent in Smith and Brown?
 length(setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label))
-#Only 320 of 3014 lacking. I.e. ~90% is present. That seems good enough for now.
-#What we could still do to get the numbers up
-# (1) Fuzzy matching of species names to tree -> so small spelling variations means it doesn't immediately drop out.
-# (2) Manually check the missing 10% with reference to the tree. See if synonyms are present.
-# @Marco: do you think either of these is worth it?
+#Only 320 of 3014 lacking. I.e. ~90% is present. That seems good enough.
 
 #Print species from database not in tree.
 write.csv(
@@ -78,8 +70,8 @@ write.csv(
   row.names = F,
   file = "./Output/SmithBrownAllSpecies.csv"
 )
-
-###Manual substitutions of data names
+#Marco manually checked the above two files and suggested name substitutions (wrong synonyms etc.)
+###Substitutions of data species - based on manual checking by Marco, happens here.
 sub_table <- read.csv("./Data/SolvingMismatchesSmith.csv")
 head(sub_table)
 
@@ -92,9 +84,11 @@ dat_CSR_symb$Species_name <-
     dat_CSR_symb$Species_name,
     sub_table$Equivalent.in.Smith.Brown.Tree[match(dat_CSR_symb$Species_name, sub_table$Name.in.CSR.data.set)]
   )
-dat_CSR_symb$Species_name
-length(setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label)) #Yes, now only 17 species missing. 
 
+dat_CSR_symb$Species_name
+length(setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label)) #Yes, now only 17 species missing.
+
+#### Clean phylogeny
 
 #Extract the appropriate subtree from Smith&Brown
 analysis_tree <-
@@ -104,55 +98,58 @@ analysis_tree <-
   )
 analysis_tree
 
-
 #PLot big analysis tree for finding species
 pdf("./Output/BigAnalysisTree.pdf",
     width = 30,
     height = 30)
-plot.phylo(x = analysis_tree,type = "f",show.tip.label = T,cex = 0.1,label.offset = 0.2)
+plot.phylo(
+  x = analysis_tree,
+  type = "f",
+  show.tip.label = T,
+  cex = 0.1,
+  label.offset = 0.2
+)
 dev.off()
 
+#### Match dataset and phylogeny
 
 analysis_dat_CSR_symb <-
   dat_CSR_symb %>% filter(Species_name %in% analysis_tree$tip.label)
 nrow(analysis_dat_CSR_symb)
 #More species in data set, than in tree.
 #This should not be possible. Could be due to duplicates in the dataset?
-analysis_dat_CSR_symb[duplicated(analysis_dat_CSR_symb$Species_name), ]
+analysis_dat_CSR_symb[duplicated(analysis_dat_CSR_symb$Species_name),]
 #Yes, some duplicates, but only about ~30. Small variations in CSR-values, agreement on symbiont type
 
-#For now, simply remove the duplicates. Other option, take average values for CSR values.
+#Simply remove the duplicates.
 analysis_dat_CSR_symb <-
-  analysis_dat_CSR_symb[!duplicated(analysis_dat_CSR_symb$Species_name),]
+  analysis_dat_CSR_symb[!duplicated(analysis_dat_CSR_symb$Species_name), ]
 nrow(analysis_dat_CSR_symb)
 #Now matches
 
-#Lastly some sanity checks
-table(analysis_dat_CSR_symb$Symbiotic_type) #This seems a reasonable distribution.
-#Do they all sum to 100?
-length(which(
-  round(
-    analysis_dat_CSR_symb$C.selection + analysis_dat_CSR_symb$S.selection +
-      analysis_dat_CSR_symb$R.selection,
-    0
-  ) == 100
-))
+# Analysis variables-------------------------------------------------------
 
-# Descriptives ------------------------------------------------------------
+#Create the categorical variables to analyse
 
-# Basic statistics on the C, S and R values
-summary(analysis_dat_CSR_symb$C.selection)
-summary(analysis_dat_CSR_symb$S.selection)
-summary(analysis_dat_CSR_symb$R.selection)
+#First for the symbionts
+head(analysis_dat_CSR_symb)
+table(analysis_dat_CSR_symb$Symbiotic_type)
 
-ggplot(data = analysis_dat_CSR_symb) +
-  geom_histogram(aes(C.selection))
+#Turn the categorical variable in two binary ones.
+analysis_dat_CSR_symb$Symbiotic_type_AMOnly_Rest <-
+  ifelse(analysis_dat_CSR_symb$Symbiotic_type %in% c("AM"),
+         "AMOnly",
+         "Rest")
+table(analysis_dat_CSR_symb$Symbiotic_type_AMOnly_Rest)
+analysis_dat_CSR_symb$Symbiotic_type_AnyAM_Rest <-
+  ifelse(
+    analysis_dat_CSR_symb$Symbiotic_type %in% c("AM", "NMAM", "AMNod", "EcMAM"),
+    "AnyAM",
+    "Rest"
+  )
+table(analysis_dat_CSR_symb$Symbiotic_type_AnyAM_Rest)
 
-ggplot(data = analysis_dat_CSR_symb) +
-  geom_freqpoly(aes(C.selection), colour = "Red") +
-  geom_freqpoly(aes(S.selection), colour = "Blue") +
-  geom_freqpoly(aes(R.selection), colour = "Green")
-#Ok, so looking at the graphs quite a lot of plants on the 0 side for particularly S and R selection.
+
 
 # Analyses ----------------------------------------------------------------
 
@@ -172,7 +169,7 @@ table(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type)
 ASR_symbiont_type_ER_yang <-
   corHMM(
     phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_type,
+    data = analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type),
     rate.cat = 1,
     model = "ER",
     node.states = "marginal",
@@ -275,225 +272,6 @@ dev.off()
 
 #######Explore ways of simplifying this ASR
 
-#####First, lump AM+NMAM
-#Data formatting. We need two columns, species and symbiont state.
-analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped <-
-  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type)
-analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type<-
-  ifelse(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type %in% c("AM","NMAM"),
-         "AM_NMAM",analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type)
-head(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped)
-table(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type)
-states_AM_NMAM_lumped<-names(table(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type))
-analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type<-
-  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type))
-table(analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Symbiotic_type)
-
-
-#Run ASRs
-ASR_symbiont_type_AM_NMAM_lumped_ER_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped,
-    rate.cat = 1,
-    model = "ER",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
-ASR_symbiont_type_AM_NMAM_lumped_ARD_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped,
-    rate.cat = 1,
-    model = "ARD",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
-ASR_symbiont_type_AM_NMAM_lumped_SYM_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped,
-    rate.cat = 1,
-    model = "SYM",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
-
-#Save all model ran
-save(ASR_symbiont_type_AM_NMAM_lumped_ER_yang, file = "./Output/ASR_symbiont_type_AM_NMAM_lumped_ER_yang")
-save(ASR_symbiont_type_AM_NMAM_lumped_ARD_yang, file = "./Output/ASR_symbiont_type_AM_NMAM_lumped_ARD_yang")
-save(ASR_symbiont_type_AM_NMAM_lumped_SYM_yang, file = "./Output/ASR_symbiont_type_AM_NMAM_lumped_SYM_yang")
-
-load("./Output/ASR_symbiont_type_AM_NMAM_lumped_ER_yang")
-load("./Output/ASR_symbiont_type_AM_NMAM_lumped_ARD_yang")
-load("./Output/ASR_symbiont_type_AM_NMAM_lumped_SYM_yang")
-
-#Which is the best model, using AIC-criteria?
-akaike.weights(
-  c(
-    ASR_symbiont_type_AM_NMAM_lumped_ER_yang$AICc,
-    ASR_symbiont_type_AM_NMAM_lumped_ARD_yang$AICc,
-    ASR_symbiont_type_AM_NMAM_lumped_SYM_yang$AICc
-  )
-)
-
-#ARD by far the best
-ASR_symbiont_type_AM_NMAM_lumped_ARD_yang
-plotMKmodel(ASR_symbiont_type_AM_NMAM_lumped_ARD_yang)
-
-##Let's for now plot this reconstruction onto the tree
-
-#Create a data frame to plot the trait data
-dat_plot_symbiont_type_AM_NMAM_lumped <-
-  analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped %>%
-  dplyr::select(Symbiotic_type)
-row.names(dat_plot_symbiont_type_AM_NMAM_lumped) <-
-  analysis_dat_CSR_symb_ASR_symbiont_type_AM_NMAM_lumped$Species_name
-# dat_plot_symbiont_type$Symbiotic_type <-
-#   as.numeric(as.factor(dat_plot_symbiont_type$Symbiotic_type))
-head(dat_plot_symbiont_type_AM_NMAM_lumped)
-
-#Plot
-pdf("./Output/ASRsymbiont_type_AM_NMAM_lumped.pdf",
-    width = 20,
-    height = 20)
-trait.plot(
-  tree = analysis_tree,
-  dat = dat_plot_symbiont_type_AM_NMAM_lumped,
-  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
-  type = "f",
-  legend = T,
-  w = 1 / 40,
-  edge.width = 2,
-  cex.lab = 0.01,
-  tip.color = "white",
-  show.node.label = T
-)
-nodelabels(pie = ASR_symbiont_type_AM_NMAM_lumped_ARD_yang$states,
-           piecol = brewer.pal(n = 8, "Set2"),
-           cex = 0.3)
-legend(legend=states_AM_NMAM_lumped,
-       x = "bottomright",
-       fill = brewer.pal(n = 8, "Set2"),
-       cex = 2)
-add.scale.bar()
-dev.off()
-
-####Second, lump all AM
-#Data formatting. We need two columns, species and symbiont state.
-analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped <-
-  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type)
-analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type<-
-  ifelse(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type %in% c("AM","NMAM","AMNod","EcMAM"),
-         "All_AM",analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type)
-head(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped)
-table(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type)
-states_All_AM_lumped<-names(table(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type))
-
-analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type<-
-  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type))
-table(analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Symbiotic_type)
-
-#Run ASRs
-ASR_symbiont_type_All_AM_lumped_ER_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped,
-    rate.cat = 1,
-    model = "ER",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
-ASR_symbiont_type_All_AM_lumped_ARD_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped,
-    rate.cat = 1,
-    model = "ARD",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
-ASR_symbiont_type_All_AM_lumped_SYM_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped,
-    rate.cat = 1,
-    model = "SYM",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
-
-#Save all model ran
-save(ASR_symbiont_type_All_AM_lumped_ER_yang, file = "./Output/ASR_symbiont_type_All_AM_lumped_ER_yang")
-save(ASR_symbiont_type_All_AM_lumped_ARD_yang, file = "./Output/ASR_symbiont_type_All_AM_lumped_ARD_yang")
-save(ASR_symbiont_type_All_AM_lumped_SYM_yang, file = "./Output/ASR_symbiont_type_All_AM_lumped_SYM_yang")
-
-load("./Output/ASR_symbiont_type_All_AM_lumped_ER_yang")
-load("./Output/ASR_symbiont_type_All_AM_lumped_ARD_yang")
-load("./Output/ASR_symbiont_type_All_AM_lumped_SYM_yang")
-
-#Which is the best model, using AIC-criteria?
-akaike.weights(
-  c(
-    ASR_symbiont_type_All_AM_lumped_ER_yang$AICc,
-    ASR_symbiont_type_All_AM_lumped_ARD_yang$AICc,
-    ASR_symbiont_type_All_AM_lumped_SYM_yang$AICc
-  )
-)
-
-#SYM by far the best
-ASR_symbiont_type_All_AM_lumped_SYM_yang
-plotMKmodel(ASR_symbiont_type_All_AM_lumped_SYM_yang)
-
-#Plot them
-
-#Create a data frame to plot the trait data
-dat_plot_symbiont_type_All_AM_lumped <-
-  analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped %>%
-  dplyr::select(Symbiotic_type)
-row.names(dat_plot_symbiont_type_All_AM_lumped) <-
-  analysis_dat_CSR_symb_ASR_symbiont_type_All_AM_lumped$Species_name
-# dat_plot_symbiont_type$Symbiotic_type <-
-#   as.numeric(as.factor(dat_plot_symbiont_type$Symbiotic_type))
-head(dat_plot_symbiont_type_All_AM_lumped)
-
-#Plot
-pdf("./Output/ASRsymbiont_type_All_AM_lumped.pdf",
-    width = 20,
-    height = 20)
-trait.plot(
-  tree = analysis_tree,
-  dat = dat_plot_symbiont_type_All_AM_lumped,
-  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
-  type = "f",
-  legend = T,
-  w = 1 / 40,
-  edge.width = 2,
-  cex.lab = 0.01,
-  tip.color = "white",
-  show.node.label = T
-)
-nodelabels(pie = ASR_symbiont_type_All_AM_lumped_SYM_yang$states,
-           piecol = brewer.pal(n = 8, "Set2"),
-           cex = 0.3)
-legend(legend=states_All_AM_lumped,
-       x = "bottomright",
-       fill = brewer.pal(n = 8, "Set2"),
-       cex = 2)
-add.scale.bar()
-dev.off()
 
 #####Third, lump all non-AM
 #Data formatting. We need two columns, species and symbiont state.
