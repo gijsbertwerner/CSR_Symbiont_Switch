@@ -719,6 +719,8 @@ legend(legend=states__All_non_AM_vs_any_AM_lumped,
 add.scale.bar()
 dev.off()
 
+save.image()
+
 ############## CSR ASR
 
 #Ways to treat CSR analytically:
@@ -1339,7 +1341,7 @@ legend(legend=states_selection_type_binary,
 add.scale.bar()
 dev.off()
 
-
+save.image()
 
 ####Analysis with the 92 cutoff
 #Data formatting. We need two columns, species and symbiont state.
