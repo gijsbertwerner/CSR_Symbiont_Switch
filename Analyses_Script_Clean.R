@@ -39,9 +39,6 @@ sapply(dat_CSR_symb, class)
 table(dat_CSR_symb$CSR_categorical_level)
 nrow(dat_CSR_symb)
 
-zanne_tree <- read.tree("./Data/Vascular_Plants_rooted.dated.tre")
-zanne_tree
-
 smith_brown_tree <- read.tree("./Data/ALLMB.tre")
 smith_brown_tree
 
