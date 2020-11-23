@@ -118,12 +118,12 @@ analysis_dat_CSR_symb <-
 nrow(analysis_dat_CSR_symb)
 #More species in data set, than in tree.
 #This should not be possible. Could be due to duplicates in the dataset?
-analysis_dat_CSR_symb[duplicated(analysis_dat_CSR_symb$Species_name),]
+analysis_dat_CSR_symb[duplicated(analysis_dat_CSR_symb$Species_name), ]
 #Yes, some duplicates, but only about ~30. Small variations in CSR-values, agreement on symbiont type
 
 #Simply remove the duplicates.
 analysis_dat_CSR_symb <-
-  analysis_dat_CSR_symb[!duplicated(analysis_dat_CSR_symb$Species_name), ]
+  analysis_dat_CSR_symb[!duplicated(analysis_dat_CSR_symb$Species_name),]
 nrow(analysis_dat_CSR_symb)
 #Now matches
 
@@ -131,7 +131,7 @@ nrow(analysis_dat_CSR_symb)
 
 #Create the categorical variables to analyse
 
-#First for the symbionts
+#####First for the symbionts
 head(analysis_dat_CSR_symb)
 table(analysis_dat_CSR_symb$Symbiotic_type)
 
@@ -149,6 +149,81 @@ analysis_dat_CSR_symb$Symbiotic_type_AnyAM_Rest <-
   )
 table(analysis_dat_CSR_symb$Symbiotic_type_AnyAM_Rest)
 
+######And second for the CSR strategies
+table(analysis_dat_CSR_symb$CSR_categorical_level) #Pretty equal numbers of all three types.
+
+#Create a number of alternative CSR-cutoffs, using cosine similarity (email Marco October 30, 2020).
+analysis_dat_CSR_symb$CSR_binary_70 <-
+  ifelse(
+    analysis_dat_CSR_symb$CSR_categorical_level %in% c(
+      "C/CSR",
+      "CR/CSR",
+      "CS/CSR",
+      "CSR",
+      "R/CSR",
+      "S/CSR",
+      "SR/CSR",
+      "CR",
+      "CS",
+      "SR",
+      "C/CR",
+      "C/CS",
+      "R/CR",
+      "R/SR",
+      "S/CS",
+      "S/SR"
+    ),
+    "CSR70",
+    "NoCSR"
+  )
+analysis_dat_CSR_symb$CSR_binary_85 <-
+  ifelse(
+    analysis_dat_CSR_symb$CSR_categorical_level %in% c(
+      "C/CSR",
+      "CR/CSR",
+      "CS/CSR",
+      "CSR",
+      "R/CSR",
+      "S/CSR",
+      "SR/CSR",
+      "CR",
+      "CS",
+      "SR"
+    ),
+    "CSR85",
+    "NoCSR"
+  )
+analysis_dat_CSR_symb$CSR_binary_90 <-
+  ifelse(
+    analysis_dat_CSR_symb$CSR_categorical_level %in% c("C/CSR", "CR/CSR", "CS/CSR", "CSR", "R/CSR", "S/CSR", "SR/CSR"),
+    "CSR90",
+    "NoCSR"
+  )
+analysis_dat_CSR_symb$CSR_binary_92 <-
+  ifelse(
+    analysis_dat_CSR_symb$CSR_categorical_level %in% c("CR/CSR", "CS/CSR", "CSR", "SR/CSR"),
+    "CSR92",
+    "NoCSR"
+  )
+analysis_dat_CSR_symb$CSR_binary_95 <-
+  ifelse(analysis_dat_CSR_symb$CSR_categorical_level %in% c("CSR"),
+         "CSR95",
+         "NoCSR")
+table(analysis_dat_CSR_symb$CSR_binary_70)
+table(analysis_dat_CSR_symb$CSR_binary_85)
+table(analysis_dat_CSR_symb$CSR_binary_90)
+table(analysis_dat_CSR_symb$CSR_binary_92)
+table(analysis_dat_CSR_symb$CSR_binary_95)
+
+##Check data file
+head(analysis_dat_CSR_symb)
+
+write.csv(
+  analysis_dat_CSR_symb,
+  quote = F,
+  row.names = F,
+  file = "./Output/AnalysedData.csv"
+)
 
 
 # Analyses ----------------------------------------------------------------
@@ -160,8 +235,6 @@ table(analysis_dat_CSR_symb$Symbiotic_type_AnyAM_Rest)
 #Data formatting. We need two columns, species and symbiont state.
 analysis_dat_CSR_symb_ASR_symbiont_type <-
   analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type)
-head(analysis_dat_CSR_symb_ASR_symbiont_type)
-table(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type)
 analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type<-as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type))
 table(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type)
 
@@ -169,7 +242,7 @@ table(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type)
 ASR_symbiont_type_ER_yang <-
   corHMM(
     phy = analysis_tree,
-    data = analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type),
+    data = analysis_dat_CSR_symb_ASR_symbiont_type,
     rate.cat = 1,
     model = "ER",
     node.states = "marginal",
@@ -496,201 +569,12 @@ dev.off()
 
 save.image()
 
-############## CSR ASR
 
-#Ways to treat CSR analytically:
-#1. Turn it into a categorical variable: assign one of three categorical states based on what it is most selected for.
-#2. Treat as three distinct continuous variables, and repeat the analyses for each.
-#Neither of these captures perfectly what we are trying to measure, but they may do for our purposes. Let's have a look.
-#I'll try only 1 for now, because it seems simplest and most informative.
-
-analysis_dat_CSR_symb$selection_type <-
-  apply(
-    analysis_dat_CSR_symb %>% dplyr::select(C.selection, S.selection, R.selection),
-    1,
-    which.max
-  )
-analysis_dat_CSR_symb$selection_type <-
-  gsub(
-    pattern = "1",
-    replacement = "C",
-    x = analysis_dat_CSR_symb$selection_type
-  )
-analysis_dat_CSR_symb$selection_type <-
-  gsub(
-    pattern = "2",
-    replacement = "S",
-    x = analysis_dat_CSR_symb$selection_type
-  )
-analysis_dat_CSR_symb$selection_type <-
-  gsub(
-    pattern = "3",
-    replacement = "R",
-    x = analysis_dat_CSR_symb$selection_type
-  )
-table(analysis_dat_CSR_symb$selection_type) #Pretty equal numbers of all three types.
-
-#Data formatting. We need two columns, species and symbiont state.
-analysis_dat_CSR_symb_ASR_selection_type <-
-  analysis_dat_CSR_symb %>% dplyr::select(Species_name, selection_type)
-head(analysis_dat_CSR_symb_ASR_selection_type)
-table(analysis_dat_CSR_symb_ASR_selection_type$selection_type)
-states_selection_type<-names(table(analysis_dat_CSR_symb_ASR_selection_type$selection_type))
-
-analysis_dat_CSR_symb_ASR_selection_type$selection_type<-
-  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_selection_type$selection_type))
-table(analysis_dat_CSR_symb_ASR_selection_type$selection_type)
-
-#Run ASRs
-ASR_selection_type_ER_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_selection_type,
-    rate.cat = 1,
-    model = "ER",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
-ASR_selection_type_ARD_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_selection_type,
-    rate.cat = 1,
-    model = "ARD",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
-ASR_selection_type_SYM_yang <-
-  corHMM(
-    phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_selection_type,
-    rate.cat = 1,
-    model = "SYM",
-    node.states = "marginal",
-    root.p = "yang",
-    nstarts = 10,
-    n.cores = 7
-  )
-
-#Save all model ran
-save(ASR_selection_type_ER_yang, file = "./Output/ASR_selection_type_ER_yang")
-save(ASR_selection_type_ARD_yang, file = "./Output/ASR_selection_type_ARD_yang")
-save(ASR_selection_type_SYM_yang, file = "./Output/ASR_selection_type_SYM_yang")
-
-load("./Output/ASR_selection_type_ER_yang")
-load("./Output/ASR_selection_type_ARD_yang")
-load("./Output/ASR_selection_type_SYM_yang")
-
-#Which is the best model, using AIC-criteria?
-akaike.weights(
-  c(
-    ASR_selection_type_ER_yang$AICc,
-    ASR_selection_type_ARD_yang$AICc,
-    ASR_selection_type_SYM_yang$AICc
-  )
-)
-
-#ARD by far the best
-ASR_selection_type_ARD_yang
-plotMKmodel(ASR_selection_type_ARD_yang)
-table(analysis_dat_CSR_symb$selection_type) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
-
-#Create a data frame to plot the trait data
-dat_plot_selection_type <-
-  analysis_dat_CSR_symb_ASR_selection_type %>%
-  dplyr::select(selection_type)
-row.names(dat_plot_selection_type) <-
-  analysis_dat_CSR_symb_ASR_selection_type$Species_name
-dat_plot_selection_type$selection_type <-
-  as.numeric(as.factor(dat_plot_selection_type$selection_type))
-head(dat_plot_selection_type)
-
-#CSR ASR - Plot to Pdf
-pdf("./Output/ASRCSRType.pdf",
-    width = 20,
-    height = 20)
-trait.plot(
-  tree = analysis_tree,
-  dat = dat_plot_selection_type,
-  cols = list(selection_type = brewer.pal(n = 3, "Accent")),
-  type = "f",
-  legend = T,
-  w = 1 / 40,
-  edge.width = 2,
-  cex.lab = 0.01,
-  tip.color = "white",
-  show.node.label = T
-)
-nodelabels(pie = ASR_selection_type_ARD_yang$states,
-           piecol = brewer.pal(n = 3, "Accent"),
-           cex = 0.3)
-legend(legend=states_selection_type,
-       x = "bottomright",
-       fill = brewer.pal(n = 3, "Accent"),
-       cex = 2)
-add.scale.bar()
-dev.off()
-
-#Ok, what do we see here? Reconstruction of the three CSR types, treated as three discrete categories.
-#Some things that spring to mind:
-#1. Looking at the distribution of the trait on the outside bar, there doesn't seem to be massive phylogenetic signal (we could quantify this)
-#2. Or in other words, the three types are all mixed up, mostly.
-#3  As a result throughout most of evolutionary history, it seems to be the case that we can't do mutch better than reconstruct 1/3, 1/3, 1/3 for the three types.
-#4. Thus, evolution of distinct CSR-types is even more tippy than symbiont.
-#5. Or, in other words. They generally don't precede, but follow symbiont switches.
-#6. Alternative explantion CSR evolution happens at a much much faster rate. I.e. we just can't look back that far with ASR.
-#7. Or, it's the method of splitting into 3 discrete categories, which creates the inevitbale simplification.
-#8. Options: if we have fossile/other evidence of ancient CSR-types, we could fix some nodes and create a better ASR.
-# Does this exist?
 
 
 ############## CSR ASR - Approach 2
 
-table(analysis_dat_CSR_symb$CSR_categorical_level) #Pretty equal numbers of all three types.
 
-#Create a number of alternative CSR-cutoffs, using cosine similarity (email Marco October 30, 2020). 
-analysis_dat_CSR_symb$CSR_binary_70 <-
-  ifelse(
-    analysis_dat_CSR_symb$CSR_categorical_level %in% c("C/CSR", "CR/CSR", "CS/CSR", 
-                                                       "CSR", "R/CSR", "S/CSR", "SR/CSR",
-                                                       "CR","CS","SR",
-                                                       "C/CR","C/CS","R/CR","R/SR","S/CS","S/SR"),
-    "CSR70",
-    "NoCSR"
-  )
-analysis_dat_CSR_symb$CSR_binary_85 <-
-  ifelse(
-    analysis_dat_CSR_symb$CSR_categorical_level %in% c("C/CSR", "CR/CSR", "CS/CSR", "CSR", "R/CSR", "S/CSR", "SR/CSR","CR","CS","SR"),
-    "CSR85",
-    "NoCSR"
-  )
-analysis_dat_CSR_symb$CSR_binary_90 <-
-  ifelse(
-    analysis_dat_CSR_symb$CSR_categorical_level %in% c("C/CSR", "CR/CSR", "CS/CSR", "CSR", "R/CSR", "S/CSR", "SR/CSR"),
-    "CSR90",
-    "NoCSR"
-  )
-analysis_dat_CSR_symb$CSR_binary_92 <-
-  ifelse(
-    analysis_dat_CSR_symb$CSR_categorical_level %in% c( "CR/CSR", "CS/CSR", "CSR", "SR/CSR"),
-    "CSR92",
-    "NoCSR"
-  )
-analysis_dat_CSR_symb$CSR_binary_95 <-
-  ifelse(
-    analysis_dat_CSR_symb$CSR_categorical_level %in% c("CSR"),
-    "CSR95",
-    "NoCSR"
-  )
-table(analysis_dat_CSR_symb$CSR_binary_70)
-table(analysis_dat_CSR_symb$CSR_binary_85)
-table(analysis_dat_CSR_symb$CSR_binary_90)
-table(analysis_dat_CSR_symb$CSR_binary_92)
-table(analysis_dat_CSR_symb$CSR_binary_95)
 
 ####Analysis with the 70 cutoff
 #Data formatting. We need two columns, species and symbiont state.
