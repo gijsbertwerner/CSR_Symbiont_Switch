@@ -228,6 +228,112 @@ write.csv(
 
 # Analyses ----------------------------------------------------------------
 
+
+###### Analysing the symbiotic states
+
+#Data formatting. We need two columns, species and symbiont state.
+analysis_dat_CSR_symb_ASR_symbiont_type <-
+  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type)
+head(analysis_dat_CSR_symb_ASR_symbiont_type)
+table(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type)
+analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type<-as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type))
+table(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type)
+
+#Run ASRs
+ASR_symbiont_type_ER_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type,
+    rate.cat = 1,
+    model = "ER",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_type_ARD_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type,
+    rate.cat = 1,
+    model = "ARD",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+ASR_symbiont_type_SYM_yang <-
+  corHMM(
+    phy = analysis_tree,
+    data = analysis_dat_CSR_symb_ASR_symbiont_type,
+    rate.cat = 1,
+    model = "SYM",
+    node.states = "marginal",
+    root.p = "yang",
+    nstarts = 10,
+    n.cores = 7
+  )
+
+#Save all model ran
+save(ASR_symbiont_type_ER_yang, file = "./Output/ASR_symbiont_type_ER_yang")
+save(ASR_symbiont_type_ARD_yang, file = "./Output/ASR_symbiont_type_ARD_yang")
+save(ASR_symbiont_type_SYM_yang, file = "./Output/ASR_symbiont_type_SYM_yang")
+
+load("./Output/ASR_symbiont_type_ER_yang")
+load("./Output/ASR_symbiont_type_ARD_yang")
+load("./Output/ASR_symbiont_type_SYM_yang")
+
+#Which is the best model, using AIC-criteria?
+akaike.weights(
+  c(
+    ASR_symbiont_type_ER_yang$AICc,
+    ASR_symbiont_type_ARD_yang$AICc,
+    ASR_symbiont_type_SYM_yang$AICc
+  )
+)
+
+#ARD is the best
+ASR_symbiont_type_SYM_yang
+plotMKmodel(ASR_symbiont_type_SYM_yang)
+table(analysis_dat_CSR_symb$Symbiotic_type) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
+
+#Create a data frame to plot the trait data
+dat_plot_symbiont_type <-
+  analysis_dat_CSR_symb_ASR_symbiont_type %>%
+  dplyr::select(Symbiotic_type)
+row.names(dat_plot_symbiont_type) <-
+  analysis_dat_CSR_symb_ASR_symbiont_type$Species_name
+# dat_plot_symbiont_type$Symbiotic_type <-
+#   as.numeric(as.factor(dat_plot_symbiont_type$Symbiotic_type))
+head(dat_plot_symbiont_type)
+
+#Symbionts ASR - plot to pdf
+pdf("./Output/ASRSymbiontType.pdf",
+    width = 20,
+    height = 20)
+trait.plot(
+  tree = analysis_tree,
+  dat = dat_plot_symbiont_type,
+  cols = list(Symbiotic_type = brewer.pal(n = 8, "Set2")),
+  type = "f",
+  legend = T,
+  w = 1 / 40,
+  edge.width = 2,
+  cex.lab = 0.01,
+  tip.color = "white",
+  show.node.label = T
+)
+nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
+           piecol = brewer.pal(n = 8, "Set2"),
+           cex = 0.3)
+legend(legend=names(table(analysis_dat_CSR_symb$Symbiotic_type)),
+       x = "bottomright",
+       fill = brewer.pal(n = 8, "Set2"),
+       cex = 2)
+add.scale.bar()
+dev.off()
+
+
 ######Correlated evolution between the two variables
 
 ######90
@@ -329,7 +435,7 @@ row.names(dat_plot_AnyAM_Rest_CSR_binary_90) <-
   analysis_dat_CSR_symb_AnyAM_Rest_CSR_binary_90$Species_name
 head(dat_plot_AnyAM_Rest_CSR_binary_90)
 
-plotvec_symbiont_selection_type_binary_70<-
+plotvec_symbiont_binary_selection_type_binary<-
   c("#e31a1c","#fb9a99",     #Red is AMF
     "#8c510a","#d8b365",     #Brown is AMNod
     "#1f78b4","#a6cee3",      #Blue is ECM
@@ -366,6 +472,20 @@ legend(
   x = "bottomright",
   fill = plotvec_symbiont_binary_selection_type_binary,
   cex = 1.5
+)
+legend(
+  legend = c("AnyAM (AM,NMAM,AMNod,EcMAM)","Rest (EcM,ErM,NM,OM)"),
+  x = "topleft",
+  fill = brewer.pal(n = 8, "Set2"),
+  title = "Inner Ring",
+  cex=1.5
+)
+legend(
+  legend = c("CSR","NoCSR"),
+  x = "topright",
+  fill = brewer.pal(n = 3, "Accent"),
+  title = "Outer Ring",
+  cex=1.5
 )
 add.scale.bar()
 dev.off()
@@ -498,16 +618,6 @@ row.names(dat_plot_AMOnly_Rest_CSR_binary_90) <-
   analysis_dat_CSR_symb_AMOnly_Rest_CSR_binary_90$Species_name
 head(dat_plot_AMOnly_Rest_CSR_binary_90)
 
-plotvec_symbiont_selection_type_binary_70<-
-  c("#e31a1c","#fb9a99",     #Red is AMF
-    "#8c510a","#d8b365",     #Brown is AMNod
-    "#1f78b4","#a6cee3",      #Blue is ECM
-    "#a6cee3","#cab2d6",     #Purple is ECMAM
-    "#33a02c","#b2df8a",      #Green is ERM  
-    "#fec44f","#fee391",     #Yellow is NM
-    "#525252","#bdbdbd",    #Grey is NMAM
-    "#014636" ,"#02818a")    #Turqouise is OM 
-
 #CSR ASR - plot pdf
 pdf("./Output/ASR_AMOnly_Rest_CSR_binary_90.pdf",
     width = 20,
@@ -535,6 +645,20 @@ legend(
   x = "bottomright",
   fill = plotvec_symbiont_binary_selection_type_binary,
   cex = 1.5
+)
+legend(
+  legend = c("AMOnly (AM)","Rest (All other types)"),
+  x = "topleft",
+  fill = brewer.pal(n = 8, "Set2"),
+  title = "Inner Ring",
+  cex=1.5
+)
+legend(
+  legend = c("CSR","NoCSR"),
+  x = "topright",
+  fill = brewer.pal(n = 3, "Accent"),
+  title = "Outer Ring",
+  cex=1.5
 )
 add.scale.bar()
 dev.off()
@@ -710,6 +834,20 @@ legend(
   fill = plotvec_symbiont_binary_selection_type_binary,
   cex = 1.5
 )
+legend(
+  legend = c("AnyAM (AM,NMAM,AMNod,EcMAM)","Rest (EcM,ErM,NM,OM)"),
+  x = "topleft",
+  fill = brewer.pal(n = 8, "Set2"),
+  title = "Inner Ring",
+  cex=1.5
+)
+legend(
+  legend = c("CSR","NoCSR"),
+  x = "topright",
+  fill = brewer.pal(n = 3, "Accent"),
+  title = "Outer Ring",
+  cex=1.5
+)
 add.scale.bar()
 dev.off()
 
@@ -841,15 +979,6 @@ row.names(dat_plot_AMOnly_Rest_CSR_binary_70) <-
   analysis_dat_CSR_symb_AMOnly_Rest_CSR_binary_70$Species_name
 head(dat_plot_AMOnly_Rest_CSR_binary_70)
 
-plotvec_symbiont_selection_type_binary_70<-
-  c("#e31a1c","#fb9a99",     #Red is AMF
-    "#8c510a","#d8b365",     #Brown is AMNod
-    "#1f78b4","#a6cee3",      #Blue is ECM
-    "#a6cee3","#cab2d6",     #Purple is ECMAM
-    "#33a02c","#b2df8a",      #Green is ERM  
-    "#fec44f","#fee391",     #Yellow is NM
-    "#525252","#bdbdbd",    #Grey is NMAM
-    "#014636" ,"#02818a")    #Turqouise is OM 
 
 #CSR ASR - plot pdf
 pdf("./Output/ASR_AMOnly_Rest_CSR_binary_70.pdf",
@@ -878,6 +1007,20 @@ legend(
   x = "bottomright",
   fill = plotvec_symbiont_binary_selection_type_binary,
   cex = 1.5
+)
+legend(
+  legend = c("AMOnly (AM)","Rest (All other types)"),
+  x = "topleft",
+  fill = brewer.pal(n = 8, "Set2"),
+  title = "Inner Ring",
+  cex=1.5
+)
+legend(
+  legend = c("CSR","NoCSR"),
+  x = "topright",
+  fill = brewer.pal(n = 3, "Accent"),
+  title = "Outer Ring",
+  cex=1.5
 )
 add.scale.bar()
 dev.off()
@@ -1012,16 +1155,6 @@ row.names(dat_plot_AnyAM_Rest_CSR_binary_85) <-
   analysis_dat_CSR_symb_AnyAM_Rest_CSR_binary_85$Species_name
 head(dat_plot_AnyAM_Rest_CSR_binary_85)
 
-plotvec_symbiont_selection_type_binary_70<-
-  c("#e31a1c","#fb9a99",     #Red is AMF
-    "#8c510a","#d8b365",     #Brown is AMNod
-    "#1f78b4","#a6cee3",      #Blue is ECM
-    "#a6cee3","#cab2d6",     #Purple is ECMAM
-    "#33a02c","#b2df8a",      #Green is ERM  
-    "#fec44f","#fee391",     #Yellow is NM
-    "#525252","#bdbdbd",    #Grey is NMAM
-    "#014636" ,"#02818a")    #Turqouise is OM 
-
 #CSR ASR - plot pdf
 pdf("./Output/ASR_AnyAM_Rest_CSR_binary_85.pdf",
     width = 20,
@@ -1049,6 +1182,20 @@ legend(
   x = "bottomright",
   fill = plotvec_symbiont_binary_selection_type_binary,
   cex = 1.5
+)
+legend(
+  legend = c("AnyAM (AM,NMAM,AMNod,EcMAM)","Rest (EcM,ErM,NM,OM)"),
+  x = "topleft",
+  fill = brewer.pal(n = 8, "Set2"),
+  title = "Inner Ring",
+  cex=1.5
+)
+legend(
+  legend = c("CSR","NoCSR"),
+  x = "topright",
+  fill = brewer.pal(n = 3, "Accent"),
+  title = "Outer Ring",
+  cex=1.5
 )
 add.scale.bar()
 dev.off()
@@ -1219,6 +1366,20 @@ legend(
   fill = plotvec_symbiont_binary_selection_type_binary,
   cex = 1.5
 )
+legend(
+  legend = c("AMOnly (AM)","Rest (All other types)"),
+  x = "topleft",
+  fill = brewer.pal(n = 8, "Set2"),
+  title = "Inner Ring",
+  cex=1.5
+)
+legend(
+  legend = c("CSR","NoCSR"),
+  x = "topright",
+  fill = brewer.pal(n = 3, "Accent"),
+  title = "Outer Ring",
+  cex=1.5
+)
 add.scale.bar()
 dev.off()
 
@@ -1352,16 +1513,6 @@ row.names(dat_plot_AnyAM_Rest_CSR_binary_92) <-
   analysis_dat_CSR_symb_AnyAM_Rest_CSR_binary_92$Species_name
 head(dat_plot_AnyAM_Rest_CSR_binary_92)
 
-plotvec_symbiont_selection_type_binary_70<-
-  c("#e31a1c","#fb9a99",     #Red is AMF
-    "#8c510a","#d8b365",     #Brown is AMNod
-    "#1f78b4","#a6cee3",      #Blue is ECM
-    "#a6cee3","#cab2d6",     #Purple is ECMAM
-    "#33a02c","#b2df8a",      #Green is ERM  
-    "#fec44f","#fee391",     #Yellow is NM
-    "#525252","#bdbdbd",    #Grey is NMAM
-    "#014636" ,"#02818a")    #Turqouise is OM 
-
 #CSR ASR - plot pdf
 pdf("./Output/ASR_AnyAM_Rest_CSR_binary_92.pdf",
     width = 20,
@@ -1389,6 +1540,20 @@ legend(
   x = "bottomright",
   fill = plotvec_symbiont_binary_selection_type_binary,
   cex = 1.5
+)
+legend(
+  legend = c("AnyAM (AM,NMAM,AMNod,EcMAM)","Rest (EcM,ErM,NM,OM)"),
+  x = "topleft",
+  fill = brewer.pal(n = 8, "Set2"),
+  title = "Inner Ring",
+  cex=1.5
+)
+legend(
+  legend = c("CSR","NoCSR"),
+  x = "topright",
+  fill = brewer.pal(n = 3, "Accent"),
+  title = "Outer Ring",
+  cex=1.5
 )
 add.scale.bar()
 dev.off()
@@ -1521,15 +1686,6 @@ row.names(dat_plot_AMOnly_Rest_CSR_binary_92) <-
   analysis_dat_CSR_symb_AMOnly_Rest_CSR_binary_92$Species_name
 head(dat_plot_AMOnly_Rest_CSR_binary_92)
 
-plotvec_symbiont_selection_type_binary_70<-
-  c("#e31a1c","#fb9a99",     #Red is AMF
-    "#8c510a","#d8b365",     #Brown is AMNod
-    "#1f78b4","#a6cee3",      #Blue is ECM
-    "#a6cee3","#cab2d6",     #Purple is ECMAM
-    "#33a02c","#b2df8a",      #Green is ERM  
-    "#fec44f","#fee391",     #Yellow is NM
-    "#525252","#bdbdbd",    #Grey is NMAM
-    "#014636" ,"#02818a")    #Turqouise is OM 
 
 #CSR ASR - plot pdf
 pdf("./Output/ASR_AMOnly_Rest_CSR_binary_92.pdf",
@@ -1558,6 +1714,20 @@ legend(
   x = "bottomright",
   fill = plotvec_symbiont_binary_selection_type_binary,
   cex = 1.5
+)
+legend(
+  legend = c("AMOnly (AM)","Rest (All other types)"),
+  x = "topleft",
+  fill = brewer.pal(n = 8, "Set2"),
+  title = "Inner Ring",
+  cex=1.5
+)
+legend(
+  legend = c("CSR","NoCSR"),
+  x = "topright",
+  fill = brewer.pal(n = 3, "Accent"),
+  title = "Outer Ring",
+  cex=1.5
 )
 add.scale.bar()
 dev.off()
@@ -1730,6 +1900,20 @@ legend(
   fill = plotvec_symbiont_binary_selection_type_binary,
   cex = 1.5
 )
+legend(
+  legend = c("AnyAM (AM,NMAM,AMNod,EcMAM)","Rest (EcM,ErM,NM,OM)"),
+  x = "topleft",
+  fill = brewer.pal(n = 8, "Set2"),
+  title = "Inner Ring",
+  cex=1.5
+)
+legend(
+  legend = c("CSR","NoCSR"),
+  x = "topright",
+  fill = brewer.pal(n = 3, "Accent"),
+  title = "Outer Ring",
+  cex=1.5
+)
 add.scale.bar()
 dev.off()
 
@@ -1898,6 +2082,20 @@ legend(
   x = "bottomright",
   fill = plotvec_symbiont_binary_selection_type_binary,
   cex = 1.5
+)
+legend(
+  legend = c("AMOnly (AM)","Rest (All other types)"),
+  x = "topleft",
+  fill = brewer.pal(n = 8, "Set2"),
+  title = "Inner Ring",
+  cex=1.5
+)
+legend(
+  legend = c("CSR","NoCSR"),
+  x = "topright",
+  fill = brewer.pal(n = 3, "Accent"),
+  title = "Outer Ring",
+  cex=1.5
 )
 add.scale.bar()
 dev.off()
