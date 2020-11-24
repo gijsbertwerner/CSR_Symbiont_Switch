@@ -127,7 +127,7 @@ analysis_dat_CSR_symb <-
 nrow(analysis_dat_CSR_symb)
 #Now matches
 
-# Analysis variables-------------------------------------------------------
+# Defining variables for analyses -------------------------------------------------------
 
 #Create the categorical variables to analyse
 
@@ -569,6 +569,9 @@ plot(pagel_AMOnly_Rest_CSR_binary_90_ARD)
 dev.off()
 
 save.image()
+
+
+# Sensitivity Analyses ----------------------------------------------------
 
 ######70
 
