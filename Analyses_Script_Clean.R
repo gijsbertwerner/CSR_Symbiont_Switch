@@ -88,10 +88,8 @@ analysis_dat_CSR_symb <-
 nrow(analysis_dat_CSR_symb)
 #More species in data set, than in tree.
 
-# Analyses ----------------------------------------------------------------
 
-
-###### Analysing the symbiotic states
+# Analysing the symbiotic states ------------------------------------------
 
 #Data formatting. We need two columns, species and symbiont state.
 analysis_dat_CSR_symb_ASR_symbiont_type <-
@@ -199,7 +197,8 @@ add.scale.bar()
 dev.off()
 
 
-######Correlated evolution between the two variables
+# Correlated evolution between the two variables --------------------------
+
 
 ###General data prep
 head(analysis_dat_CSR_symb)
@@ -259,7 +258,7 @@ plotvec_symbiont_binary_selection_type_binary <-
 
 
 
-######Script to run the analyses for both
+# Analyse AnyAM -----------------------------------------------------------
 
 ###First for AnyAM
 ncol(analysis_dat_CSR_symb_for_correlated_anyAM)
@@ -405,7 +404,12 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM) - 2)) {
   
 }
 
-###Second for OnlyAM
+
+
+# Analyse OnlyAM ----------------------------------------------------------
+
+
+
 ncol(analysis_dat_CSR_symb_for_correlated_OnlyAM)
 states_print_label <- c("OnlyAM & CSR_gen",
                         "OnlyAM & CSR_spe",
