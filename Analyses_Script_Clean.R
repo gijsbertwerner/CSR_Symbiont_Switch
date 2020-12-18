@@ -19,7 +19,7 @@ library(viridis)
 # Loading data and trees --------------------------------------------------
 
 dat_CSR_symb <-
-  read.csv(file = "./Data/Plant species with symbiotic type and CSR strategy_Cosme et al 16-09-2020.csv",
+  read.csv(file = "./Data/AnalysedData_Gijsbert_23-11-2020_dif_cutoffs_01-12-2020_forR.csv",
            as.is = T,
            strip.white = T)
 head(dat_CSR_symb)
@@ -54,39 +54,7 @@ dat_CSR_symb$Species_name <- gsub(pattern = " ",
 
 #How many of the 3014 species in the database are absent in Smith and Brown?
 length(setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label))
-#Only 320 of 3014 lacking. I.e. ~90% is present. That seems good enough.
-
-#Print species from database not in tree.
-write.csv(
-  setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label),
-  quote = F,
-  row.names = F,
-  file = "./Output/Cosme_Species_Missing_Smith_Tree.csv"
-)
-#Print all tree species
-write.csv(
-  smith_brown_tree$tip.label,
-  quote = F,
-  row.names = F,
-  file = "./Output/SmithBrownAllSpecies.csv"
-)
-#Marco manually checked the above two files and suggested name substitutions (wrong synonyms etc.)
-###Substitutions of data species - based on manual checking by Marco, happens here.
-sub_table <- read.csv("./Data/SolvingMismatchesSmith.csv")
-head(sub_table)
-
-#Replace in the CSR data file
-dat_CSR_symb$Species_name <-
-  ifelse(
-    is.na(
-      match(dat_CSR_symb$Species_name, sub_table$Name.in.CSR.data.set)
-    ),
-    dat_CSR_symb$Species_name,
-    sub_table$Equivalent.in.Smith.Brown.Tree[match(dat_CSR_symb$Species_name, sub_table$Name.in.CSR.data.set)]
-  )
-
-dat_CSR_symb$Species_name
-length(setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label)) #Yes, now only 17 species missing.
+#All present
 
 #### Clean phylogeny
 
