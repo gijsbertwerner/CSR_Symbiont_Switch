@@ -85,15 +85,7 @@ analysis_dat_CSR_symb <-
   dat_CSR_symb %>% filter(Species_name %in% analysis_tree$tip.label)
 nrow(analysis_dat_CSR_symb)
 #More species in data set, than in tree.
-#This should not be possible. Could be due to duplicates in the dataset?
-analysis_dat_CSR_symb[duplicated(analysis_dat_CSR_symb$Species_name),]
-#Yes, some duplicates, but only about ~30. Small variations in CSR-values, agreement on symbiont type
 
-#Simply remove the duplicates.
-analysis_dat_CSR_symb <-
-  analysis_dat_CSR_symb[!duplicated(analysis_dat_CSR_symb$Species_name), ]
-nrow(analysis_dat_CSR_symb)
-#Now matches
 
 # Defining variables for analyses -------------------------------------------------------
 
