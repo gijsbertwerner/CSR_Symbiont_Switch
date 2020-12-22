@@ -22,8 +22,8 @@ dat_CSR_symb <-
   read.csv(file = "./Data/AnalysedData_Gijsbert_23-11-2020_dif_cutoffs_01-12-2020_forR.csv",
            as.is = T,
            strip.white = T)
-#dat_CSR_symb <-
-#  dat_CSR_symb[sample(1:nrow(dat_CSR_symb), size = 25), ] #Only when testing the script
+dat_CSR_symb <-
+  dat_CSR_symb[sample(1:nrow(dat_CSR_symb), size = 25), ] #Only when testing the script
 head(dat_CSR_symb)
 
 smith_brown_tree <- read.tree("./Data/ALLMB.tre")
@@ -201,6 +201,8 @@ dev.off()
 
 
 ###General data prep
+
+##CSR as baseline
 head(analysis_dat_CSR_symb)
 analysis_dat_CSR_symb_for_correlated_anyAM <-
   analysis_dat_CSR_symb %>% dplyr::select(
@@ -227,6 +229,53 @@ analysis_dat_CSR_symb_for_correlated_OnlyAM <-
 head(analysis_dat_CSR_symb_for_correlated_anyAM)
 head(analysis_dat_CSR_symb_for_correlated_OnlyAM)
 
+###C-specialist as baseline
+head(analysis_dat_CSR_symb)
+analysis_dat_CSR_symb_for_correlated_anyAM_CBaseline <-
+  analysis_dat_CSR_symb %>% dplyr::select(
+    Species_name,
+    Binary_Symb_AnyAM,
+    C0.7,
+    C0.75,
+    C0.8,
+    C0.85,
+    C0.9,
+    C0.95
+  )
+head(analysis_dat_CSR_symb_for_correlated_anyAM_CBaseline)
+
+###S-specialist as baseline
+head(analysis_dat_CSR_symb)
+analysis_dat_CSR_symb_for_correlated_anyAM_SBaseline <-
+  analysis_dat_CSR_symb %>% dplyr::select(
+    Species_name,
+    Binary_Symb_AnyAM,
+    S0.7,
+    S0.75,
+    S0.8,
+    S0.85,
+    S0.9,
+    S0.95
+  )
+head(analysis_dat_CSR_symb_for_correlated_anyAM_SBaseline)
+
+###R-specialist as baseline
+head(analysis_dat_CSR_symb)
+analysis_dat_CSR_symb_for_correlated_anyAM_RBaseline <-
+  analysis_dat_CSR_symb %>% dplyr::select(
+    Species_name,
+    Binary_Symb_AnyAM,
+    R0.7,
+    R0.75,
+    R0.8,
+    R0.85,
+    R0.9,
+    R0.95
+  )
+head(analysis_dat_CSR_symb_for_correlated_anyAM_RBaseline)
+
+
+#Colouring
 plotvec_symbiont_binary_selection_type_binary <-
   c(
     "#e31a1c",
