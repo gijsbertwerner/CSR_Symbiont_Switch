@@ -231,7 +231,7 @@ head(analysis_dat_CSR_symb_for_correlated_OnlyAM)
 
 ###C-specialist as baseline
 head(analysis_dat_CSR_symb)
-analysis_dat_CSR_symb_for_correlated_anyAM_CBaseline <-
+analysis_dat_CSR_symb_for_correlated_anyAM_C_spe <-
   analysis_dat_CSR_symb %>% dplyr::select(
     Species_name,
     Binary_Symb_AnyAM,
@@ -242,11 +242,11 @@ analysis_dat_CSR_symb_for_correlated_anyAM_CBaseline <-
     C0.9,
     C0.95
   )
-head(analysis_dat_CSR_symb_for_correlated_anyAM_CBaseline)
+head(analysis_dat_CSR_symb_for_correlated_anyAM_C_spe)
 
 ###S-specialist as baseline
 head(analysis_dat_CSR_symb)
-analysis_dat_CSR_symb_for_correlated_anyAM_SBaseline <-
+analysis_dat_CSR_symb_for_correlated_anyAM_S_spe <-
   analysis_dat_CSR_symb %>% dplyr::select(
     Species_name,
     Binary_Symb_AnyAM,
@@ -257,11 +257,11 @@ analysis_dat_CSR_symb_for_correlated_anyAM_SBaseline <-
     S0.9,
     S0.95
   )
-head(analysis_dat_CSR_symb_for_correlated_anyAM_SBaseline)
+head(analysis_dat_CSR_symb_for_correlated_anyAM_S_spe)
 
 ###R-specialist as baseline
 head(analysis_dat_CSR_symb)
-analysis_dat_CSR_symb_for_correlated_anyAM_RBaseline <-
+analysis_dat_CSR_symb_for_correlated_anyAM_R_spe <-
   analysis_dat_CSR_symb %>% dplyr::select(
     Species_name,
     Binary_Symb_AnyAM,
@@ -272,7 +272,7 @@ analysis_dat_CSR_symb_for_correlated_anyAM_RBaseline <-
     R0.9,
     R0.95
   )
-head(analysis_dat_CSR_symb_for_correlated_anyAM_RBaseline)
+head(analysis_dat_CSR_symb_for_correlated_anyAM_R_spe)
 
 
 #Colouring
@@ -305,9 +305,9 @@ plotvec_symbiont_binary_selection_type_binary <-
 
 
 
-# Analyse AnyAM -----------------------------------------------------------
+# Analyse AnyAM and CSR Baselie -----------------------------------------------------------
 
-###First for AnyAM
+###First for AnyAM and 
 ncol(analysis_dat_CSR_symb_for_correlated_anyAM)
 states_print_label <- c("AnyAM & CSR_gen",
                         "AnyAM & CSR_spe",
@@ -315,7 +315,7 @@ states_print_label <- c("AnyAM & CSR_gen",
                         "noAM & CSR_spe")
 
 for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM) - 2)) {
-  #Data formatting. We need three columns, species and symbiont state and selection type.
+  #Data formatting. We need three columns, speies and symbiont state and selection type.
   analysis_dat_frame <-
     analysis_dat_CSR_symb_for_correlated_anyAM[, c(1, 2, i + 2)]
   
@@ -450,6 +450,448 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM) - 2)) {
   gc()
   
 }
+
+
+
+# AnyAM and C-specialist baseline -----------------------------------------
+
+###First for AnyAM
+ncol(analysis_dat_CSR_symb_for_correlated_anyAM)
+states_print_label <- c("AnyAM & C_spe",
+                        "AnyAM & Non_C_spe",
+                        "noAM & C_spe",
+                        "noAM & Non_C_spe")
+
+for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM_C_spe) - 2)) {
+  #Data formatting. We need three columns, species and symbiont state and selection type.
+  analysis_dat_frame <-
+    analysis_dat_CSR_symb_for_correlated_anyAM_C_spe[, c(1, 2, i + 2)]
+  
+  print(paste("This is AnyAM run:", colnames(analysis_dat_frame)[3]))
+  print(paste("It's currently:", Sys.time()))
+  
+  print(table(analysis_dat_frame[, 2],
+              analysis_dat_frame[, 3]))
+  
+  analysis_dat_frame[, 2] <-
+    as.numeric(as.factor(analysis_dat_frame[, 2]))
+  analysis_dat_frame[, 3] <-
+    as.numeric(as.factor(analysis_dat_frame[, 3]))
+  
+  print(table(analysis_dat_frame[, 2],
+              analysis_dat_frame[, 3]))
+  
+  #Run and save the model
+  ASR_run_ARD <-
+    corHMM(
+      phy = analysis_tree,
+      data = analysis_dat_frame,
+      rate.cat = 1,
+      model = "ARD",
+      node.states = "marginal",
+      root.p = "yang",
+      nstarts = 5,
+      n.cores = 7
+    )
+  
+  save(ASR_run_ARD,
+       file = paste0(
+         "./Output/ASR_AnyAM_Rest_",
+         colnames(analysis_dat_frame)[3],
+         "_ARD_yang"
+       ))
+  
+  #Plot the model run
+  plotMKmodel(ASR_run_ARD)
+  ASR_run_ARD
+  
+  #Create a data frame to plot the trait data
+  dat_plot <-
+    analysis_dat_frame[, c(2, 3)]
+  row.names(dat_plot) <-
+    analysis_dat_frame$Species_name
+  colnames(dat_plot)[2] <- "CSR_var"
+  
+  #CSR ASR - plot pdf
+  pdf(
+    paste0(
+      "./Output/ASR_AnyAM_",
+      colnames(analysis_dat_frame)[3],
+      ".pdf"
+    ),
+    width = 20,
+    height = 20
+  )
+  trait.plot(
+    tree = analysis_tree,
+    dat = dat_plot,
+    cols = list(
+      Binary_Symb_AnyAM = brewer.pal(n = 8, "Set2"),
+      CSR_var = brewer.pal(n = 3, "Accent")
+    ),
+    type = "f",
+    legend = F,
+    w = 1 / 40,
+    edge.width = 2,
+    cex.lab = 0.01,
+    tip.color = "white",
+    show.node.label = T
+  )
+  nodelabels(pie = ASR_run_ARD$states,
+             piecol = plotvec_symbiont_binary_selection_type_binary,
+             cex = 0.3)
+  legend(
+    legend = states_print_label,
+    x = "bottomright",
+    fill = plotvec_symbiont_binary_selection_type_binary,
+    cex = 1.5
+  )
+  legend(
+    legend = c("AnyAM (AM,NMAM,AMNod,EcMAM)", "Rest (EcM,ErM,NM,OM)"),
+    x = "topleft",
+    fill = brewer.pal(n = 8, "Set2"),
+    title = "Inner Ring",
+    cex = 1.5
+  )
+  legend(
+    legend = c("C_spe", "Non_C_spe"),
+    x = "topright",
+    fill = brewer.pal(n = 3, "Accent"),
+    title = "Outer Ring",
+    cex = 1.5
+  )
+  add.scale.bar()
+  dev.off()
+  
+  ####Run Pagel's model
+  vec_symbiont_binary <-
+    dat_plot[, 1]
+  vec_selection_type_binary <-
+    dat_plot[, 2]
+  names(vec_symbiont_binary) <-
+    row.names(dat_plot)
+  names(vec_selection_type_binary) <-
+    row.names(dat_plot)
+  table(vec_symbiont_binary)
+  table(vec_selection_type_binary)
+  
+  pagel_run <-
+    fitPagel(
+      tree = analysis_tree,
+      x = vec_symbiont_binary,
+      y = vec_selection_type_binary,
+      model = "ARD",
+      pi = "fitzjohn"
+    )
+  pagel_run
+  plot(pagel_run)
+  
+  pdf(paste0(
+    "./Output/Plot_pagel_AnyAM_Rest",
+    colnames(analysis_dat_frame)[3],
+    "_ARD.pdf"
+  ))
+  plot(pagel_run)
+  dev.off()
+  
+  #Final cleaning
+  gc()
+  
+}
+
+
+# AnyAM and S-specialist baseline -----------------------------------------
+
+###First for AnyAM
+ncol(analysis_dat_CSR_symb_for_correlated_anyAM)
+states_print_label <- c("AnyAM & Non_S_spe",
+                        "AnyAM & S_spe",
+                        "noAM & Non_S_spe",
+                        "noAM & S_spe")
+
+for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM_S_spe) - 2)) {
+  #Data formatting. We need three columns, species and symbiont state and selection type.
+  analysis_dat_frame <-
+    analysis_dat_CSR_symb_for_correlated_anyAM_S_spe[, c(1, 2, i + 2)]
+  
+  print(paste("This is AnyAM run:", colnames(analysis_dat_frame)[3]))
+  print(paste("It's currently:", Sys.time()))
+  
+  print(table(analysis_dat_frame[, 2],
+              analysis_dat_frame[, 3]))
+  
+  analysis_dat_frame[, 2] <-
+    as.numeric(as.factor(analysis_dat_frame[, 2]))
+  analysis_dat_frame[, 3] <-
+    as.numeric(as.factor(analysis_dat_frame[, 3]))
+  
+  print(table(analysis_dat_frame[, 2],
+              analysis_dat_frame[, 3]))
+  
+  #Run and save the model
+  ASR_run_ARD <-
+    corHMM(
+      phy = analysis_tree,
+      data = analysis_dat_frame,
+      rate.cat = 1,
+      model = "ARD",
+      node.states = "marginal",
+      root.p = "yang",
+      nstarts = 5,
+      n.cores = 7
+    )
+  
+  save(ASR_run_ARD,
+       file = paste0(
+         "./Output/ASR_AnyAM_Rest_",
+         colnames(analysis_dat_frame)[3],
+         "_ARD_yang"
+       ))
+  
+  #Plot the model run
+  plotMKmodel(ASR_run_ARD)
+  ASR_run_ARD
+  
+  #Create a data frame to plot the trait data
+  dat_plot <-
+    analysis_dat_frame[, c(2, 3)]
+  row.names(dat_plot) <-
+    analysis_dat_frame$Species_name
+  colnames(dat_plot)[2] <- "CSR_var"
+  
+  #CSR ASR - plot pdf
+  pdf(
+    paste0(
+      "./Output/ASR_AnyAM_",
+      colnames(analysis_dat_frame)[3],
+      ".pdf"
+    ),
+    width = 20,
+    height = 20
+  )
+  trait.plot(
+    tree = analysis_tree,
+    dat = dat_plot,
+    cols = list(
+      Binary_Symb_AnyAM = brewer.pal(n = 8, "Set2"),
+      CSR_var = brewer.pal(n = 3, "Accent")
+    ),
+    type = "f",
+    legend = F,
+    w = 1 / 40,
+    edge.width = 2,
+    cex.lab = 0.01,
+    tip.color = "white",
+    show.node.label = T
+  )
+  nodelabels(pie = ASR_run_ARD$states,
+             piecol = plotvec_symbiont_binary_selection_type_binary,
+             cex = 0.3)
+  legend(
+    legend = states_print_label,
+    x = "bottomright",
+    fill = plotvec_symbiont_binary_selection_type_binary,
+    cex = 1.5
+  )
+  legend(
+    legend = c("AnyAM (AM,NMAM,AMNod,EcMAM)", "Rest (EcM,ErM,NM,OM)"),
+    x = "topleft",
+    fill = brewer.pal(n = 8, "Set2"),
+    title = "Inner Ring",
+    cex = 1.5
+  )
+  legend(
+    legend = c("Non_S_spe", "S_spe"),
+    x = "topright",
+    fill = brewer.pal(n = 3, "Accent"),
+    title = "Outer Ring",
+    cex = 1.5
+  )
+  add.scale.bar()
+  dev.off()
+  
+  ####Run Pagel's model
+  vec_symbiont_binary <-
+    dat_plot[, 1]
+  vec_selection_type_binary <-
+    dat_plot[, 2]
+  names(vec_symbiont_binary) <-
+    row.names(dat_plot)
+  names(vec_selection_type_binary) <-
+    row.names(dat_plot)
+  table(vec_symbiont_binary)
+  table(vec_selection_type_binary)
+  
+  pagel_run <-
+    fitPagel(
+      tree = analysis_tree,
+      x = vec_symbiont_binary,
+      y = vec_selection_type_binary,
+      model = "ARD",
+      pi = "fitzjohn"
+    )
+  pagel_run
+  plot(pagel_run)
+  
+  pdf(paste0(
+    "./Output/Plot_pagel_AnyAM_Rest",
+    colnames(analysis_dat_frame)[3],
+    "_ARD.pdf"
+  ))
+  plot(pagel_run)
+  dev.off()
+  
+  #Final cleaning
+  gc()
+  
+}
+
+# AnyAM and R-specialist baseline -----------------------------------------
+
+###First for AnyAM
+ncol(analysis_dat_CSR_symb_for_correlated_anyAM)
+states_print_label <- c("AnyAM & Non_R_spe",
+                        "AnyAM & R_spe",
+                        "noAM & Non_R_spe",
+                        "noAM & R_spe")
+
+for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM_R_spe) - 2)) {
+  #Data formatting. We need three columns, species and symbiont state and selection type.
+  analysis_dat_frame <-
+    analysis_dat_CSR_symb_for_correlated_anyAM_R_spe[, c(1, 2, i + 2)]
+  
+  print(paste("This is AnyAM run:", colnames(analysis_dat_frame)[3]))
+  print(paste("It's currently:", Sys.time()))
+  
+  print(table(analysis_dat_frame[, 2],
+              analysis_dat_frame[, 3]))
+  
+  analysis_dat_frame[, 2] <-
+    as.numeric(as.factor(analysis_dat_frame[, 2]))
+  analysis_dat_frame[, 3] <-
+    as.numeric(as.factor(analysis_dat_frame[, 3]))
+  
+  print(table(analysis_dat_frame[, 2],
+              analysis_dat_frame[, 3]))
+  
+  #Run and save the model
+  ASR_run_ARD <-
+    corHMM(
+      phy = analysis_tree,
+      data = analysis_dat_frame,
+      rate.cat = 1,
+      model = "ARD",
+      node.states = "marginal",
+      root.p = "yang",
+      nstarts = 5,
+      n.cores = 7
+    )
+  
+  save(ASR_run_ARD,
+       file = paste0(
+         "./Output/ASR_AnyAM_Rest_",
+         colnames(analysis_dat_frame)[3],
+         "_ARD_yang"
+       ))
+  
+  #Plot the model run
+  plotMKmodel(ASR_run_ARD)
+  ASR_run_ARD
+  
+  #Create a data frame to plot the trait data
+  dat_plot <-
+    analysis_dat_frame[, c(2, 3)]
+  row.names(dat_plot) <-
+    analysis_dat_frame$Species_name
+  colnames(dat_plot)[2] <- "CSR_var"
+  
+  #CSR ASR - plot pdf
+  pdf(
+    paste0(
+      "./Output/ASR_AnyAM_",
+      colnames(analysis_dat_frame)[3],
+      ".pdf"
+    ),
+    width = 20,
+    height = 20
+  )
+  trait.plot(
+    tree = analysis_tree,
+    dat = dat_plot,
+    cols = list(
+      Binary_Symb_AnyAM = brewer.pal(n = 8, "Set2"),
+      CSR_var = brewer.pal(n = 3, "Accent")
+    ),
+    type = "f",
+    legend = F,
+    w = 1 / 40,
+    edge.width = 2,
+    cex.lab = 0.01,
+    tip.color = "white",
+    show.node.label = T
+  )
+  nodelabels(pie = ASR_run_ARD$states,
+             piecol = plotvec_symbiont_binary_selection_type_binary,
+             cex = 0.3)
+  legend(
+    legend = states_print_label,
+    x = "bottomright",
+    fill = plotvec_symbiont_binary_selection_type_binary,
+    cex = 1.5
+  )
+  legend(
+    legend = c("AnyAM (AM,NMAM,AMNod,EcMAM)", "Rest (EcM,ErM,NM,OM)"),
+    x = "topleft",
+    fill = brewer.pal(n = 8, "Set2"),
+    title = "Inner Ring",
+    cex = 1.5
+  )
+  legend(
+    legend = c("Non_R_spe", "R_spe"),
+    x = "topright",
+    fill = brewer.pal(n = 3, "Accent"),
+    title = "Outer Ring",
+    cex = 1.5
+  )
+  add.scale.bar()
+  dev.off()
+  
+  ####Run Pagel's model
+  vec_symbiont_binary <-
+    dat_plot[, 1]
+  vec_selection_type_binary <-
+    dat_plot[, 2]
+  names(vec_symbiont_binary) <-
+    row.names(dat_plot)
+  names(vec_selection_type_binary) <-
+    row.names(dat_plot)
+  table(vec_symbiont_binary)
+  table(vec_selection_type_binary)
+  
+  pagel_run <-
+    fitPagel(
+      tree = analysis_tree,
+      x = vec_symbiont_binary,
+      y = vec_selection_type_binary,
+      model = "ARD",
+      pi = "fitzjohn"
+    )
+  pagel_run
+  plot(pagel_run)
+  
+  pdf(paste0(
+    "./Output/Plot_pagel_AnyAM_Rest",
+    colnames(analysis_dat_frame)[3],
+    "_ARD.pdf"
+  ))
+  plot(pagel_run)
+  dev.off()
+  
+  #Final cleaning
+  gc()
+  
+}
+
 
 
 
