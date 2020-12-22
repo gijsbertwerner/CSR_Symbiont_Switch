@@ -109,7 +109,7 @@ ASR_symbiont_type_ER_yang <-
     model = "ER",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 5,
+    nstarts = 12,
     n.cores = 7
   )
 ASR_symbiont_type_ARD_yang <-
@@ -120,7 +120,7 @@ ASR_symbiont_type_ARD_yang <-
     model = "ARD",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 5,
+    nstarts = 12,
     n.cores = 7
   )
 ASR_symbiont_type_SYM_yang <-
@@ -131,7 +131,7 @@ ASR_symbiont_type_SYM_yang <-
     model = "SYM",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 5,
+    nstarts = 12,
     n.cores = 7
   )
 
@@ -342,7 +342,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM) - 2)) {
       model = "ARD",
       node.states = "marginal",
       root.p = "yang",
-      nstarts = 5,
+      nstarts = 12,
       n.cores = 7
     )
   
@@ -490,7 +490,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM_C_spe) - 2)) {
       model = "ARD",
       node.states = "marginal",
       root.p = "yang",
-      nstarts = 5,
+      nstarts = 12,
       n.cores = 7
     )
   
@@ -637,7 +637,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM_S_spe) - 2)) {
       model = "ARD",
       node.states = "marginal",
       root.p = "yang",
-      nstarts = 5,
+      nstarts = 12,
       n.cores = 7
     )
   
@@ -783,7 +783,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM_R_spe) - 2)) {
       model = "ARD",
       node.states = "marginal",
       root.p = "yang",
-      nstarts = 5,
+      nstarts = 12,
       n.cores = 7
     )
   
@@ -933,7 +933,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM_R_spe) - 2)) {
 #       model = "ARD",
 #       node.states = "marginal",
 #       root.p = "yang",
-#       nstarts = 5,
+#       nstarts = 12,
 #       n.cores = 7
 #     )
 #   
