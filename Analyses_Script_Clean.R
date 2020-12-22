@@ -211,7 +211,6 @@ analysis_dat_CSR_symb_for_correlated_anyAM <-
     CSR0.8,
     CSR0.85,
     CSR0.9,
-    CSR0.92,
     CSR0.95
   )
 analysis_dat_CSR_symb_for_correlated_OnlyAM <-
@@ -223,7 +222,6 @@ analysis_dat_CSR_symb_for_correlated_OnlyAM <-
     CSR0.8,
     CSR0.85,
     CSR0.9,
-    CSR0.92,
     CSR0.95
   )
 head(analysis_dat_CSR_symb_for_correlated_anyAM)
