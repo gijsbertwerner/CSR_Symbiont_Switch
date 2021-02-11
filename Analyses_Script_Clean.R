@@ -81,6 +81,10 @@ plot.phylo(
 )
 dev.off()
 
+#Write the analysed tree
+write.tree(phy = analysis_tree,file = "./Output/Cosme_Analysed_Tree.newick")
+write.nexus(phy = analysis_tree,file = "./Output/Cosme_Analysed_Tree.nexus")
+
 #### Match dataset and phylogeny
 
 analysis_dat_CSR_symb <-
