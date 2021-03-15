@@ -448,6 +448,13 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM) - 2)) {
     "_ARD.pdf"
   ))
   plot(pagel_run)
+  plot.new()
+  text(0, 1, paste("likelihood-ratio: ",
+                   pagel_run$lik.ratio,
+                   "p-value: ",
+                   pagel_run$P,
+                   collapse='\r\n'), adj = c(0,1), family = 'mono',cex=0.5)
+  box()
   dev.off()
   
   #Final cleaning
@@ -596,6 +603,13 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM_C_spe) - 2)) {
     "_ARD.pdf"
   ))
   plot(pagel_run)
+  plot.new()
+  text(0, 1, paste("likelihood-ratio: ",
+                   pagel_run$lik.ratio,
+                   "p-value: ",
+                   pagel_run$P,
+                   collapse='\r\n'), adj = c(0,1), family = 'mono',cex=0.5)
+  box()
   dev.off()
   
   #Final cleaning
@@ -743,6 +757,13 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM_S_spe) - 2)) {
     "_ARD.pdf"
   ))
   plot(pagel_run)
+  plot.new()
+  text(0, 1, paste("likelihood-ratio: ",
+                   pagel_run$lik.ratio,
+                   "p-value: ",
+                   pagel_run$P,
+                   collapse='\r\n'), adj = c(0,1), family = 'mono',cex=0.5)
+  box()
   dev.off()
   
   #Final cleaning
@@ -889,6 +910,13 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM_R_spe) - 2)) {
     "_ARD.pdf"
   ))
   plot(pagel_run)
+  plot.new()
+  text(0, 1, paste("likelihood-ratio: ",
+                   pagel_run$lik.ratio,
+                   "p-value: ",
+                   pagel_run$P,
+                   collapse='\r\n'), adj = c(0,1), family = 'mono',cex=0.5)
+  box()
   dev.off()
   
   #Final cleaning
