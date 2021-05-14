@@ -22,8 +22,8 @@ dat_CSR_symb <-
   read.csv(file = "./Data/AnalysedData_Gijsbert_23-11-2020_dif_cutoffs_01-12-2020_forR.csv",
            as.is = T,
            strip.white = T)
-# dat_CSR_symb <-
-#   dat_CSR_symb[sample(1:nrow(dat_CSR_symb), size = 25), ] #Only when testing the script
+ # dat_CSR_symb <-
+ #   dat_CSR_symb[sample(1:nrow(dat_CSR_symb), size = 25), ] #Only when testing the script
 head(dat_CSR_symb)
 
 smith_brown_tree <- read.tree("./Data/ALLMB.tre")
@@ -234,16 +234,17 @@ plotvec_symbiont_binary_selection_type_binary <-
 
 ### Loading data  for correlated evolution 
 
-#Various data files, for different symbiotic contrasts. 
+# Correlated AnyAMvsnoAM -----------------------------------------------------------
+
+#Loading data
 dat_CSR_symb_AnyAMvsnoAM <-
   read.csv(file = "./Data/AnalysedData_Gijsbert_23-11-2020_CSR_generalist_NoAM_EcM_NM_comparisons_19-03-2021_AnyAMvsnoAMtab.csv",
            as.is = T,
            strip.white = T)
-dat_CSR_symb_AnyAMvsnoAM <-
-  dat_CSR_symb_AnyAMvsnoAM[sample(1:nrow(dat_CSR_symb_AnyAMvsnoAM), size = 25), ] #Only when testing the script
+# dat_CSR_symb_AnyAMvsnoAM <-
+#   dat_CSR_symb_AnyAMvsnoAM[sample(1:nrow(dat_CSR_symb_AnyAMvsnoAM), size = 25), ] #Only when testing the script
 head(dat_CSR_symb_AnyAMvsnoAM)
-
-# Correlated AnyAMvsnoAM -----------------------------------------------------------
+table(dat_CSR_symb_AnyAMvsnoAM$Binary_Symb_anyAMvsnoAM)
 
 ####Clean data file
 #How many of the species in the database are absent in Smith and Brown?
@@ -284,7 +285,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AnyAMvsnoAM) - 2)) {
   analysis_dat_frame <-
     analysis_dat_CSR_symb_AnyAMvsnoAM[, c(1, 2, i + 2)]
   
-  print(paste("This is AnyAM run:", colnames(analysis_dat_frame)[3]))
+  print(paste("This is AnyAMvsnoAM run:", colnames(analysis_dat_frame)[3]))
   print(paste("It's currently:", Sys.time()))
   
   print(table(analysis_dat_frame[, 2],
@@ -313,7 +314,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AnyAMvsnoAM) - 2)) {
   
   save(ASR_run_ARD,
        file = paste0(
-         "./Output/ASR_AnyAM_Rest_",
+         "./Output/ASR_AnyAMvsnoAM_",
          colnames(analysis_dat_frame)[3],
          "_ARD_yang"
        ))
@@ -332,7 +333,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AnyAMvsnoAM) - 2)) {
   #CSR ASR - plot pdf
   pdf(
     paste0(
-      "./Output/ASR_AnyAM_",
+      "./Output/ASR_AnyAMvsnoAM_",
       colnames(analysis_dat_frame)[3],
       ".pdf"
     ),
@@ -343,7 +344,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AnyAMvsnoAM) - 2)) {
     tree = analysis_tree_correlate_run,
     dat = dat_plot,
     cols = list(
-      Binary_Symb_AnyAM = brewer.pal(n = 8, "Set2"),
+      Binary_Symb_anyAMvsnoAM = brewer.pal(n = 8, "Set2"),
       CSR_var = brewer.pal(n = 3, "Accent")
     ),
     type = "f",
@@ -364,7 +365,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AnyAMvsnoAM) - 2)) {
     cex = 1.5
   )
   legend(
-    legend = c("AnyAM (AM,NMAM,AMNod,EcMAM)", "Rest (EcM,ErM,NM,OM)"),
+    legend = c("AnyAM (AM,NMAM,AMNod,EcMAM)", "NoAM (EcM,ErM,NM,OM)"),
     x = "topleft",
     fill = brewer.pal(n = 8, "Set2"),
     title = "Inner Ring",
@@ -404,7 +405,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AnyAMvsnoAM) - 2)) {
   plot(pagel_run)
   
   pdf(paste0(
-    "./Output/Plot_pagel_AnyAM_Rest",
+    "./Output/Plot_pagel_AnyAMvsnoAM",
     colnames(analysis_dat_frame)[3],
     "_ARD.pdf"
   ))
@@ -422,4 +423,197 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AnyAMvsnoAM) - 2)) {
   gc()
   
 }
+
+
+
+
+# Correlated AMvsECM -----------------------------------------------------------
+
+#Loading data
+dat_CSR_symb_AMvsECM <-
+  read.csv(file = "./Data/AnalysedData_Gijsbert_23-11-2020_CSR_generalist_NoAM_EcM_NM_comparisons_19-03-2021_AMvsECMtab.csv",
+           as.is = T,
+           strip.white = T)
+# dat_CSR_symb_AMvsECM <-
+#   dat_CSR_symb_AMvsECM[sample(1:nrow(dat_CSR_symb_AMvsECM), size = 25), ] #Only when testing the script
+head(dat_CSR_symb_AMvsECM)
+table(dat_CSR_symb_AMvsECM$Binary)
+
+####Clean data file
+#How many of the species in the database are absent in Smith and Brown?
+length(setdiff(dat_CSR_symb_AMvsECM$Species_name, smith_brown_tree$tip.label))
+#All present
+
+###Clean phylogeny
+analysis_tree_AMvsECM <-
+  drop.tip(
+    phy = smith_brown_tree,
+    tip = setdiff(smith_brown_tree$tip.label, dat_CSR_symb_AMvsECM$Species_name)
+  )
+analysis_tree_AMvsECM
+
+###General data prep
+
+head(dat_CSR_symb_AMvsECM)
+analysis_dat_CSR_symb_AMvsECM <-
+  dat_CSR_symb_AMvsECM %>% dplyr::select(    -C.selection,
+                                             -S.selection,
+                                             -R.selection,
+                                             -Cosine_CSR)
+head(analysis_dat_CSR_symb_AMvsECM)
+
+#Analysis
+
+###Analysis run specific prepping. 
+ncol(analysis_dat_CSR_symb_AMvsECM)
+states_print_label <- c("AM & CSR_gen",
+                        "AM & CSR_spe",
+                        "ECM & CSR_gen",
+                        "ECM & CSR_spe")
+analysis_tree_correlate_run<-analysis_tree_AMvsECM
+
+for (i in 1:(ncol(analysis_dat_CSR_symb_AMvsECM) - 2)) {
+  #Data formatting. We need three columns, speies and symbiont state and selection type.
+  analysis_dat_frame <-
+    analysis_dat_CSR_symb_AMvsECM[, c(1, 2, i + 2)]
+  
+  print(paste("This is AMvsECM run:", colnames(analysis_dat_frame)[3]))
+  print(paste("It's currently:", Sys.time()))
+  
+  print(table(analysis_dat_frame[, 2],
+              analysis_dat_frame[, 3]))
+  
+  analysis_dat_frame[, 2] <-
+    as.numeric(as.factor(analysis_dat_frame[, 2]))
+  analysis_dat_frame[, 3] <-
+    as.numeric(as.factor(analysis_dat_frame[, 3]))
+  
+  print(table(analysis_dat_frame[, 2],
+              analysis_dat_frame[, 3]))
+  
+  #Run and save the model
+  ASR_run_ARD <-
+    corHMM(
+      phy = analysis_tree_correlate_run,
+      data = analysis_dat_frame,
+      rate.cat = 1,
+      model = "ARD",
+      node.states = "marginal",
+      root.p = "yang",
+      nstarts = 12,
+      n.cores = 7
+    )
+  
+  save(ASR_run_ARD,
+       file = paste0(
+         "./Output/ASR_AMvsECM_",
+         colnames(analysis_dat_frame)[3],
+         "_ARD_yang"
+       ))
+  
+  #Plot the model run
+  plotMKmodel(ASR_run_ARD)
+  ASR_run_ARD
+  
+  #Create a data frame to plot the trait data
+  dat_plot <-
+    analysis_dat_frame[, c(2, 3)]
+  row.names(dat_plot) <-
+    analysis_dat_frame$Species_name
+  colnames(dat_plot)[2] <- "CSR_var"
+  
+  #CSR ASR - plot pdf
+  pdf(
+    paste0(
+      "./Output/ASR_AMvsECM_",
+      colnames(analysis_dat_frame)[3],
+      ".pdf"
+    ),
+    width = 20,
+    height = 20
+  )
+  trait.plot(
+    tree = analysis_tree_correlate_run,
+    dat = dat_plot,
+    cols = list(
+      Binary_Symb_AMvsECM = brewer.pal(n = 8, "Set2"),
+      CSR_var = brewer.pal(n = 3, "Accent")
+    ),
+    type = "f",
+    legend = F,
+    w = 1 / 40,
+    edge.width = 2,
+    cex.lab = 0.01,
+    tip.color = "white",
+    show.node.label = T
+  )
+  nodelabels(pie = ASR_run_ARD$states,
+             piecol = plotvec_symbiont_binary_selection_type_binary,
+             cex = 0.3)
+  legend(
+    legend = states_print_label,
+    x = "bottomright",
+    fill = plotvec_symbiont_binary_selection_type_binary,
+    cex = 1.5
+  )
+  legend(
+    legend = c("AM", "ECM"),
+    x = "topleft",
+    fill = brewer.pal(n = 8, "Set2"),
+    title = "Inner Ring",
+    cex = 1.5
+  )
+  legend(
+    legend = c("CSR_gen", "CSR_spec"),
+    x = "topright",
+    fill = brewer.pal(n = 3, "Accent"),
+    title = "Outer Ring",
+    cex = 1.5
+  )
+  add.scale.bar()
+  dev.off()
+  
+  ####Run Pagel's model
+  vec_symbiont_binary <-
+    dat_plot[, 1]
+  vec_selection_type_binary <-
+    dat_plot[, 2]
+  names(vec_symbiont_binary) <-
+    row.names(dat_plot)
+  names(vec_selection_type_binary) <-
+    row.names(dat_plot)
+  table(vec_symbiont_binary)
+  table(vec_selection_type_binary)
+  
+  pagel_run <-
+    fitPagel(
+      tree = analysis_tree_correlate_run,
+      x = vec_symbiont_binary,
+      y = vec_selection_type_binary,
+      model = "ARD",
+      pi = "fitzjohn"
+    )
+  pagel_run
+  plot(pagel_run)
+  
+  pdf(paste0(
+    "./Output/Plot_pagel_AMvsECM",
+    colnames(analysis_dat_frame)[3],
+    "_ARD.pdf"
+  ))
+  plot(pagel_run)
+  plot.new()
+  text(0, 1, paste("likelihood-ratio: ",
+                   pagel_run$lik.ratio,
+                   "p-value: ",
+                   pagel_run$P,
+                   collapse='\r\n'), adj = c(0,1), family = 'mono',cex=0.5)
+  box()
+  dev.off()
+  
+  #Final cleaning
+  gc()
+  
+}
+
 
