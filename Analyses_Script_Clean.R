@@ -18,13 +18,13 @@ library(viridis)
 
 # Loading data and trees --------------------------------------------------
 
-dat_CSR_symb <-
-  read.csv(file = "./Data/AnalysedData_Gijsbert_23-11-2020_dif_cutoffs_01-12-2020_forR.csv",
+dat_CSR_symb_AnyAMvsnoAM <-
+  read.csv(file = "./Data/AnalysedData_Gijsbert_23-11-2020_CSR_generalist_NoAM_EcM_NM_comparisons_19-03-2021_AnyAMvsnoAMtab.csv",
            as.is = T,
            strip.white = T)
-# dat_CSR_symb <-
-#   dat_CSR_symb[sample(1:nrow(dat_CSR_symb), size = 25), ] #Only when testing the script
-head(dat_CSR_symb)
+dat_CSR_symb_AnyAMvsnoAM <-
+   dat_CSR_symb_AnyAMvsnoAM[sample(1:nrow(dat_CSR_symb_AnyAMvsnoAM), size = 25), ] #Only when testing the script
+head(dat_CSR_symb_AnyAMvsnoAM)
 
 smith_brown_tree <- read.tree("./Data/ALLMB.tre")
 smith_brown_tree
@@ -33,29 +33,15 @@ smith_brown_tree
 
 ####Clean data file
 
-#Formatting of levels
-dat_CSR_symb$Symbiotic_type <-
-  gsub(pattern = "NM-AM",
-       replacement = "NMAM",
-       dat_CSR_symb$Symbiotic_type)
-dat_CSR_symb$Symbiotic_type <-
-  gsub(pattern = "EcM-AM",
-       replacement = "EcMAM",
-       dat_CSR_symb$Symbiotic_type)
-dat_CSR_symb$Symbiotic_type <-
-  gsub(pattern = "AM-Nod",
-       replacement = "AMNod",
-       dat_CSR_symb$Symbiotic_type)
-
 #Species formatting
-head(dat_CSR_symb$Species_name)
+head(dat_CSR_symb_AnyAMvsnoAM$Species_name)
 head(smith_brown_tree$tip.label)
-dat_CSR_symb$Species_name <- gsub(pattern = " ",
+dat_CSR_symb_AnyAMvsnoAM$Species_name <- gsub(pattern = " ",
                                   replacement = "_",
-                                  dat_CSR_symb$Species_name)
+                                  dat_CSR_symb_AnyAMvsnoAM$Species_name)
 
 #How many of the 3014 species in the database are absent in Smith and Brown?
-length(setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label))
+length(setdiff(dat_CSR_symb_AnyAMvsnoAM$Species_name, smith_brown_tree$tip.label))
 #All present
 
 #### Clean phylogeny
@@ -64,7 +50,7 @@ length(setdiff(dat_CSR_symb$Species_name, smith_brown_tree$tip.label))
 analysis_tree <-
   drop.tip(
     phy = smith_brown_tree,
-    tip = setdiff(smith_brown_tree$tip.label, dat_CSR_symb$Species_name)
+    tip = setdiff(smith_brown_tree$tip.label, dat_CSR_symb_AnyAMvsnoAM$Species_name)
   )
 analysis_tree
 
@@ -87,28 +73,28 @@ write.nexus(phy = analysis_tree,file = "./Output/Cosme_Analysed_Tree.nexus")
 
 #### Match dataset and phylogeny
 
-analysis_dat_CSR_symb <-
-  dat_CSR_symb %>% filter(Species_name %in% analysis_tree$tip.label)
-nrow(analysis_dat_CSR_symb)
+analysis_dat_CSR_symb_AnyAMvsnoAM <-
+  dat_CSR_symb_AnyAMvsnoAM %>% filter(Species_name %in% analysis_tree$tip.label)
+nrow(analysis_dat_CSR_symb_AnyAMvsnoAM)
 #More species in data set, than in tree.
 
 
 # Analysing the symbiotic states ------------------------------------------
 
 #Data formatting. We need two columns, species and symbiont state.
-analysis_dat_CSR_symb_ASR_symbiont_type <-
-  analysis_dat_CSR_symb %>% dplyr::select(Species_name, Symbiotic_type)
-head(analysis_dat_CSR_symb_ASR_symbiont_type)
-table(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type)
-analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type <-
-  as.numeric(as.factor(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type))
-table(analysis_dat_CSR_symb_ASR_symbiont_type$Symbiotic_type)
+analysis_dat_CSR_symb_AnyAMvsnoAM_ASR_symbiont_type <-
+  analysis_dat_CSR_symb_AnyAMvsnoAM %>% dplyr::select(Species_name, Symbiotic_type)
+head(analysis_dat_CSR_symb_AnyAMvsnoAM_ASR_symbiont_type)
+table(analysis_dat_CSR_symb_AnyAMvsnoAM_ASR_symbiont_type$Symbiotic_type)
+analysis_dat_CSR_symb_AnyAMvsnoAM_ASR_symbiont_type$Symbiotic_type <-
+  as.numeric(as.factor(analysis_dat_CSR_symb_AnyAMvsnoAM_ASR_symbiont_type$Symbiotic_type))
+table(analysis_dat_CSR_symb_AnyAMvsnoAM_ASR_symbiont_type$Symbiotic_type)
 
 #Run ASRs
 ASR_symbiont_type_ER_yang <-
   corHMM(
     phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_type,
+    data = analysis_dat_CSR_symb_AnyAMvsnoAM_ASR_symbiont_type,
     rate.cat = 1,
     model = "ER",
     node.states = "marginal",
@@ -119,7 +105,7 @@ ASR_symbiont_type_ER_yang <-
 ASR_symbiont_type_ARD_yang <-
   corHMM(
     phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_type,
+    data = analysis_dat_CSR_symb_AnyAMvsnoAM_ASR_symbiont_type,
     rate.cat = 1,
     model = "ARD",
     node.states = "marginal",
@@ -130,7 +116,7 @@ ASR_symbiont_type_ARD_yang <-
 ASR_symbiont_type_SYM_yang <-
   corHMM(
     phy = analysis_tree,
-    data = analysis_dat_CSR_symb_ASR_symbiont_type,
+    data = analysis_dat_CSR_symb_AnyAMvsnoAM_ASR_symbiont_type,
     rate.cat = 1,
     model = "SYM",
     node.states = "marginal",
@@ -160,14 +146,14 @@ akaike.weights(
 #ARD is the best
 ASR_symbiont_type_SYM_yang
 plotMKmodel(ASR_symbiont_type_SYM_yang)
-table(analysis_dat_CSR_symb$Symbiotic_type) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
+table(analysis_dat_CSR_symb_AnyAMvsnoAM$Symbiotic_type) #States are numbered in the modeling: this is what types the numbers represent, they are ordered aphabetically, it sems.
 
 #Create a data frame to plot the trait data
 dat_plot_symbiont_type <-
-  analysis_dat_CSR_symb_ASR_symbiont_type %>%
+  analysis_dat_CSR_symb_AnyAMvsnoAM_ASR_symbiont_type %>%
   dplyr::select(Symbiotic_type)
 row.names(dat_plot_symbiont_type) <-
-  analysis_dat_CSR_symb_ASR_symbiont_type$Species_name
+  analysis_dat_CSR_symb_AnyAMvsnoAM_ASR_symbiont_type$Species_name
 # dat_plot_symbiont_type$Symbiotic_type <-
 #   as.numeric(as.factor(dat_plot_symbiont_type$Symbiotic_type))
 head(dat_plot_symbiont_type)
@@ -192,7 +178,7 @@ nodelabels(pie = ASR_symbiont_type_SYM_yang$states,
            piecol = brewer.pal(n = 8, "Set2"),
            cex = 0.3)
 legend(
-  legend = names(table(analysis_dat_CSR_symb$Symbiotic_type)),
+  legend = names(table(analysis_dat_CSR_symb_AnyAMvsnoAM$Symbiotic_type)),
   x = "bottomright",
   fill = brewer.pal(n = 8, "Set2"),
   cex = 2
