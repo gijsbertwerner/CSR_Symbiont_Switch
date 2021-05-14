@@ -1379,3 +1379,194 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AM_plus_NMAMvsNM) - 2)) {
   gc()
   
 }
+
+
+# Correlated AMvsNM_plus_NMAM -----------------------------------------------------------
+
+#Loading data
+dat_CSR_symb_AMvsNM_plus_NMAM <-
+  read.csv(file = "./Data/AnalysedData_Gijsbert_23-11-2020_CSR_generalist_NoAM_EcM_NM_comparisons_19-03-2021_AMvsNM_plus_NMAMtab.csv",
+           as.is = T,
+           strip.white = T)
+# dat_CSR_symb_AMvsNM_plus_NMAM <-
+#  dat_CSR_symb_AMvsNM_plus_NMAM[sample(1:nrow(dat_CSR_symb_AMvsNM_plus_NMAM), size = 25), ] #Only when testing the script
+head(dat_CSR_symb_AMvsNM_plus_NMAM)
+table(dat_CSR_symb_AMvsNM_plus_NMAM$Binary_Symb_AMvsNM_plus_NMAM)
+
+####Clean data file
+#How many of the species in the database are absent in Smith and Brown?
+length(setdiff(dat_CSR_symb_AMvsNM_plus_NMAM$Species_name, smith_brown_tree$tip.label))
+#All present
+
+###Clean phylogeny
+analysis_tree_AMvsNM_plus_NMAM <-
+  drop.tip(
+    phy = smith_brown_tree,
+    tip = setdiff(smith_brown_tree$tip.label, dat_CSR_symb_AMvsNM_plus_NMAM$Species_name)
+  )
+analysis_tree_AMvsNM_plus_NMAM
+
+###General data prep
+
+head(dat_CSR_symb_AMvsNM_plus_NMAM)
+analysis_dat_CSR_symb_AMvsNM_plus_NMAM <-
+  dat_CSR_symb_AMvsNM_plus_NMAM %>% dplyr::select(-Symbiotic_type,
+                                                  -C.selection,
+                                                  -S.selection,
+                                                  -R.selection,
+                                                  -Cosine_CSR)
+head(analysis_dat_CSR_symb_AMvsNM_plus_NMAM)
+
+#Analysis
+
+###Analysis run specific prepping. 
+ncol(analysis_dat_CSR_symb_AMvsNM_plus_NMAM)
+states_print_label <- c("AM & CSR_gen",
+                        "AM & CSR_spe",
+                        "NM_plus_NMAM & CSR_gen",
+                        "NM_plus_NMAM & CSR_spe")
+analysis_tree_correlate_run<-analysis_tree_AMvsNM_plus_NMAM
+
+for (i in 1:(ncol(analysis_dat_CSR_symb_AMvsNM_plus_NMAM) - 2)) {
+  #Data formatting. We need three columns, speies and symbiont state and selection type.
+  analysis_dat_frame <-
+    analysis_dat_CSR_symb_AMvsNM_plus_NMAM[, c(1, 2, i + 2)]
+  
+  print(paste("This is AMvsNM_plus_NMAM run:", colnames(analysis_dat_frame)[3]))
+  print(paste("It's currently:", Sys.time()))
+  
+  print(table(analysis_dat_frame[, 2],
+              analysis_dat_frame[, 3]))
+  
+  analysis_dat_frame[, 2] <-
+    as.numeric(as.factor(analysis_dat_frame[, 2]))
+  analysis_dat_frame[, 3] <-
+    as.numeric(as.factor(analysis_dat_frame[, 3]))
+  
+  print(table(analysis_dat_frame[, 2],
+              analysis_dat_frame[, 3]))
+  
+  #Run and save the model
+  ASR_run_ARD <-
+    corHMM(
+      phy = analysis_tree_correlate_run,
+      data = analysis_dat_frame,
+      rate.cat = 1,
+      model = "ARD",
+      node.states = "marginal",
+      root.p = "yang",
+      nstarts = 12,
+      n.cores = 7
+    )
+  
+  save(ASR_run_ARD,
+       file = paste0(
+         "./Output/ASR_AMvsNM_plus_NMAM_",
+         colnames(analysis_dat_frame)[3],
+         "_ARD_yang"
+       ))
+  
+  #Plot the model run
+  plotMKmodel(ASR_run_ARD)
+  ASR_run_ARD
+  
+  #Create a data frame to plot the trait data
+  dat_plot <-
+    analysis_dat_frame[, c(2, 3)]
+  row.names(dat_plot) <-
+    analysis_dat_frame$Species_name
+  colnames(dat_plot)[2] <- "CSR_var"
+  
+  #CSR ASR - plot pdf
+  pdf(
+    paste0(
+      "./Output/ASR_AMvsNM_plus_NMAM_",
+      colnames(analysis_dat_frame)[3],
+      ".pdf"
+    ),
+    width = 20,
+    height = 20
+  )
+  trait.plot(
+    tree = analysis_tree_correlate_run,
+    dat = dat_plot,
+    cols = list(
+      Binary_Symb_AMvsNM_plus_NMAM = brewer.pal(n = 8, "Set2"),
+      CSR_var = brewer.pal(n = 3, "Accent")
+    ),
+    type = "f",
+    legend = F,
+    w = 1 / 40,
+    edge.width = 2,
+    cex.lab = 0.01,
+    tip.color = "white",
+    show.node.label = T
+  )
+  nodelabels(pie = ASR_run_ARD$states,
+             piecol = plotvec_symbiont_binary_selection_type_binary,
+             cex = 0.3)
+  legend(
+    legend = states_print_label,
+    x = "bottomright",
+    fill = plotvec_symbiont_binary_selection_type_binary,
+    cex = 1.5
+  )
+  legend(
+    legend = c("AM", "NM_plus_NMAM"),
+    x = "topleft",
+    fill = brewer.pal(n = 8, "Set2"),
+    title = "Inner Ring",
+    cex = 1.5
+  )
+  legend(
+    legend = c("CSR_gen", "CSR_spec"),
+    x = "topright",
+    fill = brewer.pal(n = 3, "Accent"),
+    title = "Outer Ring",
+    cex = 1.5
+  )
+  add.scale.bar()
+  dev.off()
+  
+  ####Run Pagel's model
+  vec_symbiont_binary <-
+    dat_plot[, 1]
+  vec_selection_type_binary <-
+    dat_plot[, 2]
+  names(vec_symbiont_binary) <-
+    row.names(dat_plot)
+  names(vec_selection_type_binary) <-
+    row.names(dat_plot)
+  table(vec_symbiont_binary)
+  table(vec_selection_type_binary)
+  
+  pagel_run <-
+    fitPagel(
+      tree = analysis_tree_correlate_run,
+      x = vec_symbiont_binary,
+      y = vec_selection_type_binary,
+      model = "ARD",
+      pi = "fitzjohn"
+    )
+  pagel_run
+  plot(pagel_run)
+  
+  pdf(paste0(
+    "./Output/Plot_pagel_AMvsNM_plus_NMAM",
+    colnames(analysis_dat_frame)[3],
+    "_ARD.pdf"
+  ))
+  plot(pagel_run)
+  plot.new()
+  text(0, 1, paste("likelihood-ratio: ",
+                   pagel_run$lik.ratio,
+                   "p-value: ",
+                   pagel_run$P,
+                   collapse='\r\n'), adj = c(0,1), family = 'mono',cex=0.5)
+  box()
+  dev.off()
+  
+  #Final cleaning
+  gc()
+  
+}
