@@ -203,83 +203,7 @@ dev.off()
 
 # Correlated evolution between the two variables --------------------------
 
-
-###General data prep
-
-##CSR as baseline
-head(analysis_dat_CSR_symb)
-analysis_dat_CSR_symb_for_correlated_anyAM <-
-  analysis_dat_CSR_symb %>% dplyr::select(
-    Species_name,
-    Binary_Symb_AnyAM,
-    CSR0.7,
-    CSR0.75,
-    CSR0.8,
-    CSR0.85,
-    CSR0.9,
-    CSR0.95
-  )
-analysis_dat_CSR_symb_for_correlated_OnlyAM <-
-  analysis_dat_CSR_symb %>% dplyr::select(
-    Species_name,
-    Binary_Sym_OnlyAM,
-    CSR0.7,
-    CSR0.75,
-    CSR0.8,
-    CSR0.85,
-    CSR0.9,
-    CSR0.95
-  )
-head(analysis_dat_CSR_symb_for_correlated_anyAM)
-head(analysis_dat_CSR_symb_for_correlated_OnlyAM)
-
-###C-specialist as baseline
-head(analysis_dat_CSR_symb)
-analysis_dat_CSR_symb_for_correlated_anyAM_C_spe <-
-  analysis_dat_CSR_symb %>% dplyr::select(
-    Species_name,
-    Binary_Symb_AnyAM,
-    C0.7,
-    C0.75,
-    C0.8,
-    C0.85,
-    C0.9,
-    C0.95
-  )
-head(analysis_dat_CSR_symb_for_correlated_anyAM_C_spe)
-
-###S-specialist as baseline
-head(analysis_dat_CSR_symb)
-analysis_dat_CSR_symb_for_correlated_anyAM_S_spe <-
-  analysis_dat_CSR_symb %>% dplyr::select(
-    Species_name,
-    Binary_Symb_AnyAM,
-    S0.7,
-    S0.75,
-    S0.8,
-    S0.85,
-    S0.9,
-    S0.95
-  )
-head(analysis_dat_CSR_symb_for_correlated_anyAM_S_spe)
-
-###R-specialist as baseline
-head(analysis_dat_CSR_symb)
-analysis_dat_CSR_symb_for_correlated_anyAM_R_spe <-
-  analysis_dat_CSR_symb %>% dplyr::select(
-    Species_name,
-    Binary_Symb_AnyAM,
-    R0.7,
-    R0.75,
-    R0.8,
-    R0.85,
-    R0.9,
-    R0.95
-  )
-head(analysis_dat_CSR_symb_for_correlated_anyAM_R_spe)
-
-
-#Colouring
+####Colouring for plotting later on. 
 plotvec_symbiont_binary_selection_type_binary <-
   c(
     "#e31a1c",
@@ -308,20 +232,57 @@ plotvec_symbiont_binary_selection_type_binary <-
   )    #Turqouise is OM
 
 
+### Loading data  for correlated evolution 
 
-# Analyse AnyAM and CSR Baselie -----------------------------------------------------------
+#Various data files, for different symbiotic contrasts. 
+dat_CSR_symb_AnyAMvsnoAM <-
+  read.csv(file = "./Data/AnalysedData_Gijsbert_23-11-2020_CSR_generalist_NoAM_EcM_NM_comparisons_19-03-2021_AnyAMvsnoAMtab.csv",
+           as.is = T,
+           strip.white = T)
+dat_CSR_symb_AnyAMvsnoAM <-
+  dat_CSR_symb_AnyAMvsnoAM[sample(1:nrow(dat_CSR_symb_AnyAMvsnoAM), size = 25), ] #Only when testing the script
+head(dat_CSR_symb_AnyAMvsnoAM)
 
-###First for AnyAM and 
-ncol(analysis_dat_CSR_symb_for_correlated_anyAM)
+# Correlated AnyAMvsnoAM -----------------------------------------------------------
+
+####Clean data file
+#How many of the species in the database are absent in Smith and Brown?
+length(setdiff(dat_CSR_symb_AnyAMvsnoAM$Species_name, smith_brown_tree$tip.label))
+#All present
+
+###Clean phylogeny
+analysis_tree_AnyAMvsnoAM <-
+  drop.tip(
+    phy = smith_brown_tree,
+    tip = setdiff(smith_brown_tree$tip.label, dat_CSR_symb_AnyAMvsnoAM$Species_name)
+  )
+analysis_tree_AnyAMvsnoAM
+
+###General data prep
+
+head(dat_CSR_symb_AnyAMvsnoAM)
+analysis_dat_CSR_symb_AnyAMvsnoAM <-
+  dat_CSR_symb_AnyAMvsnoAM %>% dplyr::select(-Symbiotic_type,
+                                             -C.selection,
+                                             -S.selection,
+                                             -R.selection,
+                                             -Cosine_CSR)
+head(analysis_dat_CSR_symb_AnyAMvsnoAM)
+
+#Analysis
+
+###Analysis run specific prepping. 
+ncol(analysis_dat_CSR_symb_AnyAMvsnoAM)
 states_print_label <- c("AnyAM & CSR_gen",
                         "AnyAM & CSR_spe",
                         "noAM & CSR_gen",
                         "noAM & CSR_spe")
+analysis_tree_correlate_run<-analysis_tree_AnyAMvsnoAM
 
-for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM) - 2)) {
+for (i in 1:(ncol(analysis_dat_CSR_symb_AnyAMvsnoAM) - 2)) {
   #Data formatting. We need three columns, speies and symbiont state and selection type.
   analysis_dat_frame <-
-    analysis_dat_CSR_symb_for_correlated_anyAM[, c(1, 2, i + 2)]
+    analysis_dat_CSR_symb_AnyAMvsnoAM[, c(1, 2, i + 2)]
   
   print(paste("This is AnyAM run:", colnames(analysis_dat_frame)[3]))
   print(paste("It's currently:", Sys.time()))
@@ -340,7 +301,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM) - 2)) {
   #Run and save the model
   ASR_run_ARD <-
     corHMM(
-      phy = analysis_tree,
+      phy = analysis_tree_correlate_run,
       data = analysis_dat_frame,
       rate.cat = 1,
       model = "ARD",
@@ -379,7 +340,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM) - 2)) {
     height = 20
   )
   trait.plot(
-    tree = analysis_tree,
+    tree = analysis_tree_correlate_run,
     dat = dat_plot,
     cols = list(
       Binary_Symb_AnyAM = brewer.pal(n = 8, "Set2"),
@@ -433,7 +394,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_for_correlated_anyAM) - 2)) {
   
   pagel_run <-
     fitPagel(
-      tree = analysis_tree,
+      tree = analysis_tree_correlate_run,
       x = vec_symbiont_binary,
       y = vec_selection_type_binary,
       model = "ARD",
