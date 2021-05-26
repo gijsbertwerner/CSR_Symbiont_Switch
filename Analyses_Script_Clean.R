@@ -22,8 +22,8 @@ dat_CSR_symb <-
   read.csv(file = "./Data/AnalysedData_Gijsbert_23-11-2020_dif_cutoffs_01-12-2020_forR.csv",
            as.is = T,
            strip.white = T)
- # dat_CSR_symb <-
- #   dat_CSR_symb[sample(1:nrow(dat_CSR_symb), size = 25), ] #Only when testing the script
+  # dat_CSR_symb <-
+  #   dat_CSR_symb[sample(1:nrow(dat_CSR_symb), size = 100), ] #Only when testing the script
 head(dat_CSR_symb)
 
 smith_brown_tree <- read.tree("./Data/ALLMB.tre")
@@ -241,8 +241,8 @@ dat_CSR_symb_AnyAMvsnoAM <-
   read.csv(file = "./Data/AnalysedData_Gijsbert_23-11-2020_CSR_generalist_NoAM_EcM_NM_comparisons_19-03-2021_AnyAMvsnoAMtab.csv",
            as.is = T,
            strip.white = T)
-# dat_CSR_symb_AnyAMvsnoAM <-
-#   dat_CSR_symb_AnyAMvsnoAM[sample(1:nrow(dat_CSR_symb_AnyAMvsnoAM), size = 25), ] #Only when testing the script
+ # dat_CSR_symb_AnyAMvsnoAM <-
+ #   dat_CSR_symb_AnyAMvsnoAM[sample(1:nrow(dat_CSR_symb_AnyAMvsnoAM), size = 25), ] #Only when testing the script
 head(dat_CSR_symb_AnyAMvsnoAM)
 table(dat_CSR_symb_AnyAMvsnoAM$Binary_Symb_anyAMvsnoAM)
 
@@ -428,7 +428,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AnyAMvsnoAM) - 2)) {
 
 #Loading data
 dat_CSR_symb_AMvsECM <-
-  read.csv(file = "./Data/AnalysedData_Gijsbert_23-11-2020_CSR_generalist_NoAM_EcM_NM_comparisons_19-03-2021_AMvsECMtab.csv",
+  read.csv(file = "./Data/AnalysedData_Gijsbert_23-11-2020_CSR_generalist_NoAM_EcM_NM_comparisons_19-03-2021_onlyAMvsonlyECMtab.csv",
            as.is = T,
            strip.white = T)
 # dat_CSR_symb_AMvsECM <-
@@ -463,10 +463,10 @@ head(analysis_dat_CSR_symb_AMvsECM)
 
 ###Analysis run specific prepping. 
 ncol(analysis_dat_CSR_symb_AMvsECM)
-states_print_label <- c("AM & CSR_gen",
-                        "AM & CSR_spe",
-                        "ECM & CSR_gen",
-                        "ECM & CSR_spe")
+states_print_label <- c("onlyAM & CSR_gen",
+                        "onlyAM & CSR_spe",
+                        "onlyECM & CSR_gen",
+                        "onlyECM & CSR_spe")
 analysis_tree_correlate_run<-analysis_tree_AMvsECM
 
 for (i in 1:(ncol(analysis_dat_CSR_symb_AMvsECM) - 2)) {
@@ -474,7 +474,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AMvsECM) - 2)) {
   analysis_dat_frame <-
     analysis_dat_CSR_symb_AMvsECM[, c(1, 2, i + 2)]
   
-  print(paste("This is AMvsECM run:", colnames(analysis_dat_frame)[3]))
+  print(paste("This is onlyAMvsonlyECM run:", colnames(analysis_dat_frame)[3]))
   print(paste("It's currently:", Sys.time()))
   
   print(table(analysis_dat_frame[, 2],
@@ -503,7 +503,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AMvsECM) - 2)) {
   
   save(ASR_run_ARD,
        file = paste0(
-         "./Output/ASR_AMvsECM_",
+         "./Output/ASR_onlyAMvsonlyECM_",
          colnames(analysis_dat_frame)[3],
          "_ARD_yang"
        ))
@@ -522,7 +522,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AMvsECM) - 2)) {
   #CSR ASR - plot pdf
   pdf(
     paste0(
-      "./Output/ASR_AMvsECM_",
+      "./Output/ASR_onlyAMvsonlyECM_",
       colnames(analysis_dat_frame)[3],
       ".pdf"
     ),
@@ -594,7 +594,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AMvsECM) - 2)) {
   plot(pagel_run)
   
   pdf(paste0(
-    "./Output/Plot_pagel_AMvsECM",
+    "./Output/Plot_pagel_onlyAMvsonlyECM",
     colnames(analysis_dat_frame)[3],
     "_ARD.pdf"
   ))
@@ -1028,8 +1028,7 @@ analysis_tree_AMvsNM
 
 head(dat_CSR_symb_AMvsNM)
 analysis_dat_CSR_symb_AMvsNM <-
-  dat_CSR_symb_AMvsNM %>% dplyr::select(-Symbiotic_type,
-                                                    -C.selection,
+  dat_CSR_symb_AMvsNM %>% dplyr::select(            -C.selection,
                                                     -S.selection,
                                                     -R.selection,
                                                     -Cosine_CSR)
@@ -1379,7 +1378,6 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AM_plus_NMAMvsNM) - 2)) {
   gc()
   
 }
-
 
 # Correlated AMvsNM_plus_NMAM -----------------------------------------------------------
 
