@@ -113,7 +113,7 @@ ASR_symbiont_type_ER_yang <-
     model = "ER",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 12,
+    nstarts = 25,
     n.cores = 7
   )
 ASR_symbiont_type_ARD_yang <-
@@ -124,7 +124,7 @@ ASR_symbiont_type_ARD_yang <-
     model = "ARD",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 12,
+    nstarts = 25,
     n.cores = 7
   )
 ASR_symbiont_type_SYM_yang <-
@@ -135,7 +135,7 @@ ASR_symbiont_type_SYM_yang <-
     model = "SYM",
     node.states = "marginal",
     root.p = "yang",
-    nstarts = 12,
+    nstarts = 25,
     n.cores = 7
   )
 
@@ -308,7 +308,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AnyAMvsnoAM) - 2)) {
       model = "ARD",
       node.states = "marginal",
       root.p = "yang",
-      nstarts = 12,
+      nstarts = 25,
       n.cores = 7
     )
   
@@ -497,7 +497,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AMvsECM) - 2)) {
       model = "ARD",
       node.states = "marginal",
       root.p = "yang",
-      nstarts = 12,
+      nstarts = 25,
       n.cores = 7
     )
   
@@ -691,7 +691,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AM_plus_EcMAMvsEcM) - 2)) {
       model = "ARD",
       node.states = "marginal",
       root.p = "yang",
-      nstarts = 12,
+      nstarts = 25,
       n.cores = 7
     )
   
@@ -882,7 +882,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AMvsEcM_plus_EcMAM) - 2)) {
       model = "ARD",
       node.states = "marginal",
       root.p = "yang",
-      nstarts = 12,
+      nstarts = 25,
       n.cores = 7
     )
   
@@ -1072,7 +1072,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AMvsNM) - 2)) {
       model = "ARD",
       node.states = "marginal",
       root.p = "yang",
-      nstarts = 12,
+      nstarts = 25,
       n.cores = 7
     )
   
@@ -1263,7 +1263,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AM_plus_NMAMvsNM) - 2)) {
       model = "ARD",
       node.states = "marginal",
       root.p = "yang",
-      nstarts = 12,
+      nstarts = 25,
       n.cores = 7
     )
   
@@ -1453,7 +1453,7 @@ for (i in 1:(ncol(analysis_dat_CSR_symb_AMvsNM_plus_NMAM) - 2)) {
       model = "ARD",
       node.states = "marginal",
       root.p = "yang",
-      nstarts = 12,
+      nstarts = 25,
       n.cores = 7
     )
   
